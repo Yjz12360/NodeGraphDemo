@@ -6,7 +6,7 @@ namespace SceneNodeGraph
 {
     public class SvrNodeGraphBehaviour : MonoBehaviour
     {
-        public SvrNodeGraph nodeGraph = new SvrNodeGraph();
+        private SvrNodeGraph nodeGraph = SvrNodeGraph.instance;
 
         private void Start()
         {

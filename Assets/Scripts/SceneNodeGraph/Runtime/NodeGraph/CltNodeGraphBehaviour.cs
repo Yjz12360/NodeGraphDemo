@@ -6,7 +6,7 @@ namespace SceneNodeGraph
 {
     public class CltNodeGraphBehaviour : MonoBehaviour
     {
-        public CltNodeGraph nodeGraph = new CltNodeGraph();
+        private CltNodeGraph nodeGraph = CltNodeGraph.instance;
 
         private void Start()
         {

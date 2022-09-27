@@ -25,7 +25,6 @@ namespace SceneNodeGraph
 
     public class SvrMoveNode : SvrRuntimeNode
     {
-        public MoveNodeData nodeData;
 
         public override void StartNode()
         {

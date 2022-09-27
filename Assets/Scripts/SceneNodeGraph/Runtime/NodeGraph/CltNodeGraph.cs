@@ -15,6 +15,9 @@ namespace SceneNodeGraph
 
     public class CltNodeGraph
     {
+        private static CltNodeGraph _instance = new CltNodeGraph();
+        public static CltNodeGraph instance { get { return _instance; } }
+
         public NodeGraphData nodeGraphData;
         NodeGraphState nCurrState = NodeGraphState.Pending;
 
@@ -123,6 +126,11 @@ namespace SceneNodeGraph
         public bool IsFinished()
         {
             return nCurrState == NodeGraphState.Finished;
+        }
+
+        public void RecvFinishNode(string sNodeId)
+        {
+
         }
     }
 }

@@ -9,6 +9,9 @@ namespace SceneNodeGraph
 
     public class SvrNodeGraph
     {
+        private static SvrNodeGraph _instance = new SvrNodeGraph();
+        public static SvrNodeGraph instance { get { return _instance; } }
+
         public NodeGraphData nodeGraphData;
         NodeGraphState nCurrState = NodeGraphState.Pending;
 
