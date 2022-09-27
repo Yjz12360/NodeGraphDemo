@@ -12,8 +12,6 @@ namespace SceneNodeGraph
 
     public class CltMoveNode : CltRuntimeNode
     {
-        public MoveNodeData nodeData;
-
         public override void StartNode()
         {
 

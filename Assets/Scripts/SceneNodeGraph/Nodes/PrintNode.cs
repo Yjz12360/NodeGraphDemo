@@ -12,8 +12,6 @@ namespace SceneNodeGraph
 
     public class CltPrintNode : CltRuntimeNode
     {
-        public PrintNodeData nodeData;
-
         public override void StartNode()
         {
 

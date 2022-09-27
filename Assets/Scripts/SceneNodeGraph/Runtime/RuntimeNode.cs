@@ -8,23 +8,36 @@ namespace SceneNodeGraph
 {
     public class BaseRuntimeNode
     {
-        public virtual void StartNode() 
-        {
+        //public virtual void StartNode() 
+        //{
 
-        }
-        public virtual void UpdateNode(float nDeltaTime) 
-        {
+        //}
+        //public virtual void UpdateNode(float nDeltaTime) 
+        //{
 
-        }
+        //}
 
-        public virtual void FinishNode()
-        {
+        //public virtual void FinishNode()
+        //{
 
-        }
+        //}
     }
 
     public class CltRuntimeNode : BaseRuntimeNode
     {
+        public CltNodeGraph nodeGraph;
+        public BaseNodeData nodeData;
+        public virtual void StartNode() { throw new NotImplementedException(); }
+        public virtual void UpdateNode(float nDeltaTime) { }
+        public virtual void FinishNode() { }
+
+        public void DoFinishNode()
+        {
+            FinishNode();
+            //if (nodeGraph != null)
+                //nodeGraph.on
+        }
+
         public void RecvRuntimeData(string data)
         {
 
@@ -37,6 +50,12 @@ namespace SceneNodeGraph
 
     public class SvrRuntimeNode : BaseRuntimeNode
     {
+        public SvrNodeGraph nodeGraph;
+        public BaseNodeData nodeData;
+        public virtual void StartNode() { throw new NotImplementedException(); }
+        public virtual void UpdateNode(float nDeltaTime) { }
+        public virtual void FinishNode() { }
+
         public void SyncRuntimeData(string data)
         {
 
