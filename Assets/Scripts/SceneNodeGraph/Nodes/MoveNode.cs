@@ -4,17 +4,37 @@ using UnityEngine;
 
 namespace SceneNodeGraph
 {
-    public class PrintNodeData : BaseNodeData
+    public class MoveNodeData : BaseNodeData
     {
-        public string sContext;
-        public bool bIsError;
+        public Vector3 vTargetPos;
+        public float nSpeed;
     }
 
-    public class CltPrintNode : CltRuntimeNode
+    public class CltMoveNode : CltRuntimeNode
     {
-        public PrintNodeData nodeData;
+        public MoveNodeData nodeData;
 
         public override void StartNode()
+        {
+
+        }
+
+        public override void UpdateNode(float nDeltaTime)
+        {
+
+        }
+    }
+
+    public class SvrMoveNode : SvrRuntimeNode
+    {
+        public MoveNodeData nodeData;
+
+        public override void StartNode()
+        {
+
+        }
+
+        public override void UpdateNode(float nDeltaTime)
         {
 
         }
