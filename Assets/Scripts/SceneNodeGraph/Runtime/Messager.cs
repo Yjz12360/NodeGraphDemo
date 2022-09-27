@@ -11,19 +11,14 @@ namespace SceneNodeGraph
         public static CltNodeGraph cltNodeGraph = CltNodeGraph.instance;
         public static SvrNodeGraph svrNodeGraph = SvrNodeGraph.instance;
 
-        public delegate void MessageHandle();
-        public static void DoNextFrame(MessageHandle handle)
+        public static void S2CFinishNode(string sNodeId, int nPath)
         {
-            Task t = Task.Run(async delegate
-            {
-                await Task.Delay(1);
-                handle();
-            });
+            cltNodeGraph.OnS2CFinishNode(sNodeId, nPath);
         }
 
-        public static void S2CFinishNode(string sNodeId)
-        {
-            DoNextFrame(() => { cltNodeGraph.RecvFinishNode(sNodeId); });
-        }
+        //public static void C2SFinishNode(string sNodeId, int nPath)
+        //{
+        //    svrNodeGraph.OnC2SFinishNode(sNodeId, nPath);
+        //}
     }
 }

@@ -6,14 +6,9 @@ using System.Reflection;
 
 namespace SceneNodeGraph
 {
-    public enum NodeType
-    {
-        Print = 1,
-        Move = 2,
-    }
-
     public class BaseNodeData
     {
+        public static NodeType nNodeType = 0;
         public string sNodeId;
 
         public static Type GetSubHitDataType(NodeType nodeType)

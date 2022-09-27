@@ -9,8 +9,8 @@ namespace SceneNodeGraph
 
     public class SvrNodeGraph
     {
-        private static SvrNodeGraph _instance = new SvrNodeGraph();
-        public static SvrNodeGraph instance { get { return _instance; } }
+        private static SvrNodeGraph sInstance = new SvrNodeGraph();
+        public static SvrNodeGraph instance { get { return sInstance; } }
 
         public NodeGraphData nodeGraphData;
         NodeGraphState nCurrState = NodeGraphState.Pending;
@@ -42,7 +42,8 @@ namespace SceneNodeGraph
                     Type runtimeNodeType = RegRuntimeNodeTypes.tCltTypes[nodeType];
                     SvrRuntimeNode nodeInstance = (SvrRuntimeNode)Activator.CreateInstance(runtimeNodeType);
                     nodeInstance.nodeGraph = this;
-                    nodeInstance.nodeData = pair.Value;
+                    nodeInstance.baseNodeData = pair.Value;
+                    nodeInstance.sNodeId = pair.Key;
                     tRuntimeNodeMap[pair.Key] = nodeInstance;
                 }
             }
@@ -70,7 +71,10 @@ namespace SceneNodeGraph
                 SvrRuntimeNode node = tRuntimeNodeMap[sNodeId];
                 node.StartNode();
             }
-
+            else
+            {
+                FinishNode(sNodeId);
+            }
         }
 
         public void UpdateNodes(float nDeltaTime)
@@ -96,7 +100,7 @@ namespace SceneNodeGraph
             }
         }
 
-        public void FinishNode(string sNodeId, int nPath)
+        public void FinishNode(string sNodeId, int nPath = 1)
         {
             if (nodeGraphData == null)
             {
@@ -121,6 +125,15 @@ namespace SceneNodeGraph
         public bool IsFinished()
         {
             return nCurrState == NodeGraphState.Finished;
+        }
+
+        public void OnC2SFinishNode(string sNodeId, int nPath)
+        {
+            if (nCurrState != NodeGraphState.Running) return;
+            if (!tRuntimeNodeMap.ContainsKey(sNodeId)) return;
+            if (!tRunningNodes.Contains(sNodeId)) return;
+            SvrRuntimeNode node = tRuntimeNodeMap[sNodeId];
+            node.FinishNode(nPath);
         }
     }
 }

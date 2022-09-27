@@ -6,15 +6,24 @@ namespace SceneNodeGraph
 {
     public class PrintNodeData : BaseNodeData
     {
+        public static new NodeType nNodeType = NodeType.Print;
+
         public string sContext;
         public bool bIsError;
     }
 
     public class CltPrintNode : CltRuntimeNode
     {
+        public PrintNodeData NodeData { get { return (PrintNodeData)baseNodeData; } }
+
         public override void StartNode()
         {
-
+            string sContext = NodeData.sContext;
+            if (NodeData.bIsError)
+                Debug.LogError(sContext);
+            else
+                Debug.Log(sContext);
+            FinishNode();
         }
     }
 }

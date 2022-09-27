@@ -15,8 +15,8 @@ namespace SceneNodeGraph
 
     public class CltNodeGraph
     {
-        private static CltNodeGraph _instance = new CltNodeGraph();
-        public static CltNodeGraph instance { get { return _instance; } }
+        private static CltNodeGraph sInstance = new CltNodeGraph();
+        public static CltNodeGraph instance { get { return sInstance; } }
 
         public NodeGraphData nodeGraphData;
         NodeGraphState nCurrState = NodeGraphState.Pending;
@@ -48,7 +48,8 @@ namespace SceneNodeGraph
                     Type runtimeNodeType = RegRuntimeNodeTypes.tCltTypes[nodeType];
                     CltRuntimeNode nodeInstance = (CltRuntimeNode)Activator.CreateInstance(runtimeNodeType);
                     nodeInstance.nodeGraph = this;
-                    nodeInstance.nodeData = pair.Value;
+                    nodeInstance.baseNodeData = pair.Value;
+                    nodeInstance.sNodeId = pair.Key;
                     tRuntimeNodeMap[pair.Key] = nodeInstance;
                 }
             }
@@ -128,9 +129,13 @@ namespace SceneNodeGraph
             return nCurrState == NodeGraphState.Finished;
         }
 
-        public void RecvFinishNode(string sNodeId)
+        public void OnS2CFinishNode(string sNodeId, int nPath)
         {
-
+            if (nCurrState != NodeGraphState.Running) return;
+            if (!tRuntimeNodeMap.ContainsKey(sNodeId)) return;
+            if (!tRunningNodes.Contains(sNodeId)) return;
+            CltRuntimeNode node = tRuntimeNodeMap[sNodeId];
+            node.FinishNode(nPath);
         }
     }
 }
