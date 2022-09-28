@@ -6,7 +6,7 @@ namespace SceneNodeGraph
 {
     public class PrintNodeData : BaseNodeData
     {
-        public static new NodeType nNodeType = NodeType.Print;
+        public override NodeType GetNodeType() { return NodeType.Print; }
 
         public string sContext;
         public bool bIsError;

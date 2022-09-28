@@ -8,12 +8,16 @@ namespace SceneNodeGraph
 {
     public class BaseNodeData
     {
-        public static NodeType nNodeType = 0;
         public string sNodeId;
 
-        public static Type GetSubHitDataType(NodeType nodeType)
+        public virtual NodeType GetNodeType()
         {
-            string subTypeName = $"{nodeType}Node";
+            return 0;
+        }
+
+        public static Type GetType(NodeType nodeType)
+        {
+            string subTypeName = $"{nodeType}NodeData";
             Type type = typeof(BaseNodeData);
             foreach (Type subType in type.Assembly.GetTypes())
                 if (subType.IsSubclassOf(type) && subType.Name.Equals(subTypeName))

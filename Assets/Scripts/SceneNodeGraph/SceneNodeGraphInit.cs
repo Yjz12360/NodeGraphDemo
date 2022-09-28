@@ -9,7 +9,7 @@ namespace SceneNodeGraph
         // Start is called before the first frame update
         void Awake()
         {
-            RegRuntimeNodeTypes.Initialize();
+            //RegRuntimeNodeTypes.Initialize();
         }
     }
 }

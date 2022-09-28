@@ -8,17 +8,11 @@ namespace SceneNodeGraph
 {
     public class Messager
     {
-        public static CltNodeGraph cltNodeGraph = CltNodeGraph.instance;
-        public static SvrNodeGraph svrNodeGraph = SvrNodeGraph.instance;
-
-        public static void S2CFinishNode(string sNodeId, int nPath)
+        public static void S2CFinishNode(int nGraphNodeId, string sNodeId, int nPath)
         {
+            CltNodeGraph cltNodeGraph = CltNodeGraphManager.GetNodeGraph(nGraphNodeId);
+            if (cltNodeGraph == null) return;
             cltNodeGraph.OnS2CFinishNode(sNodeId, nPath);
         }
-
-        //public static void C2SFinishNode(string sNodeId, int nPath)
-        //{
-        //    svrNodeGraph.OnC2SFinishNode(sNodeId, nPath);
-        //}
     }
 }

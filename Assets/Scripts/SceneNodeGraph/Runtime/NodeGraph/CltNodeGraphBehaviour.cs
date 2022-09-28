@@ -6,10 +6,11 @@ namespace SceneNodeGraph
 {
     public class CltNodeGraphBehaviour : MonoBehaviour
     {
-        private CltNodeGraph nodeGraph = CltNodeGraph.instance;
-
+        public int nNodeGraphId;
+        private CltNodeGraph nodeGraph;
         private void Start()
         {
+            nodeGraph = CltNodeGraphManager.GetNodeGraph(nNodeGraphId);
             if (nodeGraph == null) return;
             nodeGraph.StartGraph();
         }

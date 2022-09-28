@@ -9,14 +9,18 @@ namespace SceneNodeGraph
 
     public class SvrNodeGraph
     {
-        private static SvrNodeGraph sInstance = new SvrNodeGraph();
-        public static SvrNodeGraph instance { get { return sInstance; } }
-
         public NodeGraphData nodeGraphData;
         NodeGraphState nCurrState = NodeGraphState.Pending;
 
         public Dictionary<string, SvrRuntimeNode> tRuntimeNodeMap = new Dictionary<string, SvrRuntimeNode>();
         public List<string> tRunningNodes;
+
+        private int nNodeGraphId;
+        public SvrNodeGraph()
+        {
+            nNodeGraphId = SvrNodeGraphManager.Register(this);
+        }
+
         public void StartGraph()
         {
             if (nodeGraphData == null)
@@ -100,7 +104,7 @@ namespace SceneNodeGraph
             }
         }
 
-        public void FinishNode(string sNodeId, int nPath = 1)
+        public void FinishNode(string sNodeId, int nPath = 1, bool bSync = false)
         {
             if (nodeGraphData == null)
             {
@@ -120,6 +124,8 @@ namespace SceneNodeGraph
                     }
                 }
             }
+            if (bSync)
+                Messager.S2CFinishNode(nNodeGraphId, sNodeId, nPath);
         }
 
         public bool IsFinished()

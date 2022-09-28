@@ -57,9 +57,9 @@ namespace SceneNodeGraph
         {
             OnFinishNode();
             if (nodeGraph != null)
-                nodeGraph.FinishNode(sNodeId, nPath);
-            if (bSyncFinishNode)
-                Messager.S2CFinishNode(sNodeId, nPath);
+                nodeGraph.FinishNode(sNodeId, nPath, bSyncFinishNode);
+            //if (bSyncFinishNode)
+                //Messager.S2CFinishNode(sNodeId, nPath);
         }
 
     }

@@ -15,9 +15,6 @@ namespace SceneNodeGraph
 
     public class CltNodeGraph
     {
-        private static CltNodeGraph sInstance = new CltNodeGraph();
-        public static CltNodeGraph instance { get { return sInstance; } }
-
         public NodeGraphData nodeGraphData;
         NodeGraphState nCurrState = NodeGraphState.Pending;
 

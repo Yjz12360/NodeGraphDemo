@@ -6,10 +6,12 @@ namespace SceneNodeGraph
 {
     public class SvrNodeGraphBehaviour : MonoBehaviour
     {
-        private SvrNodeGraph nodeGraph = SvrNodeGraph.instance;
+        public int nNodeGraphId;
+        private SvrNodeGraph nodeGraph;
 
         private void Start()
         {
+            nodeGraph = SvrNodeGraphManager.GetNodeGraph(nNodeGraphId);
             if (nodeGraph == null) return;
             nodeGraph.StartGraph();
         }

@@ -6,7 +6,7 @@ namespace SceneNodeGraph
 {
     public class MoveNodeData : BaseNodeData
     {
-        public static new NodeType nNodeType = NodeType.Move;
+        public override NodeType GetNodeType() { return NodeType.Move; }
 
         public int nObjectId;
         public Vector3 vTargetPos;
