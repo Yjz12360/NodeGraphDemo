@@ -8,9 +8,9 @@ using System.Reflection;
 
 namespace SceneNodeGraph
 {
-    public class SceneNodeGraphConverter : JsonConverter
+    public class NodeGraphConverter : JsonConverter
     {
-        public static SceneNodeGraphConverter converter = new SceneNodeGraphConverter();
+        public static NodeGraphConverter converter = new NodeGraphConverter();
         public override bool CanConvert(Type objectType)
         {
             return objectType == typeof(NodeGraphData) || objectType.IsSubclassOf(typeof(NodeGraphData)); ;
@@ -59,8 +59,6 @@ namespace SceneNodeGraph
 
             writer.WritePropertyName("tTransitions");
             writer.WriteStartObject();
-            //writer.WriteStartArray();
-            //foreach(NodeTransitionData transition in nodeGraphData.tTransitions)
             for(int i = 0; i < nodeGraphData.tTransitions.Count; ++i)
             {
                 NodeTransitionData transition = nodeGraphData.tTransitions[i];
@@ -74,7 +72,6 @@ namespace SceneNodeGraph
                 writer.WriteValue(transition.nPath);
                 writer.WriteEndObject();
             }
-            //writer.WriteEndArray();
             writer.WriteEndObject();
 
             writer.WritePropertyName("sStartNodeId");
@@ -127,20 +124,6 @@ namespace SceneNodeGraph
 
             if (jsonObject.TryGetValue("sStartNodeId", out _))
                 nodeGraphData.sStartNodeId = jsonObject["sStartNodeId"].Value<string>();
-
-            //var obj = JObject.Load(reader);
-
-            //NodeGraphData nodeGraphData = new NodeGraphData();
-
-            //JToken nodeMapToken;
-            //if (obj.TryGetValue("tNodeMap", out nodeMapToken))
-            //{
-            //    nodeMapToken
-            //}
-
-            //if (obj.TryGetValue("sStartNodeId", out _))
-            //    nodeGraphData.sStartNodeId = obj["sStartNodeId"].Value<string>();
-
 
             return nodeGraphData;
         }

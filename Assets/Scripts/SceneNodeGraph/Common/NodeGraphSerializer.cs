@@ -1,13 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
-using System.Linq;
+﻿
 using System.Text;
-using System.Runtime.Serialization.Json;
 using System.IO;
-using UnityEditor;
 using Newtonsoft.Json;
+using UnityEngine;
+using UnityEditor;
 
 namespace SceneNodeGraph
 {
@@ -46,35 +42,44 @@ namespace SceneNodeGraph
 
             nodeGraph.SetStartNode(startNode);
 
-            Save(nodeGraph, "test.txt");
+            Save(nodeGraph, "test.json");
         }
 
         [MenuItem("Test/读取节点图")]
         public static void TestLoad()
         {
-            NodeGraphData nodeGraphData = Load("test.txt");
-            Save(nodeGraphData, "test2.txt");
+            NodeGraphData nodeGraphData = Load("test.json");
+            Save(nodeGraphData, "test2.json");
         }
 
-        public static void Save(NodeGraphData nodeGraph, string sFileName)
+        public static void SavePath(NodeGraphData nodeGraph, string sPath)
         {
-            string sContext = JsonConvert.SerializeObject(nodeGraph, Formatting.Indented, SceneNodeGraphConverter.converter);
-            string sPath = sDataPath + sFileName;
+            string sContext = JsonConvert.SerializeObject(nodeGraph, Formatting.Indented, NodeGraphConverter.converter);
             FileStream f = new FileStream(sPath, FileMode.OpenOrCreate, FileAccess.Write);
             byte[] bytes = new UTF8Encoding(true).GetBytes(sContext);
             f.Write(bytes, 0, bytes.Length);
             f.Close();
         }
-
-        public static NodeGraphData Load(string sFileName)
+        public static void Save(NodeGraphData nodeGraph, string sFileName)
         {
             string sPath = sDataPath + sFileName;
+            SavePath(nodeGraph, sPath);
+        }
+
+        public static NodeGraphData LoadPath(string sPath)
+        {
             FileStream f = new FileStream(sPath, FileMode.Open, FileAccess.Read);
             byte[] bytes = new byte[f.Length];
             f.Read(bytes, 0, (int)f.Length);
             string sContext = Encoding.UTF8.GetString(bytes, 0, (int)f.Length);
-            NodeGraphData nodeGraphData = JsonConvert.DeserializeObject<NodeGraphData>(sContext, SceneNodeGraphConverter.converter);
+            NodeGraphData nodeGraphData = JsonConvert.DeserializeObject<NodeGraphData>(sContext, NodeGraphConverter.converter);
             return nodeGraphData;
+        }
+
+        public static NodeGraphData Load(string sFileName)
+        {
+            string sPath = sDataPath + sFileName;
+            return LoadPath(sPath);
         }
 
     }
