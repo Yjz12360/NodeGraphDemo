@@ -1,0 +1,43 @@
+{
+  "tNodeMap": {
+    "1": {
+      "nNodeType": 0,
+      "sNodeId": "1"
+    },
+    "2": {
+      "nNodeType": 1,
+      "sContext": "Print 1",
+      "bIsError": false,
+      "sNodeId": "2"
+    },
+    "3": {
+      "nNodeType": 3,
+      "nDelayTime": 1.0,
+      "sNodeId": "3"
+    },
+    "4": {
+      "nNodeType": 1,
+      "sContext": "Print 2",
+      "bIsError": false,
+      "sNodeId": "4"
+    }
+  },
+  "tTransitions": {
+    "0": {
+      "sFromNodeId": "1",
+      "sToNodeId": "2",
+      "nPath": 1
+    },
+    "1": {
+      "sFromNodeId": "2",
+      "sToNodeId": "3",
+      "nPath": 1
+    },
+    "2": {
+      "sFromNodeId": "3",
+      "sToNodeId": "4",
+      "nPath": 1
+    }
+  },
+  "sStartNodeId": "1"
+}

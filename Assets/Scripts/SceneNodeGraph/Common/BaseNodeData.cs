@@ -15,6 +15,14 @@ namespace SceneNodeGraph
             return 0;
         }
 
+        public Type Type
+        {
+            get
+            {
+                return GetType(GetNodeType());
+            }
+        }
+
         public static Type GetType(NodeType nodeType)
         {
             string subTypeName = $"{nodeType}NodeData";

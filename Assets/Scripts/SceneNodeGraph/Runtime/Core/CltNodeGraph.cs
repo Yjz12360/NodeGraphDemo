@@ -15,6 +15,7 @@ namespace SceneNodeGraph
 
     public class CltNodeGraph
     {
+        public int nNodeGraphId;
         public NodeGraphData nodeGraphData;
         NodeGraphState nCurrState = NodeGraphState.Pending;
 
@@ -126,7 +127,13 @@ namespace SceneNodeGraph
             return nCurrState == NodeGraphState.Finished;
         }
 
-        public void OnS2CFinishNode(string sNodeId, int nPath)
+        public void OnSyncFinishGraph()
+        {
+            tRunningNodes.Clear();
+            nCurrState = NodeGraphState.Finished;
+        }
+
+        public void OnSyncFinishNode(string sNodeId, int nPath)
         {
             if (nCurrState != NodeGraphState.Running) return;
             if (!tRuntimeNodeMap.ContainsKey(sNodeId)) return;

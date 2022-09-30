@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEditor;
+using System.Reflection;
 
 namespace SceneNodeGraph
 {
@@ -70,30 +71,76 @@ namespace SceneNodeGraph
                     }
                     if (GUILayout.Button("保存配置文件"))
                     {
-                        if(string.IsNullOrEmpty(sSearchPath))
+                        if (nodeGraphEditor != null)
                         {
-                            sSearchPath = EditorUtility.SaveFilePanel("选择保存文件", sFolder, "New Graph", "json");
+                            if (string.IsNullOrEmpty(sSearchPath))
+                            {
+                                sSearchPath = EditorUtility.SaveFilePanel("选择保存文件", sFolder, "New Graph", "json");
+                            }
+                            NodeGraphData nodeGraphData = nodeGraphEditor.GetNodeGraphData();
+                            SceneNodeGraphSerializer.SavePath(nodeGraphData, sSearchPath);
                         }
+                        else
+                            EditorUtility.DisplayDialog("提示", "没有配置文件", "确定");
+                    }
+
+                    if(nodeGraphEditor != null)
+                    {
+                        EditorGUILayout.LabelField("");
+                        EditorGUILayout.LabelField($"当前选中节点： {sSelectNode}");
+                        nAddNodeType = (NodeType)EditorGUILayout.EnumPopup("选择添加节点类型", nAddNodeType);
+                        if (GUILayout.Button("添加子节点"))
+                        {
+                            nodeGraphEditor.AddNode(sSelectNode, nAddNodeType);
+                        }
+                        EditorGUI.BeginDisabledGroup(true);
+                        if (GUILayout.Button("删除节点"))
+                        {
+                            nodeGraphEditor.RemoveNode(sSelectNode);
+                        }
+                        EditorGUI.EndDisabledGroup();
+
+                        EditorGUILayout.LabelField("");
+                        EditorGUILayout.LabelField("节点属性配置");
                         NodeGraphData nodeGraphData = nodeGraphEditor.GetNodeGraphData();
-                        SceneNodeGraphSerializer.SavePath(nodeGraphData, sSearchPath);
+                        BaseNodeData nodeData = nodeGraphData.GetNodeData(sSelectNode);
+                        if(nodeData != null)
+                        {
+                            Type type = nodeData.Type;
+                            if (type != null)
+                            {
+                                FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+                                foreach (FieldInfo fieldInfo in fieldInfos)
+                                {
+                                    if (fieldInfo.Name == "sNodeId") continue;
+                                    Type fieldType = fieldInfo.FieldType;
+                                    if (fieldType == typeof(int))
+                                    {
+                                        int nOldValue = (int)fieldInfo.GetValue(nodeData);
+                                        int nNewValue = EditorGUILayout.IntField(fieldInfo.Name, nOldValue);
+                                        if (nNewValue != nOldValue)
+                                            fieldInfo.SetValue(nodeData, nNewValue);
+                                    }
+                                    else if (fieldType == typeof(float))
+                                    {
+                                        float nOldValue = (float)fieldInfo.GetValue(nodeData);
+                                        float nNewValue = EditorGUILayout.FloatField(fieldInfo.Name, nOldValue);
+                                        if (nNewValue != nOldValue)
+                                            fieldInfo.SetValue(nodeData, nNewValue);
+                                    }
+                                    else if (fieldType == typeof(string))
+                                    {
+                                        string sOldValue = (string)fieldInfo.GetValue(nodeData);
+                                        if (sOldValue == null) sOldValue = "";
+                                        string sNewValue = EditorGUILayout.TextField(fieldInfo.Name, sOldValue);
+                                        if (!sNewValue.Equals(sOldValue))
+                                            fieldInfo.SetValue(nodeData, sNewValue);
+                                    }
+                                }
+                            }
+                        }
                     }
-                    EditorGUILayout.LabelField("");
-                    EditorGUILayout.LabelField($"当前选中节点： {sSelectNode}");
-                    nAddNodeType = (NodeType)EditorGUILayout.EnumPopup("选择添加节点类型", nAddNodeType);
-                    if(GUILayout.Button("添加子节点"))
-                    {
-                        nodeGraphEditor.AddNode(sSelectNode, nAddNodeType);
-                        //Type type = BaseNodeData.GetType(nAddNodeType);
-                        //if (type == null)
-                        //    type = typeof(BaseNodeData);
-                        //BaseNodeData nodeData = (BaseNodeData)Activator.CreateInstance(type);
-                        //for(int i = 1; i < 100; ++i)
-                        //    if()
-                    }
-                    if(GUILayout.Button("删除节点"))
-                    {
-                        nodeGraphEditor.RemoveNode(sSelectNode);
-                    }
+ 
                 }
                 if (nodeGraphEditor != null)
                     nodeGraphEditor.Draw();

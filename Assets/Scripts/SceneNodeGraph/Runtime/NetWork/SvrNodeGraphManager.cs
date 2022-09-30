@@ -10,11 +10,22 @@ namespace SceneNodeGraph
 
         private static int nCurrId = 0;
 
-        public static int Register(SvrNodeGraph nodeGraph)
+        public static SvrNodeGraph AddNodeGraph(string sConfigFile)
         {
+            SvrNodeGraph svrNodeGraph = new SvrNodeGraph();
             nCurrId++;
-            nodeGraphs[nCurrId] = nodeGraph;
-            return nCurrId;
+            svrNodeGraph.nNodeGraphId = nCurrId;
+            svrNodeGraph.nodeGraphData = SceneNodeGraphSerializer.Load(sConfigFile);
+            nodeGraphs[nCurrId] = svrNodeGraph;
+            return svrNodeGraph;
+            
+        }
+
+        public static void RemoveNodeGraph(int nId)
+        {
+            if (!nodeGraphs.ContainsKey(nId))
+                return;
+            nodeGraphs.Remove(nId);
         }
 
         public static SvrNodeGraph GetNodeGraph(int nId)

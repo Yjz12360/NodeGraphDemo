@@ -9,17 +9,13 @@ namespace SceneNodeGraph
 
     public class SvrNodeGraph
     {
+        public int nNodeGraphId;
         public NodeGraphData nodeGraphData;
-        NodeGraphState nCurrState = NodeGraphState.Pending;
 
+        NodeGraphState nCurrState = NodeGraphState.Pending;
         public Dictionary<string, SvrRuntimeNode> tRuntimeNodeMap = new Dictionary<string, SvrRuntimeNode>();
         public List<string> tRunningNodes;
 
-        private int nNodeGraphId;
-        public SvrNodeGraph()
-        {
-            nNodeGraphId = SvrNodeGraphManager.Register(this);
-        }
 
         public void StartGraph()
         {

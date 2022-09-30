@@ -42,6 +42,13 @@ namespace SceneNodeGraph
             sStartNodeId = node.sNodeId;
         }
 
+        public BaseNodeData GetNodeData(string sNodeId)
+        {
+            if (!tNodeMap.ContainsKey(sNodeId))
+                return null;
+            return tNodeMap[sNodeId];
+        }
+
         public void AddTransition(string sFromNodeId, string sToNodeId, int nPath = 1)
         {
             if (!tNodeMap.ContainsKey(sFromNodeId))
