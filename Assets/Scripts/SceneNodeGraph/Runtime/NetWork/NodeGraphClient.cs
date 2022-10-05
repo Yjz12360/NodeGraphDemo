@@ -36,16 +36,20 @@ namespace SceneNodeGraph
 
         private void Update()
         {
+            List<int> tRemoveList = new List<int>();
             foreach(var pair in nodeGraphs)
             {
                 CltNodeGraph nodeGraph = pair.Value;
                 nodeGraph.UpdateNodes(Time.deltaTime);
                 if(nodeGraph.IsFinished())
                 {
-                    int nNodeGraphId = pair.Key;
-                    nodeGraphs.Remove(nNodeGraphId);
-                    CltNodeGraphManager.RemoveNodeGraph(nNodeGraphId);
+                    tRemoveList.Add(pair.Key);
                 }
+            }
+            foreach(int nNodeGraphId in tRemoveList)
+            {
+                nodeGraphs.Remove(nNodeGraphId);
+                CltNodeGraphManager.RemoveNodeGraph(nNodeGraphId);
             }
         }
 

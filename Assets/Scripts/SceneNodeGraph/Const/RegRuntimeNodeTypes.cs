@@ -32,6 +32,7 @@ namespace SceneNodeGraph
 
         public static Dictionary<NodeType, Type> tCltTypes = new Dictionary<NodeType, Type>
         {
+            {NodeType.Start, typeof(CltStartNode) },
             {NodeType.Print, typeof(CltPrintNode) },
             {NodeType.Move, typeof(CltMoveNode) },
             {NodeType.Delay, typeof(CltDelayNode) },
@@ -39,6 +40,7 @@ namespace SceneNodeGraph
 
         public static Dictionary<NodeType, Type> tSvrTypes = new Dictionary<NodeType, Type>
         {
+            {NodeType.Start, typeof(SvrStartNode) },
             {NodeType.Move, typeof(SvrMoveNode) },
             {NodeType.Delay, typeof(SvrDelayNode) },
         };

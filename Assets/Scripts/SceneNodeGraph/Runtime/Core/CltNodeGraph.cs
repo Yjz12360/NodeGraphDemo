@@ -20,7 +20,7 @@ namespace SceneNodeGraph
         NodeGraphState nCurrState = NodeGraphState.Pending;
 
         public Dictionary<string, CltRuntimeNode> tRuntimeNodeMap = new Dictionary<string, CltRuntimeNode>();
-        public List<string> tRunningNodes;
+        public List<string> tRunningNodes = new List<string>();
         public void StartGraph()
         {
             if (nodeGraphData == null)

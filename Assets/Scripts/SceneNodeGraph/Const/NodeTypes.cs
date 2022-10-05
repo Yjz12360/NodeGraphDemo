@@ -8,6 +8,7 @@ namespace SceneNodeGraph
 {
     public enum NodeType
     {
+        Start = 0,
         Print = 1,
         Move = 2,
         Delay = 3,

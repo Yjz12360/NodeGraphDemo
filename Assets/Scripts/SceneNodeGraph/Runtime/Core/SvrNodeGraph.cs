@@ -14,7 +14,7 @@ namespace SceneNodeGraph
 
         NodeGraphState nCurrState = NodeGraphState.Pending;
         public Dictionary<string, SvrRuntimeNode> tRuntimeNodeMap = new Dictionary<string, SvrRuntimeNode>();
-        public List<string> tRunningNodes;
+        public List<string> tRunningNodes = new List<string>();
 
 
         public void StartGraph()
@@ -39,7 +39,7 @@ namespace SceneNodeGraph
                     NodeType nodeType = BaseNodeData.GetNodeType(nodeDataType);
                     if (!RegRuntimeNodeTypes.tSvrTypes.ContainsKey(nodeType))
                         continue;
-                    Type runtimeNodeType = RegRuntimeNodeTypes.tCltTypes[nodeType];
+                    Type runtimeNodeType = RegRuntimeNodeTypes.tSvrTypes[nodeType];
                     SvrRuntimeNode nodeInstance = (SvrRuntimeNode)Activator.CreateInstance(runtimeNodeType);
                     nodeInstance.nodeGraph = this;
                     nodeInstance.baseNodeData = pair.Value;
@@ -58,11 +58,13 @@ namespace SceneNodeGraph
             if (nodeGraphData == null)
             {
                 Debug.LogError($"TriggerNode Error: nodeGraphData not exist.");
+                FinishNode(sNodeId);
                 return;
             }
             if (!tRuntimeNodeMap.ContainsKey(sNodeId))
             {
-                Debug.LogError($"TriggerNode error: sNodeId {sNodeId} not exist.");
+                //Debug.LogError($"TriggerNode error: sNodeId {sNodeId} not exist.");
+                FinishNode(sNodeId);
                 return;
             }
             tRunningNodes.Add(sNodeId);

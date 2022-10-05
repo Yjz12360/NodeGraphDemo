@@ -20,7 +20,7 @@ namespace SceneNodeGraph
         }
         public void OnTrigger(Collider collider)
         {
-            Messager.C2STriggerNodeGraph(nodeConfigFile.name);
+            Messager.C2STriggerNodeGraph($"{nodeConfigFile.name}.json");
         }
 
         public void Destroy()

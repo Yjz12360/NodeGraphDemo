@@ -13,6 +13,7 @@ namespace SceneNodeGraph
 
         private void OnTriggerEnter(Collider collider)
         {
+            Debug.LogError($"test trigger {collider.name}");
             if (sourceTrigger == null) return;
             if (bTriggered) return;
             if(collider.gameObject.GetComponent<Game.PlayerTriggerSign>() != null)

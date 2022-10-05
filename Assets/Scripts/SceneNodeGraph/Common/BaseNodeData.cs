@@ -36,7 +36,8 @@ namespace SceneNodeGraph
 
         public static NodeType GetNodeType(Type subType)
         {
-            string enumName = subType.Name.Replace("Node", "");
+            if (subType == typeof(BaseNodeData)) return NodeType.Start;
+            string enumName = subType.Name.Replace("NodeData", "");
             return (NodeType)Enum.Parse(typeof(NodeType), enumName);
         }
     }
