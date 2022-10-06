@@ -43,6 +43,8 @@ namespace SceneNodeGraph
             {NodeType.Start, typeof(SvrStartNode) },
             {NodeType.Move, typeof(SvrMoveNode) },
             {NodeType.Delay, typeof(SvrDelayNode) },
+            {NodeType.AddMonster, typeof(SvrAddMonsterNode) },
+            {NodeType.HasMonster, typeof(SvrHasMonsterNode) },
         };
     }
 }

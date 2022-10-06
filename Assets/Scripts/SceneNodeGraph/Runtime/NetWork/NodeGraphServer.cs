@@ -6,19 +6,27 @@ namespace SceneNodeGraph
 {
     public class NodeGraphServer : MonoBehaviour
     {
-        public List<SvrNodeGraph> nodeGraphs = new List<SvrNodeGraph>();
-
+        public TextAsset initConfigFile;
+        private List<SvrNodeGraph> nodeGraphs = new List<SvrNodeGraph>();
+        private Game.SvrGame game;
+        public void Start()
+        {
+            game = gameObject.GetComponent<Game.SvrGame>();
+            if (initConfigFile != null)
+                OnTriggerNodeGraph($"{initConfigFile.name}.json");
+        }
         public void OnTriggerNodeGraph(string sConfigFile)
         {
             SvrNodeGraph nodeGraph = SvrNodeGraphManager.AddNodeGraph(sConfigFile);
+            nodeGraph.game = game;
             nodeGraph.StartGraph();
             nodeGraphs.Add(nodeGraph);
-            Messager.S2CActivateNodeGraph(nodeGraph.nNodeGraphId, sConfigFile);
+            NodeGraphMessager.S2CActivateNodeGraph(nodeGraph.nNodeGraphId, sConfigFile);
         }
 
         public void Update()
-        {
-            for(int i = nodeGraphs.Count - 1; i >= 0; --i)
+        {            
+            for (int i = nodeGraphs.Count - 1; i >= 0; --i)
             {
                 SvrNodeGraph nodeGraph = nodeGraphs[i];
                 nodeGraph.UpdateNodes(Time.deltaTime);
@@ -26,27 +34,10 @@ namespace SceneNodeGraph
                 {
                     nodeGraphs.Remove(nodeGraph);
                     SvrNodeGraphManager.RemoveNodeGraph(nodeGraph.nNodeGraphId);
-                    Messager.S2CFinishNodeGraph(nodeGraph.nNodeGraphId);
+                    NodeGraphMessager.S2CFinishNodeGraph(nodeGraph.nNodeGraphId);
                 }   
             }
         }
-
-        //public int nNodeGraphId;
-        //private SvrNodeGraph nodeGraph;
-
-        //private void Start()
-        //{
-        //    nodeGraph = SvrNodeGraphManager.GetNodeGraph(nNodeGraphId);
-        //    if (nodeGraph == null) return;
-        //    nodeGraph.StartGraph();
-        //}
-
-        //private void Update()
-        //{
-        //    if (nodeGraph == null) return;
-        //    if (!nodeGraph.IsFinished())
-        //        nodeGraph.UpdateNodes(Time.deltaTime);
-        //}
     }
 }
 

@@ -12,5 +12,7 @@ namespace SceneNodeGraph
         Print = 1,
         Move = 2,
         Delay = 3,
+        AddMonster = 4,
+        HasMonster = 5,
     }
 }

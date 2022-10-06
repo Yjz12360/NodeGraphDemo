@@ -18,6 +18,7 @@ namespace SceneNodeGraph
 
         private string sSelectNode = "";
         private NodeType nAddNodeType = NodeType.Print;
+        private int nAddNodePath = 1;
 
         [MenuItem("节点图编辑器/打开")]
         static void Init()
@@ -89,9 +90,10 @@ namespace SceneNodeGraph
                         EditorGUILayout.LabelField("");
                         EditorGUILayout.LabelField($"当前选中节点： {sSelectNode}");
                         nAddNodeType = (NodeType)EditorGUILayout.EnumPopup("选择添加节点类型", nAddNodeType);
+                        nAddNodePath = EditorGUILayout.IntField("路径编号", nAddNodePath);
                         if (GUILayout.Button("添加子节点"))
                         {
-                            nodeGraphEditor.AddNode(sSelectNode, nAddNodeType);
+                            nodeGraphEditor.AddNode(sSelectNode, nAddNodeType, nAddNodePath);
                         }
                         EditorGUI.BeginDisabledGroup(true);
                         if (GUILayout.Button("删除节点"))
@@ -135,6 +137,13 @@ namespace SceneNodeGraph
                                         string sNewValue = EditorGUILayout.TextField(fieldInfo.Name, sOldValue);
                                         if (!sNewValue.Equals(sOldValue))
                                             fieldInfo.SetValue(nodeData, sNewValue);
+                                    }
+                                    else if(fieldType == typeof(bool))
+                                    {
+                                        bool bOldValue = (bool)fieldInfo.GetValue(nodeData);
+                                        bool bNewValue = EditorGUILayout.Toggle(fieldInfo.Name, bOldValue);
+                                        if (bNewValue != bOldValue)
+                                            fieldInfo.SetValue(nodeData, bNewValue);
                                     }
                                 }
                             }

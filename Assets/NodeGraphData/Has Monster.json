@@ -5,19 +5,18 @@
       "sNodeId": "1"
     },
     "2": {
-      "nNodeType": 1,
-      "sContext": "Print 1",
-      "bIsError": true,
+      "nNodeType": 5,
       "sNodeId": "2"
     },
     "3": {
-      "nNodeType": 3,
-      "nDelayTime": 1.0,
+      "nNodeType": 1,
+      "sContext": "Has Monster = true",
+      "bIsError": true,
       "sNodeId": "3"
     },
     "4": {
       "nNodeType": 1,
-      "sContext": "Print 2",
+      "sContext": "HasMonster = false",
       "bIsError": true,
       "sNodeId": "4"
     }
@@ -34,9 +33,9 @@
       "nPath": 1
     },
     "2": {
-      "sFromNodeId": "3",
+      "sFromNodeId": "2",
       "sToNodeId": "4",
-      "nPath": 1
+      "nPath": 2
     }
   },
   "sStartNodeId": "1"

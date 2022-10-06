@@ -17,10 +17,12 @@ namespace SceneNodeGraph
     {
         public int nNodeGraphId;
         public NodeGraphData nodeGraphData;
-        NodeGraphState nCurrState = NodeGraphState.Pending;
+        public Game.CltGame game;
 
+        NodeGraphState nCurrState = NodeGraphState.Pending;
         public Dictionary<string, CltRuntimeNode> tRuntimeNodeMap = new Dictionary<string, CltRuntimeNode>();
         public List<string> tRunningNodes = new List<string>();
+        public List<string> tPendingNodes = new List<string>();
         public void StartGraph()
         {
             if (nodeGraphData == null)
@@ -53,6 +55,7 @@ namespace SceneNodeGraph
             }
 
             tRunningNodes.Clear();
+            tPendingNodes.Clear();
             nCurrState = NodeGraphState.Running;
             TriggerNode(sStartNodeId);
         }
@@ -66,7 +69,7 @@ namespace SceneNodeGraph
             }
             if (!tRuntimeNodeMap.ContainsKey(sNodeId))
             {
-                Debug.LogError($"TriggerNode error: sNodeId {sNodeId} not exist.");
+                //Debug.LogError($"TriggerNode error: sNodeId {sNodeId} not exist.");
                 return;
             }
             tRunningNodes.Add(sNodeId);
@@ -85,6 +88,21 @@ namespace SceneNodeGraph
                 return;
             }
             if (nCurrState != NodeGraphState.Running) return;
+            if(tPendingNodes.Count > 0)
+            {
+                List<string> tCloneNodes = new List<string>();
+                tPendingNodes.ForEach(sNodeId => tCloneNodes.Add(sNodeId));
+                tPendingNodes.Clear();
+                foreach (string sNodeId in tCloneNodes)
+                {
+                    TriggerNode(sNodeId);
+                }
+                //foreach(string sNodeId in tPendingNodes)
+                //{
+                //    TriggerNode(sNodeId);
+                //}
+                //tPendingNodes.Clear();
+            }
             foreach (string sNodeId in tRunningNodes)
             {
                 if (tRuntimeNodeMap.ContainsKey(sNodeId))
@@ -93,9 +111,8 @@ namespace SceneNodeGraph
                     node.UpdateNode(nDeltaTime);
                 }
             }
-            if (tRunningNodes.Count == 0)
+            if (tRunningNodes.Count == 0 && tPendingNodes.Count == 0)
             {
-                tRunningNodes.Clear();
                 nCurrState = NodeGraphState.Finished;
             }
         }
@@ -116,7 +133,8 @@ namespace SceneNodeGraph
                 {
                     if (tNodeMap.ContainsKey(transition.sToNodeId))
                     {
-                        TriggerNode(transition.sToNodeId);
+                        tPendingNodes.Add(transition.sToNodeId);
+                        //TriggerNode(transition.sToNodeId);
                     }
                 }
             }
@@ -136,10 +154,16 @@ namespace SceneNodeGraph
         public void OnSyncFinishNode(string sNodeId, int nPath)
         {
             if (nCurrState != NodeGraphState.Running) return;
-            if (!tRuntimeNodeMap.ContainsKey(sNodeId)) return;
-            if (!tRunningNodes.Contains(sNodeId)) return;
-            CltRuntimeNode node = tRuntimeNodeMap[sNodeId];
-            node.FinishNode(nPath);
+            //if (!tRunningNodes.Contains(sNodeId)) return;
+            if (tRuntimeNodeMap.ContainsKey(sNodeId))
+            {
+                CltRuntimeNode node = tRuntimeNodeMap[sNodeId];
+                node.FinishNode(nPath);
+            }
+            else
+            {
+                FinishNode(sNodeId, nPath);
+            }
         }
     }
 }

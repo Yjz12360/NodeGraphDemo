@@ -11,11 +11,12 @@ namespace SceneNodeGraph
     {
         public int nNodeGraphId;
         public NodeGraphData nodeGraphData;
+        public Game.SvrGame game;
 
         NodeGraphState nCurrState = NodeGraphState.Pending;
         public Dictionary<string, SvrRuntimeNode> tRuntimeNodeMap = new Dictionary<string, SvrRuntimeNode>();
         public List<string> tRunningNodes = new List<string>();
-
+        public List<string> tPendingNodes = new List<string>();
 
         public void StartGraph()
         {
@@ -49,6 +50,7 @@ namespace SceneNodeGraph
             }
 
             tRunningNodes.Clear();
+            tPendingNodes.Clear();
             nCurrState = NodeGraphState.Running;
             TriggerNode(sStartNodeId);
         }
@@ -87,6 +89,16 @@ namespace SceneNodeGraph
                 return;
             }
             if (nCurrState != NodeGraphState.Running) return;
+            if(tPendingNodes.Count > 0)
+            {
+                List<string> tCloneNodes = new List<string>();
+                tPendingNodes.ForEach(sNodeId => tCloneNodes.Add(sNodeId));
+                tPendingNodes.Clear();
+                foreach (string sNodeId in tCloneNodes)
+                {
+                    TriggerNode(sNodeId);
+                }
+            }
             foreach (string sNodeId in tRunningNodes)
             {
                 if (tRuntimeNodeMap.ContainsKey(sNodeId))
@@ -95,14 +107,15 @@ namespace SceneNodeGraph
                     node.UpdateNode(nDeltaTime);
                 }
             }
-            if (tRunningNodes.Count == 0)
+            if (tRunningNodes.Count == 0 && tPendingNodes.Count == 0)
             {
-                tRunningNodes.Clear();
                 nCurrState = NodeGraphState.Finished;
             }
         }
 
-        public void FinishNode(string sNodeId, int nPath = 1, bool bSync = false)
+        public void FinishNode(string sNodeId) { FinishNode(sNodeId, 1); }
+        //public void FinishNode(string sNodeId, int nPath) { FinishNode(sNodeId, nPath, false); }
+        public void FinishNode(string sNodeId, int nPath)
         {
             if (nodeGraphData == null)
             {
@@ -118,12 +131,13 @@ namespace SceneNodeGraph
                 {
                     if (tNodeMap.ContainsKey(transition.sToNodeId))
                     {
-                        TriggerNode(transition.sToNodeId);
+                        tPendingNodes.Add(transition.sToNodeId);
+                        //TriggerNode(transition.sToNodeId);
                     }
                 }
             }
-            if (bSync)
-                Messager.S2CFinishNode(nNodeGraphId, sNodeId, nPath);
+            //if (bSync)
+            //    NodeGraphMessager.S2CFinishNode(nNodeGraphId, sNodeId, nPath);
         }
 
         public bool IsFinished()

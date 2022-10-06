@@ -31,7 +31,7 @@ namespace SceneNodeGraph
 
     public class SvrMoveNode : SvrRuntimeNode
     {
-        public static new bool bSyncFinishNode = true;
+        public override bool SyncFinishNode() { return true; }
 
         public override void StartNode()
         {

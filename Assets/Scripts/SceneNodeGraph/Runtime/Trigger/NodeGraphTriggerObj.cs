@@ -7,16 +7,14 @@ namespace SceneNodeGraph
 {
     public class NodeGraphTriggerObj : MonoBehaviour
     {
-        // Start is called before the first frame update
         public NodeGraphTrigger sourceTrigger;
         public bool bTriggered = false;
 
         private void OnTriggerEnter(Collider collider)
         {
-            Debug.LogError($"test trigger {collider.name}");
             if (sourceTrigger == null) return;
             if (bTriggered) return;
-            if(collider.gameObject.GetComponent<Game.PlayerTriggerSign>() != null)
+            if(collider.gameObject.GetComponent<Game.PlayerCollider>() != null)
             {
                 sourceTrigger.OnTrigger(collider);
             }

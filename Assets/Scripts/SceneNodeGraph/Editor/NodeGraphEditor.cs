@@ -15,6 +15,8 @@ namespace SceneNodeGraph
         private static float nPadding = 20;
         private static float nNodeWidth = 160;
         private static float nNodeHeight = 40;
+        private static float nPathTextWidth = 16;
+        private static float nPathTextHeight = 20;
 
         private static Texture2D backgroundTexture = null;
 
@@ -64,7 +66,7 @@ namespace SceneNodeGraph
             return nCoordOffsetY;
         }
 
-        public void AddNode(string sFromNodeId, NodeType nNodeType)
+        public void AddNode(string sFromNodeId, NodeType nNodeType, int nPath)
         {
             string sNewNodeId = "";
             for (int i = 1; i < 100; ++i)
@@ -81,7 +83,7 @@ namespace SceneNodeGraph
             BaseNodeData nodeData = (BaseNodeData)Activator.CreateInstance(type);
             nodeData.sNodeId = sNewNodeId;
             nodeGraphData.AddNode(nodeData);
-            nodeGraphData.AddTransition(sFromNodeId, sNewNodeId, 1); //TODO nPath
+            nodeGraphData.AddTransition(sFromNodeId, sNewNodeId, nPath); //TODO nPath
             RefreshNodes();
         }
 
@@ -143,9 +145,15 @@ namespace SceneNodeGraph
                 Vector2 fromPos = GetDrawPos(tNodeCoords[sFromNodeId]);
                 fromPos.x += nNodeWidth;
                 fromPos.y += nNodeHeight / 2;
-                Vector3 toPos = GetDrawPos(tNodeCoords[sToNodeId]);
+                Vector2 toPos = GetDrawPos(tNodeCoords[sToNodeId]);
                 toPos.y += nNodeHeight / 2;
                 Handles.DrawLine(fromPos, toPos);
+                Vector2 pathTextPos = (fromPos + toPos) / 2;
+                pathTextPos.x -= nPathTextWidth / 2;
+                pathTextPos.y -= nPathTextHeight / 2;
+                string sPath = transition.nPath.ToString();
+                using (new EditorGUI.DisabledScope()) 
+                    GUI.TextField(new Rect(pathTextPos.x, pathTextPos.y, nPathTextWidth, nPathTextHeight), sPath);
             }
         }
     }

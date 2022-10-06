@@ -9,25 +9,10 @@ namespace SceneNodeGraph
     public class BaseRuntimeNode
     {
         public string sNodeId;
-        //public virtual void StartNode() 
-        //{
-
-        //}
-        //public virtual void UpdateNode(float nDeltaTime) 
-        //{
-
-        //}
-
-        //public virtual void FinishNode()
-        //{
-
-        //}
     }
 
     public class CltRuntimeNode : BaseRuntimeNode
     {
-        //public static bool bSyncFinishNode = false;
-
         public CltNodeGraph nodeGraph;
         public BaseNodeData baseNodeData;
         public virtual void StartNode() { throw new NotImplementedException(); }
@@ -45,21 +30,22 @@ namespace SceneNodeGraph
 
     public class SvrRuntimeNode : BaseRuntimeNode
     {
-        public static bool bSyncFinishNode = false;
+        //public static bool bSyncFinishNode = false;
 
         public SvrNodeGraph nodeGraph;
         public BaseNodeData baseNodeData;
         public virtual void StartNode() { throw new NotImplementedException(); }
         public virtual void UpdateNode(float nDeltaTime) { }
         public virtual void OnFinishNode() { }
+        public virtual bool SyncFinishNode() { return false; }
 
         public void FinishNode(int nPath = 1)
         {
             OnFinishNode();
             if (nodeGraph != null)
-                nodeGraph.FinishNode(sNodeId, nPath, bSyncFinishNode);
-            //if (bSyncFinishNode)
-                //Messager.S2CFinishNode(sNodeId, nPath);
+                nodeGraph.FinishNode(sNodeId, nPath);
+            if (SyncFinishNode())
+                NodeGraphMessager.S2CFinishNode(nodeGraph.nNodeGraphId, sNodeId, nPath);
         }
 
     }
