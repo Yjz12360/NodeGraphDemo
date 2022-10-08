@@ -6,6 +6,7 @@ namespace Game
 {
     public class PlayerCollider : MonoBehaviour
     {
+        public GameObject playerObject;
     }
 }
 

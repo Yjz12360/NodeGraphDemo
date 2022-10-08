@@ -51,9 +51,9 @@ namespace Game
         {
             ClientComp.AddTrigger(nObjectId, position);
         }
-        public static void C2SAttackHitMonster(int nObjectId)
+        public static void C2SAttackHitMonster(int nPlayerId, int nMonsterId)
         {
-            ServerComp.AttackHitMonster(nObjectId);
+            ServerComp.AttackHitMonster(nPlayerId, nMonsterId);
         }
 
         public static void C2SSyncPlayerPos(int nObjectId, Vector3 pos)
@@ -61,9 +61,9 @@ namespace Game
             ServerComp.OnSyncPlayerPos(nObjectId, pos);
         }
 
-        public static void C2SActivateTrigger(int nObjectId)
+        public static void C2SActivateTrigger(int nPlayerId, int nObjectId)
         {
-            ServerComp.OnActivateTrigger(nObjectId);
+            ServerComp.OnActivateTrigger(nPlayerId, nObjectId);
         }
     }
 }

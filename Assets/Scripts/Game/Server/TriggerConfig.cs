@@ -7,6 +7,7 @@ namespace Game
 {
     public struct SvrTriggerData
     {
+        public Vector3 position;
         public string sConfigFile;
         public bool bTriggerOnce;
     }

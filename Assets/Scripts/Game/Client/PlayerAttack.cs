@@ -6,18 +6,22 @@ namespace Game
 {
     public class PlayerAttack : MonoBehaviour
     {
+        public GameObject playerObject;
         private void OnTriggerEnter(Collider other)
         {
             MonsterCollider monsterCollider = other.GetComponent<MonsterCollider>();
             if (monsterCollider != null)
             {
                 GameObject monsterObject = monsterCollider.monsterObject;
-                if(monsterObject != null)
+                if(monsterObject != null && playerObject != null)
                 {
-                    CltObjectData cltObjectData = monsterObject.GetComponent<CltObjectData>();
-                    if (cltObjectData != null)
+                    CltObjectData playerData = playerObject.GetComponent<CltObjectData>();
+                    CltObjectData monsterData = monsterObject.GetComponent<CltObjectData>();
+                    if (monsterData != null && playerData != null)
                     {
-                        GameMessager.C2SAttackHitMonster(cltObjectData.commonData.nGameObjectId);
+                        int nPlayerId = playerData.commonData.nGameObjectId;
+                        int nMonsterId = monsterData.commonData.nGameObjectId;
+                        GameMessager.C2SAttackHitMonster(nPlayerId, nMonsterId);
                     }
                 }
             }

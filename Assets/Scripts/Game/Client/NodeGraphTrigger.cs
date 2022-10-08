@@ -20,10 +20,12 @@ namespace Game
             NodeGraphTriggerObj triggerObj = targetObject.AddComponent<NodeGraphTriggerObj>();
             triggerObj.sourceTrigger = this;
         }
-        public void OnTrigger(Collider collider)
+        public void OnTrigger(GameObject playerObject)
         {
+            CltObjectData objectData = playerObject.GetComponent<CltObjectData>();
+            int nPlayerId = objectData.commonData.nGameObjectId;
             int nObjectId = cltObjectData.commonData.nGameObjectId;
-            GameMessager.C2SActivateTrigger(nObjectId);
+            GameMessager.C2SActivateTrigger(nPlayerId, nObjectId);
         }
 
         public void Destroy()

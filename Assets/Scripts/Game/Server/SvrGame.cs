@@ -99,7 +99,7 @@ namespace Game
 
         public SvrObjectData GetMonsterByStaticId(int nStaticId)
         {
-            foreach(SvrObjectData svrObjectData in tObjectData.Values)
+            foreach (SvrObjectData svrObjectData in tObjectData.Values)
             {
                 if (svrObjectData.commonData.nType == GameObjectType.Monster &&
                     svrObjectData.commonData.nStaticId == nStaticId)
@@ -108,9 +108,17 @@ namespace Game
             return null;
         }
 
-        public void AttackHitMonster(int nObjectId)
+        public void AttackHitMonster(int nPlayerId, int nMonsterId)
         {
-            MonsterDead(nObjectId); // TODO
+            if (!tObjectData.ContainsKey(nPlayerId) || !tObjectData.ContainsKey(nMonsterId))
+                return;
+            SvrObjectData playerData = tObjectData[nPlayerId];
+            SvrObjectData monsterData = tObjectData[nMonsterId];
+            Vector3 playerPos = playerData.position;
+            Vector3 monsterPos = monsterData.position;
+            float nSqrDistance = Vector3.SqrMagnitude(playerPos - monsterPos);
+            if (nSqrDistance > 100) return;
+            MonsterDead(nMonsterId); // TODO
         }
 
         public void MonsterDead(int nObjectId)
@@ -130,12 +138,17 @@ namespace Game
             tObjectData[nObjectId].position = position;
         }
 
-        public void OnActivateTrigger(int nObjectId)
+        public void OnActivateTrigger(int nPlayerId, int nObjectId)
         {
-            if (!tObjectData.ContainsKey(nObjectId)) return;
+            if (!tObjectData.ContainsKey(nPlayerId)) return;
             if (!tTriggerConfig.ContainsKey(nObjectId)) return;
             SvrTriggerData triggerData = tTriggerConfig[nObjectId];
             if (string.IsNullOrEmpty(triggerData.sConfigFile)) return;
+            SvrObjectData playerData = tObjectData[nPlayerId];
+            Vector3 playerPos = playerData.position;
+            Vector3 triggerPos = triggerData.position;
+            float nSqrDistance = Vector3.SqrMagnitude(playerPos - triggerPos);
+            if (nSqrDistance > 100) return;
             nodeGraphManager.OnTriggerNodeGraph(triggerData.sConfigFile);
             if (triggerData.bTriggerOnce)
                 RemoveObject(nObjectId);
@@ -161,6 +174,7 @@ namespace Game
                 if (config != null)
                 {
                     SvrTriggerData svrTriggerData = new SvrTriggerData();
+                    svrTriggerData.position = child.position;
                     svrTriggerData.sConfigFile = $"{config.nodeGraph.name}.json";
                     svrTriggerData.bTriggerOnce = config.bTriggerOnce;
                     AddTrigger(child.position, nStaticId, svrTriggerData);

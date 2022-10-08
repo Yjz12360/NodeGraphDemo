@@ -14,9 +14,12 @@ namespace Game
         {
             if (sourceTrigger == null) return;
             if (bTriggered) return;
-            if(collider.gameObject.GetComponent<Game.PlayerCollider>() != null)
+            PlayerCollider playerCollider = collider.gameObject.GetComponent<PlayerCollider>();
+            if (playerCollider != null)
             {
-                sourceTrigger.OnTrigger(collider);
+                GameObject playerObject = playerCollider.playerObject;
+                if (playerObject != null)
+                    sourceTrigger.OnTrigger(playerObject);
             }
         }
 
