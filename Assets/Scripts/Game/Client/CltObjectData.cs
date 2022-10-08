@@ -6,7 +6,9 @@ namespace Game
 {
     public class CltObjectData : MonoBehaviour
     {
-        public CommonData commonData = new CommonData();
+        public int nGameObjectId;
+        public GameObjectType nType;
+        public float nSpeed;
     }
 }
 

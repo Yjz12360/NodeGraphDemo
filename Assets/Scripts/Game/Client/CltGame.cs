@@ -42,9 +42,9 @@ namespace Game
             CltObjectData gameObjectData = instance.GetComponent<CltObjectData>();
             if (gameObjectData == null)
                 gameObjectData = instance.AddComponent<CltObjectData>();
-            gameObjectData.commonData.nGameObjectId = nObjectId;
-            gameObjectData.commonData.nType = GameObjectType.Player;
-            gameObjectData.commonData.nSpeed = 3.0f;
+            gameObjectData.nGameObjectId = nObjectId;
+            gameObjectData.nType = GameObjectType.Player;
+            gameObjectData.nSpeed = 3.0f;
             tGameObjects[nObjectId] = instance;
             localPlayer = instance;
             if (mainCamera != null)
@@ -63,9 +63,9 @@ namespace Game
             CltObjectData gameObjectData = instance.GetComponent<CltObjectData>();
             if (gameObjectData == null)
                 gameObjectData = instance.AddComponent<CltObjectData>();
-            gameObjectData.commonData.nGameObjectId = nObjectId;
-            gameObjectData.commonData.nType = GameObjectType.Monster;
-            gameObjectData.commonData.nSpeed = 3.0f;
+            gameObjectData.nGameObjectId = nObjectId;
+            gameObjectData.nType = GameObjectType.Monster;
+            gameObjectData.nSpeed = 3.0f;
             tGameObjects[nObjectId] = instance;
         }
 
@@ -106,8 +106,8 @@ namespace Game
             CltObjectData gameObjectData = instance.GetComponent<CltObjectData>();
             if (gameObjectData == null)
                 gameObjectData = instance.AddComponent<CltObjectData>();
-            gameObjectData.commonData.nGameObjectId = nObjectId;
-            gameObjectData.commonData.nType = GameObjectType.Trigger;
+            gameObjectData.nGameObjectId = nObjectId;
+            gameObjectData.nType = GameObjectType.Trigger;
             tGameObjects[nObjectId] = instance;
         }
 
@@ -122,7 +122,7 @@ namespace Game
                     CltObjectData objectData = localPlayer.GetComponent<CltObjectData>();
                     if(objectData != null)
                     {
-                        int nObjectId = objectData.commonData.nGameObjectId;
+                        int nObjectId = objectData.nGameObjectId;
                         Vector3 pos = localPlayer.transform.position;
                         GameMessager.C2SSyncPlayerPos(nObjectId, pos);
                     }

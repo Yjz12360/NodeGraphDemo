@@ -22,7 +22,7 @@ namespace Game
                 CltObjectData cltObjectData = gameObject.GetComponent<CltObjectData>();
                 if(cltObjectData != null)
                 {
-                    float nSpeed = gameObject.GetComponent<CltObjectData>().commonData.nSpeed;
+                    float nSpeed = cltObjectData.nSpeed;
                     Vector3 dir = (movePos - transform.position).normalized;
                     transform.position = transform.position + dir * nSpeed * Time.deltaTime;
                     float nDistance = Vector3.Magnitude(movePos - transform.position);

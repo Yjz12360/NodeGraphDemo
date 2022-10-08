@@ -28,7 +28,7 @@ namespace SceneNodeGraph
             Game.SvrObjectData objectData = nodeGraph.game.GetObject(nObjectId);
             if (objectData == null) return;
             if (NodeData.nStaticId <= 0) return;
-            if (objectData.commonData.nStaticId == NodeData.nStaticId)
+            if (objectData.nStaticId == NodeData.nStaticId)
                 FinishNode();
         }
 

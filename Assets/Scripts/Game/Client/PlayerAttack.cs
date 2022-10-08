@@ -19,8 +19,8 @@ namespace Game
                     CltObjectData monsterData = monsterObject.GetComponent<CltObjectData>();
                     if (monsterData != null && playerData != null)
                     {
-                        int nPlayerId = playerData.commonData.nGameObjectId;
-                        int nMonsterId = monsterData.commonData.nGameObjectId;
+                        int nPlayerId = playerData.nGameObjectId;
+                        int nMonsterId = monsterData.nGameObjectId;
                         GameMessager.C2SAttackHitMonster(nPlayerId, nMonsterId);
                     }
                 }

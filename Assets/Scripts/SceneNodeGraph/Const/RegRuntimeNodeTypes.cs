@@ -4,49 +4,37 @@ using UnityEngine;
 
 namespace SceneNodeGraph
 {
-    public class RegRuntimeNodeTypes
+    public static class RegRuntimeNodeTypes
     {
-        //public static Dictionary<NodeType, Type> tCltTypes = new Dictionary<NodeType, Type>();
-        //public static Dictionary<NodeType, Type> tSvrTypes = new Dictionary<NodeType, Type>();
+        public static Dictionary<NodeType, Type> tCltTypes = new Dictionary<NodeType, Type>();
+        public static Dictionary<NodeType, Type> tSvrTypes = new Dictionary<NodeType, Type>();
 
-        //public static void Initialize()
-        //{
-        //    Dictionary<string, NodeType> tNodeNamesDic = new Dictionary<string, NodeType>();
-        //    foreach(int nCode in Enum.GetValues(typeof(NodeType)))
-        //    {
-        //        string sName = Enum.GetName(typeof(NodeType), nCode);
-        //        tNodeNamesDic[sName] = (NodeType)nCode;
-        //    }
-        //    Type type = typeof(RegRuntimeNodeTypes);
-        //    foreach (Type subType in type.Assembly.GetTypes())
-        //    {
-        //        string sTypeName = subType.Name;
-        //        string sPrefix = sTypeName.Substring(0, 3);
-        //        string sName = sTypeName.Substring(3);
-        //        if (subType.IsSubclassOf(typeof(CltRuntimeNode)) && sPrefix == "Clt" && tNodeNamesDic.ContainsKey(sName))
-        //            tCltTypes[tNodeNamesDic[sName]] = subType;
-        //        if (subType.IsSubclassOf(typeof(SvrRuntimeNode)) && sPrefix == "Svr" && tNodeNamesDic.ContainsKey(sName))
-        //            tSvrTypes[tNodeNamesDic[sName]] = subType;
-        //    }
-        //}
-
-        public static Dictionary<NodeType, Type> tCltTypes = new Dictionary<NodeType, Type>
+        static RegRuntimeNodeTypes()
         {
-            {NodeType.Start, typeof(CltStartNode) },
-            {NodeType.Print, typeof(CltPrintNode) },
-            {NodeType.Move, typeof(CltMoveNode) },
-            {NodeType.Delay, typeof(CltDelayNode) },
-        };
-
-        public static Dictionary<NodeType, Type> tSvrTypes = new Dictionary<NodeType, Type>
-        {
-            {NodeType.Start, typeof(SvrStartNode) },
-            {NodeType.Move, typeof(SvrMoveNode) },
-            {NodeType.Delay, typeof(SvrDelayNode) },
-            {NodeType.AddMonster, typeof(SvrAddMonsterNode) },
-            {NodeType.HasMonster, typeof(SvrHasMonsterNode) },
-            {NodeType.WaitMonsterNum, typeof(SvrWaitMonsterNumNode) },
-            {NodeType.WaitMonsterDead, typeof(SvrWaitMonsterDeadNode) },
-        };
+            Dictionary<string, NodeType> tNodeNamesDic = new Dictionary<string, NodeType>();
+            Type nodeTypeType = typeof(NodeType);
+            Array tNodeTypes = Enum.GetValues(nodeTypeType);
+            foreach (int nCode in tNodeTypes)
+            {
+                string sName = Enum.GetName(nodeTypeType, nCode);
+                tNodeNamesDic[sName] = (NodeType)nCode;
+            }
+            Type[] allTypes = nodeTypeType.Assembly.GetTypes();
+            foreach (Type subType in allTypes)
+            {
+                string sTypeName = subType.Name;
+                if (sTypeName.Length <= 7) continue;
+                string sPostfix = sTypeName.Substring(sTypeName.Length - 4);
+                if (sPostfix == "Node")
+                {
+                    string sPrefix = sTypeName.Substring(0, 3);
+                    string sName = sTypeName.Substring(3, sTypeName.Length - 7);
+                    if (sPrefix == "Clt" && tNodeNamesDic.ContainsKey(sName) && subType.IsSubclassOf(typeof(CltRuntimeNode)))
+                        tCltTypes[tNodeNamesDic[sName]] = subType;
+                    if (sPrefix == "Svr" && tNodeNamesDic.ContainsKey(sName) && subType.IsSubclassOf(typeof(SvrRuntimeNode)))
+                        tSvrTypes[tNodeNamesDic[sName]] = subType;
+                }
+            }
+        }
     }
 }

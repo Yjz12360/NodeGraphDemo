@@ -8,6 +8,11 @@ namespace SceneNodeGraph
     {
         private Dictionary<int, CltNodeGraph> nodeGraphs = new Dictionary<int, CltNodeGraph>();
         private Game.CltGame game;
+
+        private void Start()
+        {
+            game = gameObject.GetComponent<Game.CltGame>();
+        }
         private CltNodeGraph AddNodeGraph(int nNodeGraphId, string sConfigFile)
         {
             if (nodeGraphs.ContainsKey(nNodeGraphId))

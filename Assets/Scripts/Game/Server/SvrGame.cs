@@ -19,9 +19,9 @@ namespace Game
         public int AddPlayer(Vector3 position)
         {
             SvrObjectData svrObjectData = new SvrObjectData();
-            svrObjectData.commonData.nGameObjectId = nCurrId;
-            svrObjectData.commonData.nType = GameObjectType.Player;
-            svrObjectData.commonData.nSpeed = 3.0f;
+            svrObjectData.nGameObjectId = nCurrId;
+            svrObjectData.nType = GameObjectType.Player;
+            svrObjectData.nSpeed = 3.0f;
             svrObjectData.position = position;
             tObjectData[nCurrId] = svrObjectData;
             GameMessager.S2CAddPlayer(nCurrId, position);
@@ -32,10 +32,10 @@ namespace Game
         public int AddMonster(Vector3 position, int nStaticId)
         {
             SvrObjectData svrObjectData = new SvrObjectData();
-            svrObjectData.commonData.nGameObjectId = nCurrId;
-            svrObjectData.commonData.nType = GameObjectType.Monster;
-            svrObjectData.commonData.nStaticId = nStaticId;
-            svrObjectData.commonData.nSpeed = 3.0f; // TODO
+            svrObjectData.nGameObjectId = nCurrId;
+            svrObjectData.nType = GameObjectType.Monster;
+            svrObjectData.nStaticId = nStaticId;
+            svrObjectData.nSpeed = 3.0f; // TODO
             svrObjectData.position = position;
             tObjectData[nCurrId] = svrObjectData;
             tMonsterAI[nCurrId] = new MonsterAI(svrObjectData);
@@ -49,7 +49,7 @@ namespace Game
             foreach (var pair in tObjectData)
             {
                 SvrObjectData svrObjectData = pair.Value;
-                if (svrObjectData.commonData.nType == GameObjectType.Monster)
+                if (svrObjectData.nType == GameObjectType.Monster)
                     return true;
             }
             return false;
@@ -59,7 +59,7 @@ namespace Game
         {
             int nNum = 0;
             foreach (SvrObjectData svrObjectData in tObjectData.Values)
-                if (svrObjectData.commonData.nType == GameObjectType.Monster)
+                if (svrObjectData.nType == GameObjectType.Monster)
                     nNum++;
             return nNum;
         }
@@ -67,9 +67,9 @@ namespace Game
         public int AddTrigger(Vector3 position, int nStaticId, SvrTriggerData triggerData)
         {
             SvrObjectData svrObjectData = new SvrObjectData();
-            svrObjectData.commonData.nGameObjectId = nCurrId;
-            svrObjectData.commonData.nType = GameObjectType.Trigger;
-            svrObjectData.commonData.nStaticId = nStaticId;
+            svrObjectData.nGameObjectId = nCurrId;
+            svrObjectData.nType = GameObjectType.Trigger;
+            svrObjectData.nStaticId = nStaticId;
             svrObjectData.position = position;
             tObjectData[nCurrId] = svrObjectData;
             tTriggerConfig[nCurrId] = triggerData;
@@ -81,10 +81,10 @@ namespace Game
         {
             if (!tObjectData.ContainsKey(nObjectId))
                 return;
-            if (tObjectData[nObjectId].commonData.nType == GameObjectType.Monster)
+            if (tObjectData[nObjectId].nType == GameObjectType.Monster)
                 if (tMonsterAI.ContainsKey(nObjectId))
                     tMonsterAI.Remove(nObjectId);
-            if (tObjectData[nObjectId].commonData.nType == GameObjectType.Trigger)
+            if (tObjectData[nObjectId].nType == GameObjectType.Trigger)
                 if (tTriggerConfig.ContainsKey(nObjectId))
                     tTriggerConfig.Remove(nObjectId);
             tObjectData.Remove(nObjectId);
@@ -101,8 +101,8 @@ namespace Game
         {
             foreach (SvrObjectData svrObjectData in tObjectData.Values)
             {
-                if (svrObjectData.commonData.nType == GameObjectType.Monster &&
-                    svrObjectData.commonData.nStaticId == nStaticId)
+                if (svrObjectData.nType == GameObjectType.Monster &&
+                    svrObjectData.nStaticId == nStaticId)
                     return svrObjectData;
             }
             return null;
@@ -124,7 +124,7 @@ namespace Game
         public void MonsterDead(int nObjectId)
         {
             if (!tObjectData.ContainsKey(nObjectId)) return;
-            if (tObjectData[nObjectId].commonData.nType != GameObjectType.Monster) return;
+            if (tObjectData[nObjectId].nType != GameObjectType.Monster) return;
             nodeGraphManager.OnMonsterDead(nObjectId);
             nodeGraphManager.OnMonsterNumChange(GetMonsterNum());
             RemoveObject(nObjectId);
@@ -134,7 +134,7 @@ namespace Game
         public void OnSyncPlayerPos(int nObjectId, Vector3 position)
         {
             if (!tObjectData.ContainsKey(nObjectId)) return;
-            if (tObjectData[nObjectId].commonData.nType != GameObjectType.Player) return;
+            if (tObjectData[nObjectId].nType != GameObjectType.Player) return;
             tObjectData[nObjectId].position = position;
         }
 

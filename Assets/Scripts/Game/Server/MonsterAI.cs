@@ -54,7 +54,7 @@ namespace Game
         public override ActionState Update(float nDeltaTime)
         {
             Vector3 dir = (targetPos - objectData.position).normalized;
-            float nSpeed = objectData.commonData.nSpeed;
+            float nSpeed = objectData.nSpeed;
             Vector3 newPos = objectData.position + dir * nSpeed * nDeltaTime;
             objectData.position = newPos;
             float nDistance = (targetPos - newPos).magnitude;
@@ -92,7 +92,7 @@ namespace Game
                     float nTargetZ = currPos.z + Mathf.Sin(nRad) * nDistance;
                     Vector3 targetPos = new Vector3(nTargetX, currPos.y, nTargetZ);
                     currAction = new MoveAction(objectData, targetPos);
-                    GameMessager.S2CMonsterMove(objectData.commonData.nGameObjectId, targetPos);
+                    GameMessager.S2CMonsterMove(objectData.nGameObjectId, targetPos);
                 }
             }
 

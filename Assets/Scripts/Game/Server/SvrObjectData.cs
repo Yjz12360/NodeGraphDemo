@@ -10,9 +10,10 @@ namespace Game
 {
     public class SvrObjectData
     {
-
-        public CommonData commonData = new CommonData();
+        public int nGameObjectId;
+        public GameObjectType nType;
+        public int nStaticId;
+        public float nSpeed;
         public Vector3 position = Vector3.zero;
-
     }
 }

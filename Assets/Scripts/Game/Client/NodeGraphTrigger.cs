@@ -23,8 +23,8 @@ namespace Game
         public void OnTrigger(GameObject playerObject)
         {
             CltObjectData objectData = playerObject.GetComponent<CltObjectData>();
-            int nPlayerId = objectData.commonData.nGameObjectId;
-            int nObjectId = cltObjectData.commonData.nGameObjectId;
+            int nPlayerId = objectData.nGameObjectId;
+            int nObjectId = cltObjectData.nGameObjectId;
             GameMessager.C2SActivateTrigger(nPlayerId, nObjectId);
         }
 
