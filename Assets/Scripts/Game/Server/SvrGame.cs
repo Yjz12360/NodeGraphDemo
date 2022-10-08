@@ -10,12 +10,10 @@ namespace Game
 {
     public class SvrGame : MonoBehaviour
     {
-        public List<Transform> staticMonsters = new List<Transform>();
-        public Transform playerBornPos;
-
         private int nCurrId = 1;
         private Dictionary<int, SvrObjectData> tObjectData = new Dictionary<int, SvrObjectData>();
         private Dictionary<int, MonsterAI> tMonsterAI = new Dictionary<int, MonsterAI>();
+        private Dictionary<int, SvrTriggerData> tTriggerConfig = new Dictionary<int, SvrTriggerData>();
         private SceneNodeGraph.SvrNodeGraphManager nodeGraphManager;
 
         public int AddPlayer(Vector3 position)
@@ -59,7 +57,24 @@ namespace Game
 
         public int GetMonsterNum()
         {
-            return tObjectData.Count;
+            int nNum = 0;
+            foreach (SvrObjectData svrObjectData in tObjectData.Values)
+                if (svrObjectData.commonData.nType == GameObjectType.Monster)
+                    nNum++;
+            return nNum;
+        }
+
+        public int AddTrigger(Vector3 position, int nStaticId, SvrTriggerData triggerData)
+        {
+            SvrObjectData svrObjectData = new SvrObjectData();
+            svrObjectData.commonData.nGameObjectId = nCurrId;
+            svrObjectData.commonData.nType = GameObjectType.Trigger;
+            svrObjectData.commonData.nStaticId = nStaticId;
+            svrObjectData.position = position;
+            tObjectData[nCurrId] = svrObjectData;
+            tTriggerConfig[nCurrId] = triggerData;
+            GameMessager.S2CAddTrigger(nCurrId, position);
+            return nCurrId++;
         }
 
         public void RemoveObject(int nObjectId)
@@ -69,6 +84,9 @@ namespace Game
             if (tObjectData[nObjectId].commonData.nType == GameObjectType.Monster)
                 if (tMonsterAI.ContainsKey(nObjectId))
                     tMonsterAI.Remove(nObjectId);
+            if (tObjectData[nObjectId].commonData.nType == GameObjectType.Trigger)
+                if (tTriggerConfig.ContainsKey(nObjectId))
+                    tTriggerConfig.Remove(nObjectId);
             tObjectData.Remove(nObjectId);
         }
 
@@ -105,36 +123,55 @@ namespace Game
             GameMessager.S2CMonsterDead(nObjectId);
         }
 
-        public void OnSyncPlayerPos(int nObjectId, float nPosX, float nPosY, float nPosZ)
+        public void OnSyncPlayerPos(int nObjectId, Vector3 position)
         {
             if (!tObjectData.ContainsKey(nObjectId)) return;
             if (tObjectData[nObjectId].commonData.nType != GameObjectType.Player) return;
-            tObjectData[nObjectId].position.x = nPosX;
-            tObjectData[nObjectId].position.y = nPosY;
-            tObjectData[nObjectId].position.z = nPosZ;
+            tObjectData[nObjectId].position = position;
+        }
+
+        public void OnActivateTrigger(int nObjectId)
+        {
+            if (!tObjectData.ContainsKey(nObjectId)) return;
+            if (!tTriggerConfig.ContainsKey(nObjectId)) return;
+            SvrTriggerData triggerData = tTriggerConfig[nObjectId];
+            if (string.IsNullOrEmpty(triggerData.sConfigFile)) return;
+            nodeGraphManager.OnTriggerNodeGraph(triggerData.sConfigFile);
+            if (triggerData.bTriggerOnce)
+                RemoveObject(nObjectId);
+        }
+
+        private void InitGameObjects()
+        {
+            Transform playerBornPos = transform.Find("PlayerBornPos").GetChild(0);
+            AddPlayer(playerBornPos.position);
+            Transform staticMonster = transform.Find("StaticMonster");
+            for(int i = 0; i < staticMonster.childCount; ++i)
+            {
+                Transform child = staticMonster.GetChild(i);
+                int nStaticId = int.Parse(child.name);
+                AddMonster(child.position, nStaticId);
+            }
+            Transform triggerConfig = transform.Find("TriggerConfig");
+            for(int i = 0; i < triggerConfig.childCount; ++i)
+            {
+                Transform child = triggerConfig.GetChild(i);
+                int nStaticId = int.Parse(child.name);
+                TriggerConfig config = child.gameObject.GetComponent<TriggerConfig>();
+                if (config != null)
+                {
+                    SvrTriggerData svrTriggerData = new SvrTriggerData();
+                    svrTriggerData.sConfigFile = $"{config.nodeGraph.name}.json";
+                    svrTriggerData.bTriggerOnce = config.bTriggerOnce;
+                    AddTrigger(child.position, nStaticId, svrTriggerData);
+                }
+            }
         }
 
         private void Start()
         {
             nodeGraphManager = gameObject.GetComponent<SceneNodeGraph.SvrNodeGraphManager>();
-            for(int i = 0; i < staticMonsters.Count; ++i)
-            {
-                Transform transform = staticMonsters[i];
-                if (transform == null) continue;
-                int nStaticId = int.Parse(transform.name);
-                //int nStaticId = 0;
-                //if (!int.TryParse(transform.name, out nStaticId))
-                //    nStaticId = i + 1;
-                AddMonster(transform.position, nStaticId);
-            }
-            if(playerBornPos != null)
-            {
-                AddPlayer(playerBornPos.position);
-            }
-            else
-            {
-                Debug.LogError("SvrGame Init Player error: playerBornPos is null.");
-            }
+            InitGameObjects();
         }
 
         private void Update()

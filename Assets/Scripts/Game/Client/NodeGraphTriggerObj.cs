@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore;
 
-namespace SceneNodeGraph
+namespace Game
 {
     public class NodeGraphTriggerObj : MonoBehaviour
     {

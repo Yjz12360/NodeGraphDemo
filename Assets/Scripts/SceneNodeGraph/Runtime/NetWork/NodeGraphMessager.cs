@@ -45,10 +45,5 @@ namespace SceneNodeGraph
         {
             ClientComp.ActivateNodeGraph(nGraphNodeId, sConfigFile);
         }
-
-        public static void C2STriggerNodeGraph(string sConfigFile)
-        {
-            ServerComp.OnTriggerNodeGraph(sConfigFile);
-        }
     }
 }

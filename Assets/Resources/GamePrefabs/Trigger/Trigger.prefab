@@ -102,7 +102,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7921146385655451856}
-  - component: {fileID: 4248804720806123375}
+  - component: {fileID: 739253163713234986}
   m_Layer: 0
   m_Name: Trigger
   m_TagString: Untagged
@@ -125,7 +125,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4248804720806123375
+--- !u!114 &739253163713234986
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -134,8 +134,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7921146385655451854}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ede8ac0a92106524c995da0c92f73e27, type: 3}
+  m_Script: {fileID: 11500000, guid: 364b2fa6c588c394db528eacad8518fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   checkCollider: {fileID: 358541180337566770}
-  nodeConfigFile: {fileID: 0}

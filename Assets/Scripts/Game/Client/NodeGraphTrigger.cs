@@ -3,24 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore;
 
-namespace SceneNodeGraph
+namespace Game
 {
     public class NodeGraphTrigger : MonoBehaviour
     {
         // Start is called before the first frame update
         public Collider checkCollider;
-        public TextAsset nodeConfigFile;
+
+        private CltObjectData cltObjectData;
 
         public void Start()
         {
-            if (nodeConfigFile == null) return;
+            cltObjectData = gameObject.GetComponent<CltObjectData>();
+
             GameObject targetObject = checkCollider != null ? checkCollider.gameObject : gameObject;
             NodeGraphTriggerObj triggerObj = targetObject.AddComponent<NodeGraphTriggerObj>();
             triggerObj.sourceTrigger = this;
         }
         public void OnTrigger(Collider collider)
         {
-            NodeGraphMessager.C2STriggerNodeGraph($"{nodeConfigFile.name}.json");
+            int nObjectId = cltObjectData.commonData.nGameObjectId;
+            GameMessager.C2SActivateTrigger(nObjectId);
         }
 
         public void Destroy()

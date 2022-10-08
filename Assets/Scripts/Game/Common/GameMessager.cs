@@ -47,14 +47,23 @@ namespace Game
             ClientComp.MonsterDead(nObjectId);
         }
 
+        public static void S2CAddTrigger(int nObjectId, Vector3 position)
+        {
+            ClientComp.AddTrigger(nObjectId, position);
+        }
         public static void C2SAttackHitMonster(int nObjectId)
         {
             ServerComp.AttackHitMonster(nObjectId);
         }
 
-        public static void C2SSyncPlayerPos(int nObjectId, float nPosX, float nPosY, float nPosZ)
+        public static void C2SSyncPlayerPos(int nObjectId, Vector3 pos)
         {
-            ServerComp.OnSyncPlayerPos(nObjectId, nPosX, nPosY, nPosZ);
+            ServerComp.OnSyncPlayerPos(nObjectId, pos);
+        }
+
+        public static void C2SActivateTrigger(int nObjectId)
+        {
+            ServerComp.OnActivateTrigger(nObjectId);
         }
     }
 }

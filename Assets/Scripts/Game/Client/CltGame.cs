@@ -97,6 +97,20 @@ namespace Game
             RemoveObject(nObjectId);
         }
 
+        public void AddTrigger(int nObjectId, Vector3 position)
+        {
+            GameObject instance = GameObject.Instantiate(triggerPrefab);
+            instance.transform.SetParent(triggerRoot);
+            instance.transform.position = position;
+            instance.name = $"Trigger_{nObjectId}";
+            CltObjectData gameObjectData = instance.GetComponent<CltObjectData>();
+            if (gameObjectData == null)
+                gameObjectData = instance.AddComponent<CltObjectData>();
+            gameObjectData.commonData.nGameObjectId = nObjectId;
+            gameObjectData.commonData.nType = GameObjectType.Trigger;
+            tGameObjects[nObjectId] = instance;
+        }
+
         private void Update()
         {
             if(localPlayer != null)
@@ -110,7 +124,7 @@ namespace Game
                     {
                         int nObjectId = objectData.commonData.nGameObjectId;
                         Vector3 pos = localPlayer.transform.position;
-                        GameMessager.C2SSyncPlayerPos(nObjectId, pos.x, pos.y, pos.z);
+                        GameMessager.C2SSyncPlayerPos(nObjectId, pos);
                     }
                 }
             }
