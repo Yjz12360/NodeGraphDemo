@@ -11,12 +11,5 @@ namespace Game
         Trigger = 3,
     }
 
-    public class CommonData
-    {
-        public int nGameObjectId;
-        public GameObjectType nType;
-        public int nStaticId;
-        public float nSpeed;
-    }
 }
 
