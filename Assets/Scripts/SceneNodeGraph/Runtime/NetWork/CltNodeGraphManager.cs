@@ -4,36 +4,72 @@ using UnityEngine;
 
 namespace SceneNodeGraph
 {
-    public static class CltNodeGraphManager
+    public class CltNodeGraphManager : MonoBehaviour
     {
-        private static Dictionary<int, CltNodeGraph> nodeGraphs = new Dictionary<int, CltNodeGraph>();
-
-        public static CltNodeGraph AddNodeGraph(int nNodeGraphId, string sConfigFile)
+        private Dictionary<int, CltNodeGraph> nodeGraphs = new Dictionary<int, CltNodeGraph>();
+        private Game.CltGame game;
+        private CltNodeGraph AddNodeGraph(int nNodeGraphId, string sConfigFile)
         {
-            if(nodeGraphs.ContainsKey(nNodeGraphId))
+            if (nodeGraphs.ContainsKey(nNodeGraphId))
             {
                 Debug.LogError($"AddNodeGraph error: nNodeGraphId {nNodeGraphId} already exists.");
                 return null;
             }
-            CltNodeGraph cltNodeGraph = new CltNodeGraph();
-            cltNodeGraph.nNodeGraphId = nNodeGraphId;
-            cltNodeGraph.nodeGraphData = SceneNodeGraphSerializer.Load(sConfigFile);
-            nodeGraphs[nNodeGraphId] = cltNodeGraph;
-            return cltNodeGraph;
+            CltNodeGraph nodeGraph = new CltNodeGraph();
+            nodeGraph.nNodeGraphId = nNodeGraphId;
+            nodeGraph.nodeGraphData = SceneNodeGraphSerializer.Load(sConfigFile);
+            nodeGraph.game = game;
+            nodeGraphs[nNodeGraphId] = nodeGraph;
+            return nodeGraph;
         }
 
-        public static void RemoveNodeGraph(int nId)
+        public void ActivateNodeGraph(int nNodeGraphId, string sConfigFile)
         {
-            if (!nodeGraphs.ContainsKey(nId))
+            if(nodeGraphs.ContainsKey(nNodeGraphId))
+            {
+                Debug.LogError($"ActivateNodeGraph error: nNodeGraphId {nNodeGraphId} already exists.");
                 return;
-            nodeGraphs.Remove(nId);
+            }
+            CltNodeGraph nodeGraph = AddNodeGraph(nNodeGraphId, sConfigFile);
+            nodeGraph.StartGraph();
         }
 
-        public static CltNodeGraph GetNodeGraph(int nId)
+        public void FinishNode(int nNodeGraphId, string sNodeId, int nPath)
         {
-            if (!nodeGraphs.ContainsKey(nId))
-                return null;
-            return nodeGraphs[nId];
+            if (!nodeGraphs.ContainsKey(nNodeGraphId))
+                return;
+            nodeGraphs[nNodeGraphId].OnSyncFinishNode(sNodeId, nPath);
+        }
+
+        public void FinishNodeGraph(int nNodeGraphId)
+        {
+            if (!nodeGraphs.ContainsKey(nNodeGraphId))
+                return;
+            nodeGraphs[nNodeGraphId].OnSyncFinishGraph();
+        }
+
+        private void Update()
+        {
+            List<int> tRemoveList = null;
+            foreach(var pair in nodeGraphs)
+            {
+                CltNodeGraph nodeGraph = pair.Value;
+                nodeGraph.UpdateNodes(Time.deltaTime);
+                if(nodeGraph.IsFinished())
+                {
+                    if (tRemoveList == null)
+                        tRemoveList = new List<int>();
+                    tRemoveList.Add(pair.Key);
+                }
+            }
+            if(tRemoveList != null)
+            {
+                foreach (int nNodeGraphId in tRemoveList)
+                {
+                    nodeGraphs.Remove(nNodeGraphId);
+                }
+            }
+ 
         }
 
     }

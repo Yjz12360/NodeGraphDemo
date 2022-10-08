@@ -4,37 +4,64 @@ using UnityEngine;
 
 namespace SceneNodeGraph
 {
-    public static class SvrNodeGraphManager
+    public class SvrNodeGraphManager : MonoBehaviour
     {
-        private static Dictionary<int, SvrNodeGraph> nodeGraphs = new Dictionary<int, SvrNodeGraph>();
 
-        private static int nCurrId = 0;
+        public TextAsset initConfigFile;
 
-        public static SvrNodeGraph AddNodeGraph(string sConfigFile)
+        private int nCurrId = 0;
+        private Dictionary<int, SvrNodeGraph> nodeGraphs = new Dictionary<int, SvrNodeGraph>();
+        private Game.SvrGame game;
+        public void Start()
         {
-            SvrNodeGraph svrNodeGraph = new SvrNodeGraph();
+            game = gameObject.GetComponent<Game.SvrGame>();
+            if (initConfigFile != null)
+                OnTriggerNodeGraph($"{initConfigFile.name}.json");
+        }
+        private SvrNodeGraph AddNodeGraph(string sConfigFile)
+        {
+            SvrNodeGraph nodeGraph = new SvrNodeGraph();
             nCurrId++;
-            svrNodeGraph.nNodeGraphId = nCurrId;
-            svrNodeGraph.nodeGraphData = SceneNodeGraphSerializer.Load(sConfigFile);
-            nodeGraphs[nCurrId] = svrNodeGraph;
-            return svrNodeGraph;
-            
+            nodeGraph.nNodeGraphId = nCurrId;
+            nodeGraph.nodeGraphData = SceneNodeGraphSerializer.Load(sConfigFile);
+            nodeGraph.game = game;
+            nodeGraphs[nodeGraph.nNodeGraphId] = nodeGraph;
+            return nodeGraph;
         }
-
-        public static void RemoveNodeGraph(int nId)
+        public void OnTriggerNodeGraph(string sConfigFile)
         {
-            if (!nodeGraphs.ContainsKey(nId))
-                return;
-            nodeGraphs.Remove(nId);
+            SvrNodeGraph nodeGraph = AddNodeGraph(sConfigFile);
+            nodeGraph.StartGraph();
+            NodeGraphMessager.S2CActivateNodeGraph(nodeGraph.nNodeGraphId, sConfigFile);
         }
 
-        public static SvrNodeGraph GetNodeGraph(int nId)
+        public void Update()
         {
-            if (!nodeGraphs.ContainsKey(nId))
-                return null;
-            return nodeGraphs[nId];
-        }
+            List<int> tRemoveList = null;
+            foreach(var pair in nodeGraphs)
+            {
+                int nNodeGraphId = pair.Key;
+                SvrNodeGraph nodeGraph = pair.Value;
+                nodeGraph.UpdateNodes(Time.deltaTime);
+                if (nodeGraph.IsFinished())
+                {
+                    if (tRemoveList == null)
+                        tRemoveList = new List<int>();
+                    tRemoveList.Add(nNodeGraphId);
+ 
+                    NodeGraphMessager.S2CFinishNodeGraph(nNodeGraphId);
+                }
+            }
+            if(tRemoveList != null)
+            {
+                foreach (int nNodeGraphId in tRemoveList)
+                {
+                    if (nodeGraphs.ContainsKey(nNodeGraphId))
+                        nodeGraphs.Remove(nNodeGraphId);
+                }
+            }
 
+        }
     }
 }
 

@@ -9,24 +9,24 @@ namespace SceneNodeGraph
 {
     public static class NodeGraphMessager
     {
-        private static NodeGraphServer SvrComp = null;
-        private static NodeGraphServer ServerComp
+        private static SvrNodeGraphManager SvrComp = null;
+        private static SvrNodeGraphManager ServerComp
         {
             get
             {
                 if (SvrComp == null)
-                    SvrComp = GameObject.Find("NetWork/Server").GetComponent<NodeGraphServer>();
+                    SvrComp = GameObject.Find("NetWork/Server").GetComponent<SvrNodeGraphManager>();
                 return SvrComp;
             }
         }
 
-        private static NodeGraphClient CltComp = null;
-        private static NodeGraphClient ClientComp
+        private static CltNodeGraphManager CltComp = null;
+        private static CltNodeGraphManager ClientComp
         {
             get
             {
                 if(CltComp == null)
-                    CltComp = GameObject.Find("NetWork/Client").GetComponent<NodeGraphClient>();
+                    CltComp = GameObject.Find("NetWork/Client").GetComponent<CltNodeGraphManager>();
                 return CltComp;
             }
         }
