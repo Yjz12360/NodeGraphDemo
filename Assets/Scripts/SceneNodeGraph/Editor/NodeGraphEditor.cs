@@ -68,6 +68,8 @@ namespace SceneNodeGraph
 
         public void AddNode(string sFromNodeId, NodeType nNodeType, int nPath)
         {
+            if (string.IsNullOrEmpty(sFromNodeId))
+                return;
             string sNewNodeId = "";
             for (int i = 1; i < 100; ++i)
             {
@@ -83,13 +85,14 @@ namespace SceneNodeGraph
             BaseNodeData nodeData = (BaseNodeData)Activator.CreateInstance(type);
             nodeData.sNodeId = sNewNodeId;
             nodeGraphData.AddNode(nodeData);
-            nodeGraphData.AddTransition(sFromNodeId, sNewNodeId, nPath); //TODO nPath
+            nodeGraphData.AddTransition(sFromNodeId, sNewNodeId, nPath);
             RefreshNodes();
         }
 
         public void RemoveNode(string sNodeId)
         {
-            // TODO
+            nodeGraphData.RemoveNode(sNodeId);
+            RefreshNodes();
         }
 
         public void Draw()

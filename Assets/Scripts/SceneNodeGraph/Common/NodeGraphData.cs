@@ -32,6 +32,38 @@ namespace SceneNodeGraph
             tNodeMap[node.sNodeId] = node;
         }
 
+        public void RemoveNode(string sNodeId)
+        {
+            HashSet<string> tValidNodes = new HashSet<string>();
+            Queue<string> tNodeQueue = new Queue<string>();
+            tNodeQueue.Enqueue(sStartNodeId);
+            while(tNodeQueue.Count > 0)
+            {
+                string sCurrNode = tNodeQueue.Dequeue();
+                if (sCurrNode == sNodeId) continue;
+                tValidNodes.Add(sCurrNode);
+                foreach(NodeTransitionData transition in tTransitions)
+                {
+                    if(transition.sFromNodeId == sCurrNode)
+                    {
+                        tNodeQueue.Enqueue(transition.sToNodeId);
+                    }
+                }
+            }
+            HashSet<string> tRemoveNodes = new HashSet<string>();
+            foreach (var pair in tNodeMap)
+                if (!tValidNodes.Contains(pair.Key))
+                    tRemoveNodes.Add(pair.Key);
+            foreach (string sRemoveNode in tRemoveNodes)
+                tNodeMap.Remove(sRemoveNode);
+            for(int i = tTransitions.Count - 1; i >= 0; --i)
+            {
+                NodeTransitionData transition = tTransitions[i];
+                if (tRemoveNodes.Contains(transition.sFromNodeId) || tRemoveNodes.Contains(transition.sToNodeId))
+                    tTransitions.RemoveAt(i);
+            }
+        }
+
         public void SetStartNode(BaseNodeData node)
         {
             if (!tNodeMap.ContainsKey(node.sNodeId))

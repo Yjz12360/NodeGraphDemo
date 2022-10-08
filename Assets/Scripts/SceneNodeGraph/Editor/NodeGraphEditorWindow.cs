@@ -93,15 +93,18 @@ namespace SceneNodeGraph
                         nAddNodePath = EditorGUILayout.IntField("路径编号", nAddNodePath);
                         if (GUILayout.Button("添加子节点"))
                         {
-                            nodeGraphEditor.AddNode(sSelectNode, nAddNodeType, nAddNodePath);
+                            if (!string.IsNullOrEmpty(sSelectNode))
+                                nodeGraphEditor.AddNode(sSelectNode, nAddNodeType, nAddNodePath);
+                            else
+                                EditorUtility.DisplayDialog("提示", "没有选中节点", "确定");
                         }
-                        EditorGUI.BeginDisabledGroup(true);
                         if (GUILayout.Button("删除节点"))
                         {
-                            nodeGraphEditor.RemoveNode(sSelectNode);
+                            if (!string.IsNullOrEmpty(sSelectNode))
+                                nodeGraphEditor.RemoveNode(sSelectNode);
+                            else
+                                EditorUtility.DisplayDialog("提示", "没有选中节点", "确定");
                         }
-                        EditorGUI.EndDisabledGroup();
-
                         EditorGUILayout.LabelField("");
                         EditorGUILayout.LabelField("节点属性配置");
                         NodeGraphData nodeGraphData = nodeGraphEditor.GetNodeGraphData();
