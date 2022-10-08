@@ -53,7 +53,6 @@ namespace SceneNodeGraph
             tPendingNodes.Clear();
             tRemoveNodes.Clear();
             nCurrState = NodeGraphState.Running;
-            //TriggerNode(sStartNodeId);
             tPendingNodes.Add(sStartNodeId);
         }
 
@@ -67,7 +66,6 @@ namespace SceneNodeGraph
             }
             if (!tRuntimeNodeMap.ContainsKey(sNodeId))
             {
-                //Debug.LogError($"TriggerNode error: sNodeId {sNodeId} not exist.");
                 FinishNode(sNodeId);
                 return;
             }
@@ -124,7 +122,6 @@ namespace SceneNodeGraph
         }
 
         public void FinishNode(string sNodeId) { FinishNode(sNodeId, 1); }
-        //public void FinishNode(string sNodeId, int nPath) { FinishNode(sNodeId, nPath, false); }
         public void FinishNode(string sNodeId, int nPath)
         {
             if (nodeGraphData == null)
@@ -134,7 +131,6 @@ namespace SceneNodeGraph
             }
             Dictionary<string, BaseNodeData> tNodeMap = nodeGraphData.tNodeMap;
             if (nCurrState != NodeGraphState.Running) return;
-            //tRunningNodes.Remove(sNodeId);
             tRemoveNodes.Add(sNodeId);
             foreach (NodeTransitionData transition in nodeGraphData.tTransitions)
             {
@@ -143,12 +139,9 @@ namespace SceneNodeGraph
                     if (tNodeMap.ContainsKey(transition.sToNodeId))
                     {
                         tPendingNodes.Add(transition.sToNodeId);
-                        //TriggerNode(transition.sToNodeId);
                     }
                 }
             }
-            //if (bSync)
-            //    NodeGraphMessager.S2CFinishNode(nNodeGraphId, sNodeId, nPath);
         }
 
         public bool IsFinished()
@@ -163,6 +156,28 @@ namespace SceneNodeGraph
             if (!tRunningNodes.Contains(sNodeId)) return;
             SvrRuntimeNode node = tRuntimeNodeMap[sNodeId];
             node.FinishNode(nPath);
+        }
+
+        public void OnMonsterDead(int nObjectId)
+        {
+            if (nCurrState != NodeGraphState.Running) return;
+            foreach(string sNodeId in tRunningNodes)
+            {
+                if (!tRuntimeNodeMap.ContainsKey(sNodeId)) continue;
+                SvrRuntimeNode node = tRuntimeNodeMap[sNodeId];
+                node.OnMonsterDead(nObjectId);
+            }
+        }
+
+        public void OnMonsterNumChange(int nNum)
+        {
+            if (nCurrState != NodeGraphState.Running) return;
+            foreach (string sNodeId in tRunningNodes)
+            {
+                if (!tRuntimeNodeMap.ContainsKey(sNodeId)) continue;
+                SvrRuntimeNode node = tRuntimeNodeMap[sNodeId];
+                node.OnMonsterNumChange(nNum);
+            }
         }
     }
 }

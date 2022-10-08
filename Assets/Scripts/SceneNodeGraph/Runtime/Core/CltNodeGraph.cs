@@ -58,7 +58,6 @@ namespace SceneNodeGraph
             tRunningNodes.Clear();
             tPendingNodes.Clear();
             nCurrState = NodeGraphState.Running;
-            //TriggerNode(sStartNodeId);
             tPendingNodes.Add(sStartNodeId);
         }
 
@@ -126,7 +125,6 @@ namespace SceneNodeGraph
             }
             Dictionary<string, BaseNodeData> tNodeMap = nodeGraphData.tNodeMap;
             if (nCurrState != NodeGraphState.Running) return;
-            //tRunningNodes.Remove(sNodeId);
             tRemoveNodes.Add(sNodeId);
             foreach (NodeTransitionData transition in nodeGraphData.tTransitions)
             {
@@ -135,7 +133,6 @@ namespace SceneNodeGraph
                     if (tNodeMap.ContainsKey(transition.sToNodeId))
                     {
                         tPendingNodes.Add(transition.sToNodeId);
-                        //TriggerNode(transition.sToNodeId);
                     }
                 }
             }

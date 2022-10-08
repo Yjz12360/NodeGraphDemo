@@ -48,7 +48,6 @@ namespace SceneNodeGraph
                     if (tRemoveList == null)
                         tRemoveList = new List<int>();
                     tRemoveList.Add(nNodeGraphId);
- 
                     NodeGraphMessager.S2CFinishNodeGraph(nNodeGraphId);
                 }
             }
@@ -60,7 +59,18 @@ namespace SceneNodeGraph
                         nodeGraphs.Remove(nNodeGraphId);
                 }
             }
+        }
 
+        public void OnMonsterDead(int nObjectId)
+        {
+            foreach (SvrNodeGraph nodeGraph in nodeGraphs.Values)
+                nodeGraph.OnMonsterDead(nObjectId);
+        }
+
+        public void OnMonsterNumChange(int nNum)
+        {
+            foreach (SvrNodeGraph nodeGraph in nodeGraphs.Values)
+                nodeGraph.OnMonsterNumChange(nNum);
         }
     }
 }

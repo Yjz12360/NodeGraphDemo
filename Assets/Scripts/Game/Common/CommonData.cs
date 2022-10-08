@@ -15,6 +15,7 @@ namespace Game
     {
         public int nGameObjectId;
         public GameObjectType nType;
+        public int nStaticId;
         public float nSpeed;
     }
 }

@@ -23,22 +23,18 @@ namespace SceneNodeGraph
             OnFinishNode();
             if (nodeGraph != null)
                 nodeGraph.FinishNode(sNodeId, nPath);
-            //if (bSyncFinishNode)
-            //    Messager.C2SFinishNode(sNodeId, nPath);
         }
     }
-
     public class SvrRuntimeNode : BaseRuntimeNode
     {
-        //public static bool bSyncFinishNode = false;
-
         public SvrNodeGraph nodeGraph;
         public BaseNodeData baseNodeData;
         public virtual void StartNode() { }
         public virtual void UpdateNode(float nDeltaTime) { }
         public virtual void OnFinishNode() { }
         public virtual bool SyncFinishNode() { return false; }
-
+        public virtual void OnMonsterDead(int nObjectId) { }
+        public virtual void OnMonsterNumChange(int nNum) { }
         public void FinishNode(int nPath = 1)
         {
             OnFinishNode();
@@ -47,6 +43,5 @@ namespace SceneNodeGraph
             if (SyncFinishNode())
                 NodeGraphMessager.S2CFinishNode(nodeGraph.nNodeGraphId, sNodeId, nPath);
         }
-
     }
 }

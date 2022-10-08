@@ -6,7 +6,7 @@ namespace Game
 {
     public class PlayerControl : MonoBehaviour
     {
-        public float nMoveSpeed = 10.0f;
+        public float nMoveSpeed = 3.0f;
         // Start is called before the first frame update
         private bool bAttacking = false;
         private float nAttackTime = 0.3f;
