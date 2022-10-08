@@ -145,6 +145,13 @@ namespace SceneNodeGraph
                                         if (bNewValue != bOldValue)
                                             fieldInfo.SetValue(nodeData, bNewValue);
                                     }
+                                    else if(fieldType == typeof(Enum))
+                                    {
+                                        Enum oldValue = (Enum)fieldInfo.GetValue(nodeData);
+                                        Enum newValue = EditorGUILayout.EnumPopup(fieldInfo.Name, oldValue);
+                                        if (newValue != oldValue)
+                                            fieldInfo.SetValue(nodeData, newValue);
+                                    }
                                 }
                             }
                         }

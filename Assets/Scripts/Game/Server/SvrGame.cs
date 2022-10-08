@@ -38,6 +38,11 @@ namespace Game
             return false;
         }
 
+        public int GetMonsterNum()
+        {
+            return tObjectData.Count;
+        }
+
         public void RemoveObject(int nObjectId)
         {
             if (!tObjectData.ContainsKey(nObjectId))

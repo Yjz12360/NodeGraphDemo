@@ -15,7 +15,7 @@ namespace SceneNodeGraph
     {
         public CltNodeGraph nodeGraph;
         public BaseNodeData baseNodeData;
-        public virtual void StartNode() { throw new NotImplementedException(); }
+        public virtual void StartNode() { }
         public virtual void UpdateNode(float nDeltaTime) { }
         public virtual void OnFinishNode() { }
         public void FinishNode(int nPath = 1)
@@ -34,7 +34,7 @@ namespace SceneNodeGraph
 
         public SvrNodeGraph nodeGraph;
         public BaseNodeData baseNodeData;
-        public virtual void StartNode() { throw new NotImplementedException(); }
+        public virtual void StartNode() { }
         public virtual void UpdateNode(float nDeltaTime) { }
         public virtual void OnFinishNode() { }
         public virtual bool SyncFinishNode() { return false; }

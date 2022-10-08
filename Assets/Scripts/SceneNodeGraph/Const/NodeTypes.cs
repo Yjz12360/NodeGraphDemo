@@ -14,5 +14,6 @@ namespace SceneNodeGraph
         Delay = 3,
         AddMonster = 4,
         HasMonster = 5,
+        WaitMonsterNum = 6,
     }
 }

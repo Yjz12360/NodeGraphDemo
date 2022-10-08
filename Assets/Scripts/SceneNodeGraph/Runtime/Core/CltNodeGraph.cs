@@ -23,6 +23,7 @@ namespace SceneNodeGraph
         public Dictionary<string, CltRuntimeNode> tRuntimeNodeMap = new Dictionary<string, CltRuntimeNode>();
         public List<string> tRunningNodes = new List<string>();
         public List<string> tPendingNodes = new List<string>();
+        public List<string> tRemoveNodes = new List<string>();
         public void StartGraph()
         {
             if (nodeGraphData == null)
@@ -57,7 +58,8 @@ namespace SceneNodeGraph
             tRunningNodes.Clear();
             tPendingNodes.Clear();
             nCurrState = NodeGraphState.Running;
-            TriggerNode(sStartNodeId);
+            //TriggerNode(sStartNodeId);
+            tPendingNodes.Add(sStartNodeId);
         }
 
         public void TriggerNode(string sNodeId)
@@ -65,11 +67,6 @@ namespace SceneNodeGraph
             if (nodeGraphData == null)
             {
                 Debug.LogError($"TriggerNode Error: nodeGraphData not exist.");
-                return;
-            }
-            if (!tRuntimeNodeMap.ContainsKey(sNodeId))
-            {
-                //Debug.LogError($"TriggerNode error: sNodeId {sNodeId} not exist.");
                 return;
             }
             tRunningNodes.Add(sNodeId);
@@ -97,11 +94,6 @@ namespace SceneNodeGraph
                 {
                     TriggerNode(sNodeId);
                 }
-                //foreach(string sNodeId in tPendingNodes)
-                //{
-                //    TriggerNode(sNodeId);
-                //}
-                //tPendingNodes.Clear();
             }
             foreach (string sNodeId in tRunningNodes)
             {
@@ -110,6 +102,14 @@ namespace SceneNodeGraph
                     CltRuntimeNode node = tRuntimeNodeMap[sNodeId];
                     node.UpdateNode(nDeltaTime);
                 }
+            }
+            if(tRemoveNodes.Count > 0)
+            {
+                foreach(string sNodeId in tRemoveNodes)
+                {
+                    tRunningNodes.Remove(sNodeId);
+                }
+                tRemoveNodes.Clear();
             }
             if (tRunningNodes.Count == 0 && tPendingNodes.Count == 0)
             {
@@ -126,7 +126,8 @@ namespace SceneNodeGraph
             }
             Dictionary<string, BaseNodeData> tNodeMap = nodeGraphData.tNodeMap;
             if (nCurrState != NodeGraphState.Running) return;
-            tRunningNodes.Remove(sNodeId);
+            //tRunningNodes.Remove(sNodeId);
+            tRemoveNodes.Add(sNodeId);
             foreach (NodeTransitionData transition in nodeGraphData.tTransitions)
             {
                 if (transition.sFromNodeId == sNodeId && transition.nPath == nPath)
@@ -154,7 +155,6 @@ namespace SceneNodeGraph
         public void OnSyncFinishNode(string sNodeId, int nPath)
         {
             if (nCurrState != NodeGraphState.Running) return;
-            //if (!tRunningNodes.Contains(sNodeId)) return;
             if (tRuntimeNodeMap.ContainsKey(sNodeId))
             {
                 CltRuntimeNode node = tRuntimeNodeMap[sNodeId];

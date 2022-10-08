@@ -17,7 +17,7 @@ namespace SceneNodeGraph
         public Dictionary<string, SvrRuntimeNode> tRuntimeNodeMap = new Dictionary<string, SvrRuntimeNode>();
         public List<string> tRunningNodes = new List<string>();
         public List<string> tPendingNodes = new List<string>();
-
+        public List<string> tRemoveNodes = new List<string>();
         public void StartGraph()
         {
             if (nodeGraphData == null)
@@ -51,8 +51,10 @@ namespace SceneNodeGraph
 
             tRunningNodes.Clear();
             tPendingNodes.Clear();
+            tRemoveNodes.Clear();
             nCurrState = NodeGraphState.Running;
-            TriggerNode(sStartNodeId);
+            //TriggerNode(sStartNodeId);
+            tPendingNodes.Add(sStartNodeId);
         }
 
         public void TriggerNode(string sNodeId)
@@ -107,6 +109,14 @@ namespace SceneNodeGraph
                     node.UpdateNode(nDeltaTime);
                 }
             }
+            if(tRemoveNodes.Count > 0)
+            {
+                foreach(string sNodeId in tRemoveNodes)
+                {
+                    tRunningNodes.Remove(sNodeId);
+                }
+                tRemoveNodes.Clear();
+            }
             if (tRunningNodes.Count == 0 && tPendingNodes.Count == 0)
             {
                 nCurrState = NodeGraphState.Finished;
@@ -124,7 +134,8 @@ namespace SceneNodeGraph
             }
             Dictionary<string, BaseNodeData> tNodeMap = nodeGraphData.tNodeMap;
             if (nCurrState != NodeGraphState.Running) return;
-            tRunningNodes.Remove(sNodeId);
+            //tRunningNodes.Remove(sNodeId);
+            tRemoveNodes.Add(sNodeId);
             foreach (NodeTransitionData transition in nodeGraphData.tTransitions)
             {
                 if (transition.sFromNodeId == sNodeId && transition.nPath == nPath)

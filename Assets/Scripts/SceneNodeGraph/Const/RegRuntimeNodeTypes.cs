@@ -45,6 +45,7 @@ namespace SceneNodeGraph
             {NodeType.Delay, typeof(SvrDelayNode) },
             {NodeType.AddMonster, typeof(SvrAddMonsterNode) },
             {NodeType.HasMonster, typeof(SvrHasMonsterNode) },
+            {NodeType.WaitMonsterNum, typeof(SvrWaitMonsterNumNode) },
         };
     }
 }
