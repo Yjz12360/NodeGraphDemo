@@ -28,6 +28,11 @@ namespace Game
             }
         }
 
+        public static void S2CAddPlayer(int nObjectId, Vector3 position)
+        {
+            ClientComp.AddPlayer(nObjectId, position);
+        }
+
         public static void S2CAddMonster(int nObjectId, Vector3 position)
         {
             ClientComp.AddMonster(nObjectId, position);
@@ -37,17 +42,20 @@ namespace Game
         {
             ClientComp.MonsterMove(nObjectId, position);
         }
+        public static void S2CMonsterDead(int nObjectId)
+        {
+            ClientComp.MonsterDead(nObjectId);
+        }
 
         public static void C2SAttackHitMonster(int nObjectId)
         {
             ServerComp.AttackHitMonster(nObjectId);
         }
 
-        public static void S2CMonsterDead(int nObjectId)
+        public static void C2SSyncPlayerPos(int nObjectId, float nPosX, float nPosY, float nPosZ)
         {
-            ClientComp.MonsterDead(nObjectId);
+            ServerComp.OnSyncPlayerPos(nObjectId, nPosX, nPosY, nPosZ);
         }
-
     }
 }
 
