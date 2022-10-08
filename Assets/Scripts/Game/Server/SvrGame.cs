@@ -126,8 +126,8 @@ namespace Game
             if (!tObjectData.ContainsKey(nObjectId)) return;
             if (tObjectData[nObjectId].nType != GameObjectType.Monster) return;
             nodeGraphManager.OnMonsterDead(nObjectId);
-            nodeGraphManager.OnMonsterNumChange(GetMonsterNum());
             RemoveObject(nObjectId);
+            nodeGraphManager.OnMonsterNumChange(GetMonsterNum());
             GameMessager.S2CMonsterDead(nObjectId);
         }
 

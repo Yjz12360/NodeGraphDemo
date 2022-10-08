@@ -1,0 +1,118 @@
+{
+  "tNodeMap": {
+    "1": {
+      "nNodeType": 0,
+      "sNodeId": "1"
+    },
+    "2": {
+      "nNodeType": 4,
+      "nPosX": 6.0,
+      "nPosY": 0.0,
+      "nPosZ": 6.0,
+      "sNodeId": "2"
+    },
+    "3": {
+      "nNodeType": 4,
+      "nPosX": -6.0,
+      "nPosY": 0.0,
+      "nPosZ": 6.0,
+      "sNodeId": "3"
+    },
+    "4": {
+      "nNodeType": 4,
+      "nPosX": -6.0,
+      "nPosY": 0.0,
+      "nPosZ": -6.0,
+      "sNodeId": "4"
+    },
+    "5": {
+      "nNodeType": 4,
+      "nPosX": 6.0,
+      "nPosY": 0.0,
+      "nPosZ": -6.0,
+      "sNodeId": "5"
+    },
+    "8": {
+      "nNodeType": 4,
+      "nPosX": 6.0,
+      "nPosY": 0.0,
+      "nPosZ": -6.0,
+      "sNodeId": "8"
+    },
+    "7": {
+      "nNodeType": 4,
+      "nPosX": 6.0,
+      "nPosY": 0.0,
+      "nPosZ": 6.0,
+      "sNodeId": "7"
+    },
+    "6": {
+      "nNodeType": 6,
+      "nCompareType": 1,
+      "nNum": 3,
+      "sNodeId": "6"
+    },
+    "9": {
+      "nNodeType": 4,
+      "nPosX": -6.0,
+      "nPosY": 0.0,
+      "nPosZ": -6.0,
+      "sNodeId": "9"
+    },
+    "10": {
+      "nNodeType": 4,
+      "nPosX": -6.0,
+      "nPosY": 0.0,
+      "nPosZ": 6.0,
+      "sNodeId": "10"
+    }
+  },
+  "tTransitions": {
+    "0": {
+      "sFromNodeId": "1",
+      "sToNodeId": "2",
+      "nPath": 1
+    },
+    "1": {
+      "sFromNodeId": "1",
+      "sToNodeId": "3",
+      "nPath": 1
+    },
+    "2": {
+      "sFromNodeId": "1",
+      "sToNodeId": "4",
+      "nPath": 1
+    },
+    "3": {
+      "sFromNodeId": "1",
+      "sToNodeId": "5",
+      "nPath": 1
+    },
+    "4": {
+      "sFromNodeId": "5",
+      "sToNodeId": "6",
+      "nPath": 1
+    },
+    "5": {
+      "sFromNodeId": "6",
+      "sToNodeId": "7",
+      "nPath": 1
+    },
+    "6": {
+      "sFromNodeId": "6",
+      "sToNodeId": "8",
+      "nPath": 1
+    },
+    "7": {
+      "sFromNodeId": "6",
+      "sToNodeId": "9",
+      "nPath": 1
+    },
+    "8": {
+      "sFromNodeId": "6",
+      "sToNodeId": "10",
+      "nPath": 1
+    }
+  },
+  "sStartNodeId": "1"
+}
