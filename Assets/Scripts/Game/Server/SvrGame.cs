@@ -28,19 +28,20 @@ namespace Game
             return nCurrId++;
         }
 
-        public int AddMonster(Vector3 position) { return AddMonster(position, -1); }
-        public int AddMonster(Vector3 position, int nStaticId)
+        public int AddMonster(int nMonsterTid, Vector3 position) { return AddMonster(nMonsterTid, position, -1); }
+        public int AddMonster(int nMonsterTid, Vector3 position, int nStaticId)
         {
             SvrObjectData svrObjectData = new SvrObjectData();
             svrObjectData.nGameObjectId = nCurrId;
             svrObjectData.nType = GameObjectType.Monster;
             svrObjectData.nStaticId = nStaticId;
+            svrObjectData.nMonsterTid = nMonsterTid;
             svrObjectData.nSpeed = 3.0f; // TODO
             svrObjectData.position = position;
             tObjectData[nCurrId] = svrObjectData;
             tMonsterAI[nCurrId] = new MonsterAI(svrObjectData);
             nodeGraphManager.OnMonsterNumChange(GetMonsterNum());
-            GameMessager.S2CAddMonster(nCurrId, position);
+            GameMessager.S2CAddMonster(nCurrId, nMonsterTid, position);
             return nCurrId++;
         }
 
@@ -162,13 +163,17 @@ namespace Game
             for(int i = 0; i < staticMonster.childCount; ++i)
             {
                 Transform child = staticMonster.GetChild(i);
+                if (!child.gameObject.activeSelf) continue;
                 int nStaticId = int.Parse(child.name);
-                AddMonster(child.position, nStaticId);
+                MonsterConfig monsterConfig = child.gameObject.GetComponent<MonsterConfig>();
+                int nMonsterTid = monsterConfig.nMonsterTid;
+                AddMonster(nMonsterTid, child.position, nStaticId);
             }
             Transform triggerConfig = transform.Find("TriggerConfig");
             for(int i = 0; i < triggerConfig.childCount; ++i)
             {
                 Transform child = triggerConfig.GetChild(i);
+                if (!child.gameObject.activeSelf) continue;
                 int nStaticId = int.Parse(child.name);
                 TriggerConfig config = child.gameObject.GetComponent<TriggerConfig>();
                 if (config != null)

@@ -13,6 +13,7 @@ namespace Game
         public int nGameObjectId;
         public GameObjectType nType;
         public int nStaticId;
+        public int nMonsterTid;
         public float nSpeed;
         public Vector3 position = Vector3.zero;
     }

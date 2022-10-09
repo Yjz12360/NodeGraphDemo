@@ -33,9 +33,9 @@ namespace Game
             ClientComp.AddPlayer(nObjectId, position);
         }
 
-        public static void S2CAddMonster(int nObjectId, Vector3 position)
+        public static void S2CAddMonster(int nObjectId, int nMonsterTid, Vector3 position)
         {
-            ClientComp.AddMonster(nObjectId, position);
+            ClientComp.AddMonster(nObjectId, nMonsterTid, position);
         }
 
         public static void S2CMonsterMove(int nObjectId, Vector3 position)

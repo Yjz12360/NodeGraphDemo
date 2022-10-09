@@ -8,6 +8,7 @@ namespace SceneNodeGraph
     {
         public override NodeType GetNodeType() { return NodeType.AddMonster; }
 
+        public int nMonsterTid;
         public float nPosX;
         public float nPosY;
         public float nPosZ;
@@ -23,7 +24,7 @@ namespace SceneNodeGraph
             float nPosX = NodeData.nPosX;
             float nPosY = NodeData.nPosY;
             float nPosZ = NodeData.nPosZ;
-            nodeGraph.game.AddMonster(new Vector3(nPosX, nPosY, nPosZ));
+            nodeGraph.game.AddMonster(NodeData.nMonsterTid, new Vector3(nPosX, nPosY, nPosZ));
             FinishNode();
         }
     }

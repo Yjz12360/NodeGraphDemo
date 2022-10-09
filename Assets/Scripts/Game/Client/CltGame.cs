@@ -7,7 +7,7 @@ namespace Game
     public class CltGame: MonoBehaviour
     {
         private GameObject playerPrefab;
-        private GameObject monsterPrefab;
+        //private GameObject monsterPrefab;
         private GameObject triggerPrefab;
         private Transform playerRoot;
         private Transform monsterRoot;
@@ -19,16 +19,27 @@ namespace Game
         private float nSyncTime = 0.2f;
         private float nSyncTimer = 0;
 
+        private MonsterPrefabs monsterPrefabs;
+
         private void Awake()
         {
             playerPrefab = (GameObject)Resources.Load("GamePrefabs/Player/Player");
-            monsterPrefab = (GameObject)Resources.Load("GamePrefabs/Monster/Monster");
+            //monsterPrefab = (GameObject)Resources.Load("GamePrefabs/Monster/Monster");
             triggerPrefab = (GameObject)Resources.Load("GamePrefabs/Trigger/Trigger");
             playerRoot = GameObject.Find("GameObjects/Players").transform;
             monsterRoot = GameObject.Find("GameObjects/Monsters").transform;
             triggerRoot = GameObject.Find("GameObjects/Triggers").transform;
 
             mainCamera = GameObject.Find("Main Camera");
+
+            monsterPrefabs = GameObject.Find("GameResources").GetComponent<MonsterPrefabs>();
+        }
+
+        private GameObject GetMonsterPrefab(int nMonsterTid)
+        {
+            if (nMonsterTid >= 0 && nMonsterTid < monsterPrefabs.prefabs.Count)
+                return monsterPrefabs.prefabs[nMonsterTid];
+            return null;
         }
 
         private Dictionary<int, GameObject> tGameObjects = new Dictionary<int, GameObject>();
@@ -54,8 +65,14 @@ namespace Game
             }
         }
 
-        public void AddMonster(int nObjectId, Vector3 position)
+        public void AddMonster(int nObjectId, int nMonsterTid, Vector3 position)
         {
+            GameObject monsterPrefab = GetMonsterPrefab(nMonsterTid);
+            if(monsterPrefab == null)
+            {
+                Debug.LogError($"CltGame AddMonster error: prefab not exist. nMonsterTid:{nMonsterTid}");
+                return;
+            }
             GameObject instance = GameObject.Instantiate(monsterPrefab);
             instance.transform.SetParent(monsterRoot);
             instance.transform.position = position;
