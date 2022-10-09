@@ -25,6 +25,7 @@ namespace Game
                     float nSpeed = cltObjectData.nSpeed;
                     Vector3 dir = (movePos - transform.position).normalized;
                     transform.position = transform.position + dir * nSpeed * Time.deltaTime;
+                    transform.forward = dir;
                     float nDistance = Vector3.Magnitude(movePos - transform.position);
                     if (nDistance <= 0.2f)
                         bMoving = false;
