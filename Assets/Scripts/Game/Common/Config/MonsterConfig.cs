@@ -11,6 +11,8 @@ namespace Game
         public int nPrefabId;
         public int nHP;
         public int nAtk;
+        public int nMoveSpeed;
+        public bool bActiveAI;
     }
     public class MonsterConfig : MonoBehaviour
     {

@@ -6,8 +6,6 @@ namespace Game
 {
     public class CltGame: MonoBehaviour
     {
-        private GameObject playerPrefab;
-        //private GameObject monsterPrefab;
         private GameObject triggerPrefab;
         private Transform playerRoot;
         private Transform monsterRoot;
@@ -20,12 +18,10 @@ namespace Game
         private float nSyncTime = 0.2f;
         private float nSyncTimer = 0;
 
-        private MonsterPrefabs monsterPrefabs;
+        private RolePrefabs rolePrefabs;
         private ExplosionPrefabs explosionPrefabs;
         private void Awake()
         {
-            playerPrefab = (GameObject)Resources.Load("GamePrefabs/Player/Player");
-            //monsterPrefab = (GameObject)Resources.Load("GamePrefabs/Monster/Monster");
             triggerPrefab = (GameObject)Resources.Load("GamePrefabs/Trigger/Trigger");
             playerRoot = GameObject.Find("GameObjects/Players").transform;
             monsterRoot = GameObject.Find("GameObjects/Monsters").transform;
@@ -34,9 +30,9 @@ namespace Game
 
             mainCamera = GameObject.Find("Main Camera");
 
-            GameObject gameResources = GameObject.Find("GameResources");
-            monsterPrefabs = gameResources.GetComponent<MonsterPrefabs>();
-            explosionPrefabs = gameResources.GetComponent<ExplosionPrefabs>();
+            GameObject gamePrefabs = GameObject.Find("GamePrefabs");
+            rolePrefabs = gamePrefabs.GetComponent<RolePrefabs>();
+            explosionPrefabs = gamePrefabs.GetComponent<ExplosionPrefabs>();
         }
 
         private GameObject GetByTid(List<GameObject> prefabs, int nTid)
@@ -50,7 +46,13 @@ namespace Game
 
         public void AddPlayer(int nObjectId, PlayerConfigData configData, Vector3 position)
         {
-            GameObject instance = GameObject.Instantiate(playerPrefab);
+            GameObject playerPrefab = GetByTid(rolePrefabs.prefabs, configData.nPrefabId);
+            if (playerPrefab == null)
+            {
+                Debug.LogError($"CltGame AddPlayer error: prefab not exist. nPrefabId:{configData.nPrefabId}");
+                return;
+            }
+            GameObject instance = Instantiate(playerPrefab);
             instance.transform.SetParent(playerRoot);
             instance.transform.position = position;
             instance.name = $"Player_{nObjectId}";
@@ -59,10 +61,10 @@ namespace Game
                 cltObjectData = instance.AddComponent<CltObjectData>();
             cltObjectData.nGameObjectId = nObjectId;
             cltObjectData.nType = GameObjectType.Player;
-            cltObjectData.nSpeed = 3.0f;
             cltObjectData.nMaxHP = configData.nHP;
             cltObjectData.nCurrHP = configData.nHP;
             cltObjectData.nAtk = configData.nAtk;
+            cltObjectData.nSpeed = configData.nMoveSpeed;
             tGameObjects[nObjectId] = instance;
             localPlayer = instance;
             if (mainCamera != null)
@@ -74,8 +76,7 @@ namespace Game
 
         public void AddMonster(int nObjectId, MonsterConfigData configData, Vector3 position)
         {
-            GameObject monsterPrefab = GetByTid(monsterPrefabs.prefabs, configData.nPrefabId);
-            //GameObject monsterPrefab = GetMonsterPrefab(nMonsterTid);
+            GameObject monsterPrefab = GetByTid(rolePrefabs.prefabs, configData.nPrefabId);
             if(monsterPrefab == null)
             {
                 Debug.LogError($"CltGame AddMonster error: prefab not exist. nPrefabId:{configData.nPrefabId}");

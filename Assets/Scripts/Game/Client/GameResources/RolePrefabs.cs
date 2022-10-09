@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game
 {
-    public class MonsterPrefabs : MonoBehaviour
+    public class RolePrefabs : MonoBehaviour
     {
         public List<GameObject> prefabs = new List<GameObject>();
     }

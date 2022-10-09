@@ -21,30 +21,37 @@ namespace Game
             SvrObjectData svrObjectData = new SvrObjectData();
             svrObjectData.nGameObjectId = nCurrId;
             svrObjectData.nType = GameObjectType.Player;
-            svrObjectData.nSpeed = 3.0f;
             svrObjectData.position = position;
             svrObjectData.nMaxHP = configData.nHP;
             svrObjectData.nCurrHP = configData.nHP;
             svrObjectData.nAtk = configData.nAtk;
+            svrObjectData.nSpeed = configData.nMoveSpeed;
             tObjectData[nCurrId] = svrObjectData;
             GameMessager.S2CAddPlayer(nCurrId, configData, position);
             return nCurrId++;
         }
 
-        public int AddMonster(MonsterConfigData configData, Vector3 position) { return AddMonster(configData, position, -1); }
-        public int AddMonster(MonsterConfigData configData, Vector3 position, int nStaticId)
+        public int AddMonster(int nConfigId, Vector3 position) { return AddMonster(nConfigId, position, -1); }
+        public int AddMonster(int nConfigId, Vector3 position, int nStaticId)
         {
+            if (!Config.Monster.ContainsKey(nConfigId))
+            {
+                Debug.LogError("AddMonster error, config not found.");
+                return -1;
+            }
+            MonsterConfigData configData = Config.Monster[nConfigId];
             SvrObjectData svrObjectData = new SvrObjectData();
             svrObjectData.nGameObjectId = nCurrId;
             svrObjectData.nType = GameObjectType.Monster;
             svrObjectData.nStaticId = nStaticId;
-            svrObjectData.nSpeed = 3.0f; // TODO
+            svrObjectData.nSpeed = configData.nMoveSpeed;
             svrObjectData.nMaxHP = configData.nHP;
             svrObjectData.nCurrHP = configData.nHP;
             svrObjectData.nAtk = configData.nAtk;
             svrObjectData.position = position;
             tObjectData[nCurrId] = svrObjectData;
             tMonsterAI[nCurrId] = new MonsterAI(svrObjectData);
+            tMonsterAI[nCurrId].SetActive(configData.bActiveAI);
             nodeGraphManager.OnMonsterNumChange(GetMonsterNum());
             GameMessager.S2CAddMonster(nCurrId, configData, position);
             return nCurrId++;
@@ -201,7 +208,7 @@ namespace Game
         {
             Transform playerData = transform.Find("Player").GetChild(0);
             PlayerConfig playerConfig = playerData.gameObject.GetComponent<PlayerConfig>();
-            if(playerConfig == null)
+            if (playerConfig == null)
             {
                 Debug.LogError("PlayerConfig not found");
                 return;
@@ -213,8 +220,9 @@ namespace Game
                 Transform child = staticMonster.GetChild(i);
                 if (!child.gameObject.activeSelf) continue;
                 int nStaticId = int.Parse(child.name);
-                MonsterConfig monsterConfig = child.gameObject.GetComponent<MonsterConfig>();
-                AddMonster(monsterConfig.data, child.position, nStaticId);
+                ConfigId configId = child.gameObject.GetComponent<ConfigId>();
+                if (configId == null || !Config.Monster.ContainsKey(configId.nConfigId)) continue;
+                AddMonster(configId.nConfigId, child.position, nStaticId);
             }
             Transform triggerConfig = transform.Find("TriggerConfig");
             for(int i = 0; i < triggerConfig.childCount; ++i)

@@ -69,13 +69,21 @@ namespace Game
     {
         private SvrObjectData objectData;
         private MonsterAction currAction = null;
+        private bool bActive = true;
 
         public MonsterAI(SvrObjectData objectData)
         {
             this.objectData = objectData;
         }
+
+        public void SetActive(bool bActive)
+        {
+            this.bActive = bActive;
+        }
+
         public void Update(float nDeltaTime)
         {
+            if (!bActive) return;
             if(currAction == null)
             {
                 if(Random.Range(0.0f, 1.0f) < 0.3f)
