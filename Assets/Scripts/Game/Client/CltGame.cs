@@ -78,11 +78,13 @@ namespace Game
             monsterControl.Move(position);
         }
 
-        public void RemoveObject(int nObjectId)
+        public void RemoveObject(int nObjectId) { RemoveObject(nObjectId, true); }
+        public void RemoveObject(int nObjectId, bool bDestroy)
         {
             if (!tGameObjects.ContainsKey(nObjectId))
                 return;
-            Destroy(tGameObjects[nObjectId]);
+            if (bDestroy)
+                Destroy(tGameObjects[nObjectId]);
             tGameObjects.Remove(nObjectId);
         }
 
@@ -94,7 +96,11 @@ namespace Game
 
         public void MonsterDead(int nObjectId)
         {
-            RemoveObject(nObjectId);
+            if (!tGameObjects.ContainsKey(nObjectId))
+                return;
+            MonsterControl monsterControl = tGameObjects[nObjectId].GetComponent<MonsterControl>();
+            monsterControl.Dead();
+            RemoveObject(nObjectId, false);
         }
 
         public void AddTrigger(int nObjectId, Vector3 position)
