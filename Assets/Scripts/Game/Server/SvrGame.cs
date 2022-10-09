@@ -155,6 +155,20 @@ namespace Game
                 RemoveObject(nObjectId);
         }
 
+        public List<int> GetRangeRoles(Vector3 center, float nRadius)
+        {
+            List<int> result = new List<int>();
+            foreach (var pair in tObjectData)
+            {
+                SvrObjectData objectData = pair.Value;
+                if(objectData.nType == GameObjectType.Monster || objectData.nType == GameObjectType.Player)
+                {
+                    result.Add(pair.Key);
+                }
+            }
+            return result;
+        }
+
         private void InitGameObjects()
         {
             Transform playerBornPos = transform.Find("PlayerBornPos").GetChild(0);

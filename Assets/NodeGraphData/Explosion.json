@@ -1,0 +1,36 @@
+{
+  "tNodeMap": {
+    "1": {
+      "nNodeType": 0,
+      "sNodeId": "1"
+    },
+    "2": {
+      "nNodeType": 3,
+      "nDelayTime": 1.0,
+      "sNodeId": "2"
+    },
+    "3": {
+      "nNodeType": 8,
+      "nEffectId": 1,
+      "nPosX": 0.0,
+      "nPosY": 2.0,
+      "nPosZ": 2.0,
+      "nAffectRadius": 2.0,
+      "nDisplayScale": 3.0,
+      "sNodeId": "3"
+    }
+  },
+  "tTransitions": {
+    "0": {
+      "sFromNodeId": "1",
+      "sToNodeId": "2",
+      "nPath": 1
+    },
+    "1": {
+      "sFromNodeId": "2",
+      "sToNodeId": "3",
+      "nPath": 1
+    }
+  },
+  "sStartNodeId": "1"
+}

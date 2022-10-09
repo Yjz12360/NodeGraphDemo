@@ -145,8 +145,8 @@ namespace SceneNodeGraph
 
         public void OnSyncFinishGraph()
         {
-            tRunningNodes.Clear();
-            nCurrState = NodeGraphState.Finished;
+            //tRunningNodes.Clear();
+            //nCurrState = NodeGraphState.Finished;
         }
 
         public void OnSyncFinishNode(string sNodeId, int nPath)

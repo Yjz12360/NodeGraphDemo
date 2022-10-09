@@ -12,6 +12,7 @@ namespace Game
         private Transform playerRoot;
         private Transform monsterRoot;
         private Transform triggerRoot;
+        private Transform explosionRoot;
 
         private GameObject mainCamera;
 
@@ -20,7 +21,7 @@ namespace Game
         private float nSyncTimer = 0;
 
         private MonsterPrefabs monsterPrefabs;
-
+        private ExplosionPrefabs explosionPrefabs;
         private void Awake()
         {
             playerPrefab = (GameObject)Resources.Load("GamePrefabs/Player/Player");
@@ -29,18 +30,27 @@ namespace Game
             playerRoot = GameObject.Find("GameObjects/Players").transform;
             monsterRoot = GameObject.Find("GameObjects/Monsters").transform;
             triggerRoot = GameObject.Find("GameObjects/Triggers").transform;
+            explosionRoot = GameObject.Find("Explosions").transform;
 
             mainCamera = GameObject.Find("Main Camera");
 
-            monsterPrefabs = GameObject.Find("GameResources").GetComponent<MonsterPrefabs>();
+            GameObject gameResources = GameObject.Find("GameResources");
+            monsterPrefabs = gameResources.GetComponent<MonsterPrefabs>();
+            explosionPrefabs = gameResources.GetComponent<ExplosionPrefabs>();
         }
 
-        private GameObject GetMonsterPrefab(int nMonsterTid)
+        private GameObject GetByTid(List<GameObject> prefabs, int nTid)
         {
-            if (nMonsterTid >= 0 && nMonsterTid < monsterPrefabs.prefabs.Count)
-                return monsterPrefabs.prefabs[nMonsterTid];
+            if (nTid >= 0 && nTid < prefabs.Count)
+                return prefabs[nTid];
             return null;
         }
+        //private GameObject GetMonsterPrefab(int nMonsterTid)
+        //{
+        //    if (nMonsterTid >= 0 && nMonsterTid < monsterPrefabs.prefabs.Count)
+        //        return monsterPrefabs.prefabs[nMonsterTid];
+        //    return null;
+        //}
 
         private Dictionary<int, GameObject> tGameObjects = new Dictionary<int, GameObject>();
 
@@ -67,7 +77,8 @@ namespace Game
 
         public void AddMonster(int nObjectId, int nMonsterTid, Vector3 position)
         {
-            GameObject monsterPrefab = GetMonsterPrefab(nMonsterTid);
+            GameObject monsterPrefab = GetByTid(monsterPrefabs.prefabs, nMonsterTid);
+            //GameObject monsterPrefab = GetMonsterPrefab(nMonsterTid);
             if(monsterPrefab == null)
             {
                 Debug.LogError($"CltGame AddMonster error: prefab not exist. nMonsterTid:{nMonsterTid}");
@@ -132,6 +143,22 @@ namespace Game
             gameObjectData.nGameObjectId = nObjectId;
             gameObjectData.nType = GameObjectType.Trigger;
             tGameObjects[nObjectId] = instance;
+        }
+
+        public void PlayExplosion(Vector3 position, int nEffectId, float nDisplayScale)
+        {
+            GameObject explosionPrefab = GetByTid(explosionPrefabs.prefabs, nEffectId);
+            GameObject instance = Instantiate(explosionPrefab);
+            instance.transform.SetParent(explosionRoot);
+            instance.transform.position = position;
+            instance.transform.localScale = new Vector3(nDisplayScale, nDisplayScale, nDisplayScale);
+            ParticleSystem ps = instance.GetComponent<ParticleSystem>();
+            if(ps == null)
+            {
+                Debug.LogError("Explosion has no ParticleSystem component.");
+                return;
+            }
+            instance.AddComponent<DestroyParticleOnStop>();
         }
 
         private void Update()

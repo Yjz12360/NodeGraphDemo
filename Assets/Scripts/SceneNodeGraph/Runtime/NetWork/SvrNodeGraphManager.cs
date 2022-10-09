@@ -7,7 +7,9 @@ namespace SceneNodeGraph
     public class SvrNodeGraphManager : MonoBehaviour
     {
 
-        public TextAsset initConfigFile;
+        //public TextAsset initConfigFile;
+        public List<TextAsset> initConfigFiles = new List<TextAsset>();
+
 
         private int nCurrId = 0;
         private Dictionary<int, SvrNodeGraph> nodeGraphs = new Dictionary<int, SvrNodeGraph>();
@@ -15,8 +17,8 @@ namespace SceneNodeGraph
         public void Start()
         {
             game = gameObject.GetComponent<Game.SvrGame>();
-            if (initConfigFile != null)
-                OnTriggerNodeGraph($"{initConfigFile.name}.json");
+            foreach(TextAsset configFile in initConfigFiles)
+                OnTriggerNodeGraph($"{configFile.name}.json");
         }
         private SvrNodeGraph AddNodeGraph(string sConfigFile)
         {

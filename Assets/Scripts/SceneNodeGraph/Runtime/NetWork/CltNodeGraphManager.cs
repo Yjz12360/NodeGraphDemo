@@ -9,7 +9,7 @@ namespace SceneNodeGraph
         private Dictionary<int, CltNodeGraph> nodeGraphs = new Dictionary<int, CltNodeGraph>();
         private Game.CltGame game;
 
-        private void Start()
+        private void Awake()
         {
             game = gameObject.GetComponent<Game.CltGame>();
         }

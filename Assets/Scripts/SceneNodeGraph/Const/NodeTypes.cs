@@ -16,5 +16,6 @@ namespace SceneNodeGraph
         HasMonster = 5,
         WaitMonsterNum = 6,
         WaitMonsterDead = 7,
+        Explode = 8,
     }
 }
