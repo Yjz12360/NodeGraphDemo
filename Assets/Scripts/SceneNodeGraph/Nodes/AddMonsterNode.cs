@@ -8,7 +8,8 @@ namespace SceneNodeGraph
     {
         public override NodeType GetNodeType() { return NodeType.AddMonster; }
 
-        public int nMonsterTid;
+        public int nPrefabId;
+        public int nHP;
         public float nPosX;
         public float nPosY;
         public float nPosZ;
@@ -24,7 +25,10 @@ namespace SceneNodeGraph
             float nPosX = NodeData.nPosX;
             float nPosY = NodeData.nPosY;
             float nPosZ = NodeData.nPosZ;
-            nodeGraph.game.AddMonster(NodeData.nMonsterTid, new Vector3(nPosX, nPosY, nPosZ));
+            Game.MonsterConfigData configData = new Game.MonsterConfigData();
+            configData.nPrefabId = NodeData.nPrefabId;
+            configData.nHP = NodeData.nHP;
+            nodeGraph.game.AddMonster(configData, new Vector3(nPosX, nPosY, nPosZ));
             FinishNode();
         }
     }

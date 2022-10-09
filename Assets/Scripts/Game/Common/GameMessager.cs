@@ -28,14 +28,14 @@ namespace Game
             }
         }
 
-        public static void S2CAddPlayer(int nObjectId, Vector3 position)
+        public static void S2CAddPlayer(int nObjectId, PlayerConfigData configData, Vector3 position)
         {
-            ClientComp.AddPlayer(nObjectId, position);
+            ClientComp.AddPlayer(nObjectId, configData, position);
         }
 
-        public static void S2CAddMonster(int nObjectId, int nMonsterTid, Vector3 position)
+        public static void S2CAddMonster(int nObjectId, MonsterConfigData configData, Vector3 position)
         {
-            ClientComp.AddMonster(nObjectId, nMonsterTid, position);
+            ClientComp.AddMonster(nObjectId, configData, position);
         }
 
         public static void S2CMonsterMove(int nObjectId, Vector3 position)

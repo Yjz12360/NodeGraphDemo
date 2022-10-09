@@ -15,8 +15,9 @@
       "nPosX": 0.0,
       "nPosY": 2.0,
       "nPosZ": 2.0,
-      "nAffectRadius": 2.0,
+      "nAffectRadius": 100.0,
       "nDisplayScale": 3.0,
+      "nDamage": 1,
       "sNodeId": "3"
     }
   },

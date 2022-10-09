@@ -16,32 +16,37 @@ namespace Game
         private Dictionary<int, SvrTriggerData> tTriggerConfig = new Dictionary<int, SvrTriggerData>();
         private SceneNodeGraph.SvrNodeGraphManager nodeGraphManager;
 
-        public int AddPlayer(Vector3 position)
+        public int AddPlayer(PlayerConfigData configData, Vector3 position)
         {
             SvrObjectData svrObjectData = new SvrObjectData();
             svrObjectData.nGameObjectId = nCurrId;
             svrObjectData.nType = GameObjectType.Player;
             svrObjectData.nSpeed = 3.0f;
             svrObjectData.position = position;
+            svrObjectData.nMaxHP = configData.nHP;
+            svrObjectData.nCurrHP = configData.nHP;
+            svrObjectData.nAtk = configData.nAtk;
             tObjectData[nCurrId] = svrObjectData;
-            GameMessager.S2CAddPlayer(nCurrId, position);
+            GameMessager.S2CAddPlayer(nCurrId, configData, position);
             return nCurrId++;
         }
 
-        public int AddMonster(int nMonsterTid, Vector3 position) { return AddMonster(nMonsterTid, position, -1); }
-        public int AddMonster(int nMonsterTid, Vector3 position, int nStaticId)
+        public int AddMonster(MonsterConfigData configData, Vector3 position) { return AddMonster(configData, position, -1); }
+        public int AddMonster(MonsterConfigData configData, Vector3 position, int nStaticId)
         {
             SvrObjectData svrObjectData = new SvrObjectData();
             svrObjectData.nGameObjectId = nCurrId;
             svrObjectData.nType = GameObjectType.Monster;
             svrObjectData.nStaticId = nStaticId;
-            svrObjectData.nMonsterTid = nMonsterTid;
             svrObjectData.nSpeed = 3.0f; // TODO
+            svrObjectData.nMaxHP = configData.nHP;
+            svrObjectData.nCurrHP = configData.nHP;
+            svrObjectData.nAtk = configData.nAtk;
             svrObjectData.position = position;
             tObjectData[nCurrId] = svrObjectData;
             tMonsterAI[nCurrId] = new MonsterAI(svrObjectData);
             nodeGraphManager.OnMonsterNumChange(GetMonsterNum());
-            GameMessager.S2CAddMonster(nCurrId, nMonsterTid, position);
+            GameMessager.S2CAddMonster(nCurrId, configData, position);
             return nCurrId++;
         }
 
@@ -119,9 +124,29 @@ namespace Game
             Vector3 monsterPos = monsterData.position;
             float nSqrDistance = Vector3.SqrMagnitude(playerPos - monsterPos);
             if (nSqrDistance > 100) return;
-            MonsterDead(nMonsterId); // TODO
+            monsterData.nCurrHP -= playerData.nAtk;
+            if (monsterData.nCurrHP <= 0)
+                MonsterDead(nMonsterId);
         }
 
+        public void DoExplosion(Vector3 center, float nRadius, int nDamage)
+        {
+            List<int> affectedRoles = GetRangeRoles(center, nRadius);
+            foreach (int nObjectId in affectedRoles)
+                MonsterDoDamage(nObjectId, nDamage);
+        }
+
+        public void MonsterDoDamage(int nObjectId, int nDamage)
+        {
+            if (!tObjectData.ContainsKey(nObjectId))
+                return;
+            SvrObjectData monsterData = tObjectData[nObjectId];
+            monsterData.nCurrHP -= nDamage;
+            if (monsterData.nCurrHP <= 0)
+            {
+                MonsterDead(nObjectId);
+            }
+        }
         public void MonsterDead(int nObjectId)
         {
             if (!tObjectData.ContainsKey(nObjectId)) return;
@@ -163,7 +188,10 @@ namespace Game
                 SvrObjectData objectData = pair.Value;
                 if(objectData.nType == GameObjectType.Monster || objectData.nType == GameObjectType.Player)
                 {
-                    result.Add(pair.Key);
+                    Vector3 rolePos = objectData.position;
+                    float nSqrDistance = Vector3.SqrMagnitude(rolePos - center);
+                    if (nSqrDistance <= nRadius * nRadius)
+                        result.Add(pair.Key);
                 }
             }
             return result;
@@ -171,8 +199,14 @@ namespace Game
 
         private void InitGameObjects()
         {
-            Transform playerBornPos = transform.Find("PlayerBornPos").GetChild(0);
-            AddPlayer(playerBornPos.position);
+            Transform playerData = transform.Find("Player").GetChild(0);
+            PlayerConfig playerConfig = playerData.gameObject.GetComponent<PlayerConfig>();
+            if(playerConfig == null)
+            {
+                Debug.LogError("PlayerConfig not found");
+                return;
+            }
+            AddPlayer(playerConfig.data, playerData.position);
             Transform staticMonster = transform.Find("StaticMonster");
             for(int i = 0; i < staticMonster.childCount; ++i)
             {
@@ -180,8 +214,7 @@ namespace Game
                 if (!child.gameObject.activeSelf) continue;
                 int nStaticId = int.Parse(child.name);
                 MonsterConfig monsterConfig = child.gameObject.GetComponent<MonsterConfig>();
-                int nMonsterTid = monsterConfig.nMonsterTid;
-                AddMonster(nMonsterTid, child.position, nStaticId);
+                AddMonster(monsterConfig.data, child.position, nStaticId);
             }
             Transform triggerConfig = transform.Find("TriggerConfig");
             for(int i = 0; i < triggerConfig.childCount; ++i)

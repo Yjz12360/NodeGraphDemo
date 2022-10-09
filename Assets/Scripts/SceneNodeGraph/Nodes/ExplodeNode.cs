@@ -14,8 +14,7 @@ namespace SceneNodeGraph
         public float nPosZ;
         public float nAffectRadius;
         public float nDisplayScale;
-        //public string sContext;
-        //public bool bIsError;
+        public int nDamage;
     }
 
     public class CltExplodeNode : CltRuntimeNode
@@ -27,12 +26,6 @@ namespace SceneNodeGraph
             Vector3 center = new Vector3(NodeData.nPosX, NodeData.nPosY, NodeData.nPosZ);
             nodeGraph.game.PlayExplosion(center, NodeData.nEffectId, NodeData.nDisplayScale);
             FinishNode();
-            //string sContext = NodeData.sContext;
-            //if (NodeData.bIsError)
-            //    Debug.LogError(sContext);
-            //else
-            //    Debug.Log(sContext);
-            //FinishNode();
         }
     }
 
@@ -43,11 +36,8 @@ namespace SceneNodeGraph
         public override void StartNode()
         {
             Vector3 center = new Vector3(NodeData.nPosX, NodeData.nPosY, NodeData.nPosZ);
-            List<int> affectedRoles = nodeGraph.game.GetRangeRoles(center, NodeData.nAffectRadius);
-            foreach (int nObjectId in affectedRoles)
-                nodeGraph.game.MonsterDead(nObjectId);
+            nodeGraph.game.DoExplosion(center, NodeData.nAffectRadius, NodeData.nDamage);
             FinishNode();
-            //base.StartNode();
         }
 
     }

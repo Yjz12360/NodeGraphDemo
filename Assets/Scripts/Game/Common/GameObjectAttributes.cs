@@ -9,6 +9,9 @@ namespace Game
     //    public int nValue;
     //}
 
-    //public class Atk : M
+    //public class Atk : MonoBehaviour
+    //{
+    //    public int nValue;
+    //}
 }
 

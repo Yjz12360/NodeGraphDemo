@@ -17,8 +17,9 @@ namespace SceneNodeGraph
         public void Start()
         {
             game = gameObject.GetComponent<Game.SvrGame>();
-            foreach(TextAsset configFile in initConfigFiles)
-                OnTriggerNodeGraph($"{configFile.name}.json");
+            foreach (TextAsset configFile in initConfigFiles)
+                if (configFile != null)
+                    OnTriggerNodeGraph($"{configFile.name}.json");
         }
         private SvrNodeGraph AddNodeGraph(string sConfigFile)
         {

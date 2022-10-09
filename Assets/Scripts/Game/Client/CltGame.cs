@@ -45,27 +45,24 @@ namespace Game
                 return prefabs[nTid];
             return null;
         }
-        //private GameObject GetMonsterPrefab(int nMonsterTid)
-        //{
-        //    if (nMonsterTid >= 0 && nMonsterTid < monsterPrefabs.prefabs.Count)
-        //        return monsterPrefabs.prefabs[nMonsterTid];
-        //    return null;
-        //}
 
         private Dictionary<int, GameObject> tGameObjects = new Dictionary<int, GameObject>();
 
-        public void AddPlayer(int nObjectId, Vector3 position)
+        public void AddPlayer(int nObjectId, PlayerConfigData configData, Vector3 position)
         {
             GameObject instance = GameObject.Instantiate(playerPrefab);
             instance.transform.SetParent(playerRoot);
             instance.transform.position = position;
             instance.name = $"Player_{nObjectId}";
-            CltObjectData gameObjectData = instance.GetComponent<CltObjectData>();
-            if (gameObjectData == null)
-                gameObjectData = instance.AddComponent<CltObjectData>();
-            gameObjectData.nGameObjectId = nObjectId;
-            gameObjectData.nType = GameObjectType.Player;
-            gameObjectData.nSpeed = 3.0f;
+            CltObjectData cltObjectData = instance.GetComponent<CltObjectData>();
+            if (cltObjectData == null)
+                cltObjectData = instance.AddComponent<CltObjectData>();
+            cltObjectData.nGameObjectId = nObjectId;
+            cltObjectData.nType = GameObjectType.Player;
+            cltObjectData.nSpeed = 3.0f;
+            cltObjectData.nMaxHP = configData.nHP;
+            cltObjectData.nCurrHP = configData.nHP;
+            cltObjectData.nAtk = configData.nAtk;
             tGameObjects[nObjectId] = instance;
             localPlayer = instance;
             if (mainCamera != null)
@@ -75,25 +72,29 @@ namespace Game
             }
         }
 
-        public void AddMonster(int nObjectId, int nMonsterTid, Vector3 position)
+        public void AddMonster(int nObjectId, MonsterConfigData configData, Vector3 position)
         {
-            GameObject monsterPrefab = GetByTid(monsterPrefabs.prefabs, nMonsterTid);
+            GameObject monsterPrefab = GetByTid(monsterPrefabs.prefabs, configData.nPrefabId);
             //GameObject monsterPrefab = GetMonsterPrefab(nMonsterTid);
             if(monsterPrefab == null)
             {
-                Debug.LogError($"CltGame AddMonster error: prefab not exist. nMonsterTid:{nMonsterTid}");
+                Debug.LogError($"CltGame AddMonster error: prefab not exist. nPrefabId:{configData.nPrefabId}");
                 return;
             }
             GameObject instance = GameObject.Instantiate(monsterPrefab);
             instance.transform.SetParent(monsterRoot);
             instance.transform.position = position;
             instance.name = $"Monster_{nObjectId}";
-            CltObjectData gameObjectData = instance.GetComponent<CltObjectData>();
-            if (gameObjectData == null)
-                gameObjectData = instance.AddComponent<CltObjectData>();
-            gameObjectData.nGameObjectId = nObjectId;
-            gameObjectData.nType = GameObjectType.Monster;
-            gameObjectData.nSpeed = 3.0f;
+            CltObjectData cltObjectData = instance.GetComponent<CltObjectData>();
+            if (cltObjectData == null)
+                cltObjectData = instance.AddComponent<CltObjectData>();
+            cltObjectData.nGameObjectId = nObjectId;
+            cltObjectData.nType = GameObjectType.Monster;
+            cltObjectData.nSpeed = 3.0f;
+            cltObjectData.nPrefabId = configData.nPrefabId;
+            cltObjectData.nMaxHP = configData.nHP;
+            cltObjectData.nCurrHP = configData.nHP;
+            cltObjectData.nAtk = configData.nAtk;
             tGameObjects[nObjectId] = instance;
         }
 

@@ -9,6 +9,7 @@ namespace SceneNodeGraph
     public class BaseRuntimeNode
     {
         public string sNodeId;
+        public bool bFinished;
     }
 
     public class CltRuntimeNode : BaseRuntimeNode
@@ -20,6 +21,8 @@ namespace SceneNodeGraph
         public virtual void OnFinishNode() { }
         public void FinishNode(int nPath = 1)
         {
+            if (bFinished) return;
+            bFinished = true;
             OnFinishNode();
             if (nodeGraph != null)
                 nodeGraph.FinishNode(sNodeId, nPath);
@@ -37,6 +40,8 @@ namespace SceneNodeGraph
         public virtual void OnMonsterNumChange(int nNum) { }
         public void FinishNode(int nPath = 1)
         {
+            if (bFinished) return;
+            bFinished = true;
             OnFinishNode();
             if (nodeGraph != null)
                 nodeGraph.FinishNode(sNodeId, nPath);
