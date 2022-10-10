@@ -109,6 +109,16 @@ namespace Game
             monsterControl.Move(position);
         }
 
+        public void MonsterChase(int nMonsterId, int nTargetId, float nChaseTime, float nStopDistance)
+        {
+            GameObject monsterObject = GetObject(nMonsterId);
+            GameObject targetObject = GetObject(nTargetId);
+            if (monsterObject == null || targetObject == null) return;
+            MonsterControl monsterControl = monsterObject.GetComponent<MonsterControl>();
+            if (monsterControl == null) return;
+            monsterControl.Chase(targetObject, nChaseTime, nStopDistance);
+        }
+
         public void RemoveObject(int nObjectId) { RemoveObject(nObjectId, true); }
         public void RemoveObject(int nObjectId, bool bDestroy)
         {

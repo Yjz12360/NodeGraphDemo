@@ -42,6 +42,12 @@ namespace Game
         {
             ClientComp.MonsterMove(nObjectId, position);
         }
+
+        public static void S2CMonsterChase(int nMonsterId, int nTargetId, float nChaseTime, float nStopDistance)
+        {
+            ClientComp.MonsterChase(nMonsterId, nTargetId, nChaseTime, nStopDistance);
+        }
+
         public static void S2CMonsterDead(int nObjectId)
         {
             ClientComp.MonsterDead(nObjectId);

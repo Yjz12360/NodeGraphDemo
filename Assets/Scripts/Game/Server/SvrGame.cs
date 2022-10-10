@@ -50,7 +50,7 @@ namespace Game
             svrObjectData.nAtk = configData.nAtk;
             svrObjectData.position = position;
             tObjectData[nCurrId] = svrObjectData;
-            tMonsterAI[nCurrId] = new MonsterAI(svrObjectData);
+            tMonsterAI[nCurrId] = new MonsterAI(svrObjectData, this);
             tMonsterAI[nCurrId].SetActive(configData.bActiveAI);
             nodeGraphManager.OnMonsterNumChange(GetMonsterNum());
             GameMessager.S2CAddMonster(nCurrId, configData, position, nStaticId);
@@ -108,6 +108,16 @@ namespace Game
             if (!tObjectData.ContainsKey(nObjectId))
                 return null;
             return tObjectData[nObjectId];
+        }
+
+        public SvrObjectData GetPlayer()
+        {
+            foreach (SvrObjectData svrObjectData in tObjectData.Values)
+            {
+                if (svrObjectData.nType == GameObjectType.Player)
+                    return svrObjectData;
+            }
+            return null;
         }
 
         public SvrObjectData GetMonsterByStaticId(int nStaticId)
