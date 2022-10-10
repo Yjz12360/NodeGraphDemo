@@ -159,7 +159,7 @@ namespace Game
             tGameObjects[nObjectId] = instance;
         }
 
-        public void PlayExplosion(Vector3 position, int nEffectId, float nDisplayScale)
+        public void PlayEffect(Vector3 position, int nEffectId, float nDisplayScale)
         {
             GameObject explosionPrefab = GetByTid(effectPrefabs.prefabs, nEffectId);
             GameObject instance = Instantiate(explosionPrefab);
@@ -167,12 +167,17 @@ namespace Game
             instance.transform.position = position;
             instance.transform.localScale = new Vector3(nDisplayScale, nDisplayScale, nDisplayScale);
             ParticleSystem ps = instance.GetComponent<ParticleSystem>();
-            if(ps == null)
+            if (ps == null)
             {
-                Debug.LogError("Explosion has no ParticleSystem component.");
+                Debug.LogError("Effect has no ParticleSystem component.");
                 return;
             }
             instance.AddComponent<DestroyParticleOnStop>();
+        }
+
+        public void PlayExplosion(Vector3 position, int nEffectId, float nDisplayScale)
+        {
+            PlayEffect(position, nEffectId, nDisplayScale);
         }
 
         private void Update()

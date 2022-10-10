@@ -4441,7 +4441,7 @@ MonoBehaviour:
   data:
     nPrefabId: 0
     nHP: 10
-    nAtk: 2
+    nAtk: 10
     nMoveSpeed: 4
 --- !u!1001 &1283029570
 PrefabInstance:

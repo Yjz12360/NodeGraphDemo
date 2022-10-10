@@ -20,5 +20,8 @@ namespace SceneNodeGraph
         //AOE = 9,
         AnimatorCtrl = 10,
         ActiveAI = 11,
+        PlayEffect = 12,
+        ComponentSetActive = 13,
+        GameObjectSetActive = 14,
     }
 }
