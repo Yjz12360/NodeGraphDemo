@@ -53,7 +53,7 @@ namespace Game
             tMonsterAI[nCurrId] = new MonsterAI(svrObjectData);
             tMonsterAI[nCurrId].SetActive(configData.bActiveAI);
             nodeGraphManager.OnMonsterNumChange(GetMonsterNum());
-            GameMessager.S2CAddMonster(nCurrId, configData, position);
+            GameMessager.S2CAddMonster(nCurrId, configData, position, nStaticId);
             return nCurrId++;
         }
 
@@ -119,6 +119,13 @@ namespace Game
                     return svrObjectData;
             }
             return null;
+        }
+
+        public void ActiveAI(int nObjectId, bool bActive)
+        {
+            if (!tObjectData.ContainsKey(nObjectId) || !tMonsterAI.ContainsKey(nObjectId))
+                return;
+            tMonsterAI[nObjectId].SetActive(bActive);
         }
 
         public void AttackHitMonster(int nPlayerId, int nMonsterId)

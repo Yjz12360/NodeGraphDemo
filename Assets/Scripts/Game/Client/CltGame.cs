@@ -19,7 +19,7 @@ namespace Game
         private float nSyncTimer = 0;
 
         private RolePrefabs rolePrefabs;
-        private ExplosionPrefabs explosionPrefabs;
+        private EffectPrefabs effectPrefabs;
         private void Awake()
         {
             triggerPrefab = (GameObject)Resources.Load("GamePrefabs/Trigger/Trigger");
@@ -32,7 +32,7 @@ namespace Game
 
             GameObject gamePrefabs = GameObject.Find("GamePrefabs");
             rolePrefabs = gamePrefabs.GetComponent<RolePrefabs>();
-            explosionPrefabs = gamePrefabs.GetComponent<ExplosionPrefabs>();
+            effectPrefabs = gamePrefabs.GetComponent<EffectPrefabs>();
         }
 
         private GameObject GetByTid(List<GameObject> prefabs, int nTid)
@@ -74,7 +74,7 @@ namespace Game
             }
         }
 
-        public void AddMonster(int nObjectId, MonsterConfigData configData, Vector3 position)
+        public void AddMonster(int nObjectId, MonsterConfigData configData, Vector3 position, int nStaticId)
         {
             GameObject monsterPrefab = GetByTid(rolePrefabs.prefabs, configData.nPrefabId);
             if(monsterPrefab == null)
@@ -96,6 +96,7 @@ namespace Game
             cltObjectData.nMaxHP = configData.nHP;
             cltObjectData.nCurrHP = configData.nHP;
             cltObjectData.nAtk = configData.nAtk;
+            cltObjectData.nStaticId = nStaticId;
             tGameObjects[nObjectId] = instance;
         }
 
@@ -124,6 +125,17 @@ namespace Game
             return tGameObjects[nObjectId];
         }
 
+        public GameObject GetMonsterByStaticId(int nStaticId)
+        {
+            foreach (GameObject gameObject in tGameObjects.Values)
+            {
+                CltObjectData cltObjectData = gameObject.GetComponent<CltObjectData>();
+                if (cltObjectData.nStaticId == nStaticId)
+                    return gameObject;
+            }
+            return null;
+        }
+
         public void MonsterDead(int nObjectId)
         {
             if (!tGameObjects.ContainsKey(nObjectId))
@@ -149,7 +161,7 @@ namespace Game
 
         public void PlayExplosion(Vector3 position, int nEffectId, float nDisplayScale)
         {
-            GameObject explosionPrefab = GetByTid(explosionPrefabs.prefabs, nEffectId);
+            GameObject explosionPrefab = GetByTid(effectPrefabs.prefabs, nEffectId);
             GameObject instance = Instantiate(explosionPrefab);
             instance.transform.SetParent(explosionRoot);
             instance.transform.position = position;

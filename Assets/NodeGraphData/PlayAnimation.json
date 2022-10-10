@@ -1,0 +1,54 @@
+{
+  "tNodeMap": {
+    "1": {
+      "nNodeType": 0,
+      "sNodeId": "1"
+    },
+    "2": {
+      "nNodeType": 10,
+      "nStaticId": 1,
+      "sSetTrigger": "Display",
+      "sNodeId": "2"
+    },
+    "3": {
+      "nNodeType": 3,
+      "nDelayTime": 3.0,
+      "sNodeId": "3"
+    },
+    "4": {
+      "nNodeType": 11,
+      "nStaticId": 1,
+      "bActive": true,
+      "sNodeId": "4"
+    },
+    "5": {
+      "nNodeType": 10,
+      "nStaticId": 1,
+      "sSetTrigger": "EndDisplay",
+      "sNodeId": "5"
+    }
+  },
+  "tTransitions": {
+    "0": {
+      "sFromNodeId": "1",
+      "sToNodeId": "2",
+      "nPath": 1
+    },
+    "1": {
+      "sFromNodeId": "2",
+      "sToNodeId": "3",
+      "nPath": 1
+    },
+    "2": {
+      "sFromNodeId": "3",
+      "sToNodeId": "4",
+      "nPath": 1
+    },
+    "3": {
+      "sFromNodeId": "3",
+      "sToNodeId": "5",
+      "nPath": 1
+    }
+  },
+  "sStartNodeId": "1"
+}

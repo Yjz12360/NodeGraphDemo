@@ -2491,6 +2491,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initConfigFiles:
   - {fileID: 4900000, guid: 0c9040b2870034b409683c85b2a7ddff, type: 3}
+  - {fileID: 4900000, guid: f676a934dad92d649be3661bc6fb3994, type: 3}
 --- !u!114 &706143569
 MonoBehaviour:
   m_ObjectHideFlags: 0

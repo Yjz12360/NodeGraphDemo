@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game
 {
-    public class ExplosionPrefabs : MonoBehaviour
+    public class EffectPrefabs : MonoBehaviour
     {
         public List<GameObject> prefabs = new List<GameObject>();
     }

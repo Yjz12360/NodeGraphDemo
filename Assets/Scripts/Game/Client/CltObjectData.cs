@@ -9,6 +9,7 @@ namespace Game
         public int nGameObjectId;
         public GameObjectType nType;
         public float nSpeed;
+        public int nStaticId;
         public int nPrefabId;
         public int nMaxHP;
         public int nCurrHP;

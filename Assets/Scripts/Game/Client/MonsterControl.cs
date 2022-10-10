@@ -51,7 +51,12 @@ namespace Game
                     {
                         bMoving = false;
                         if (modelAnimator != null)
+                        {
+                            //modelAnimator.
+
                             modelAnimator.SetTrigger("EndMove");
+
+                        }
                     }
                         
                 }
