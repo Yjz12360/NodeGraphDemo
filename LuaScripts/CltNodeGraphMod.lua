@@ -1,17 +1,4 @@
 
-local CltNodeGraphMod = {}
-package.loaded["CltNodeGraphMod"] = CltNodeGraphMod
-
-NodeGraphCfgMod = require "NodeGraphCfgMod"
-NodesHandlerMod = require "NodesHandlerMod"
-TableUtil = require "TableUtil"
-
-local NodeGraphState = {
-    Pending = 1,
-    Running = 2,
-    Finish = 3,
-}
-
 function addNodeGraph(tCltGame, nNodeGraphId, nConfigId)
     local tConfig = Config.NodeGraph[nConfigId]
     if tConfig == nil or tConfig.sName == nil then
@@ -19,10 +6,10 @@ function addNodeGraph(tCltGame, nNodeGraphId, nConfigId)
         return
     end
     local tNodeGraph = {}
-    tNodeGraph.tGame = tCltGame
+    tNodeGraph.tCltGame = tCltGame
     tNodeGraph.nNodeGraphId = nNodeGraphId
     tNodeGraph.tConfigData = NodeGraphCfgMod.getConfigByName(tConfig.sName)
-    tNodeGraph.nState = NodeGraphState.Pending
+    tNodeGraph.nState = Const.NodeGraphState.Pending
     tNodeGraph.tRunningNodes = {}
     tNodeGraph.tPendingNodes = {}
     tNodeGraph.tRemoveNodes = {}
@@ -35,7 +22,7 @@ function startNodeGraph(tNodeGraph)
     end
     TableUtil.clear(tNodeGraph.tPendingNodes)
     TableUtil.clear(tNodeGraph.tRemoveNodes)
-    tNodeGraph.nState = NodeGraphState.Running
+    tNodeGraph.nState = Const.NodeGraphState.Running
     local sStartNodeId = tNodeGraph.tConfigData.sStartNodeId
     tNodeGraph.tPendingNodes[sStartNodeId] = true
 end
@@ -44,7 +31,7 @@ function updateNodeGraph(tNodeGraph, nDeltaTime)
     if tNodeGraph == nil then
         return
     end
-    if tNodeGraph.nState ~= NodeGraphState.Running then
+    if tNodeGraph.nState ~= Const.NodeGraphState.Running then
         return
     end
     local tClonePendingNodes = {}
@@ -66,7 +53,7 @@ function updateNodeGraph(tNodeGraph, nDeltaTime)
     end
     TableUtil.clear(tNodeGraph.tRemoveNodes)
     if(TableUtil.isEmpty(tNodeGraph.tRunningNodes) and TableUtil.isEmpty(tNodeGraph.tPendingNodes)) then
-        tNodeGraph.nState = NodeGraphState.Finish
+        tNodeGraph.nState = Const.NodeGraphState.Finish
     end
 end
 
@@ -78,7 +65,7 @@ function triggerNode(tNodeGraph, sNodeId)
     if tNodeData == nil then
         return
     end
-    if tNodeData.nNodeType == NodeType.Start then
+    if tNodeData.nNodeType == Const.NodeType.Start then
         CltNodeGraphMod.finishNode(tNodeGraph, sNodeId)
         return
     end
@@ -96,7 +83,7 @@ function finishNode(tNodeGraph, sNodeId, nPath)
     if tNodeGraph == nil then
         return
     end
-    if tNodeGraph.nState ~= NodeGraphState.Running then
+    if tNodeGraph.nState ~= Const.NodeGraphState.Running then
         return
     end
     tNodeGraph.tRemoveNodes[sNodeId] = true
@@ -109,20 +96,16 @@ function finishNode(tNodeGraph, sNodeId, nPath)
 end
 
 function isFinish(tNodeGraph)
-    return tNodeGraph.nState == NodeGraphState.Finish
-end
-
-function recvFinishNode(nNodeGraphId, sNodeId, nPath)
-    local tNodeGraph = getNodeGraphById(nNodeGraphId)
-    if tNodeGraph == nil then return end
-    CltNodeGraphMod.finishNode(tNodeGraph, sNodeId, nPath)
+    return tNodeGraph.nState == Const.NodeGraphState.Finish
 end
 
 
-CltNodeGraphMod.addNodeGraph = addNodeGraph
-CltNodeGraphMod.getNodeGraphById = getNodeGraphById
-CltNodeGraphMod.startNodeGraph = startNodeGraph
-CltNodeGraphMod.updateNodeGraph = updateNodeGraph
-CltNodeGraphMod.triggerNode = triggerNode
-CltNodeGraphMod.finishNode = finishNode
-return CltNodeGraphMod
+
+
+-- CltNodeGraphMod.addNodeGraph = addNodeGraph
+-- CltNodeGraphMod.getNodeGraphById = getNodeGraphById
+-- CltNodeGraphMod.startNodeGraph = startNodeGraph
+-- CltNodeGraphMod.updateNodeGraph = updateNodeGraph
+-- CltNodeGraphMod.triggerNode = triggerNode
+-- CltNodeGraphMod.finishNode = finishNode
+-- return CltNodeGraphMod

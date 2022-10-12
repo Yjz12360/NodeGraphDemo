@@ -1,5 +1,3 @@
-local PrintMod = {}
-package.loaded["PrintMod"] = PrintMod
 
 function print(sContext)
     if type(sContext) ~= "string" then
@@ -25,7 +23,6 @@ function printErrorTrace(sContext)
     CS.UnityEngine.Debug.LogError(sContext .. debug.traceback())
 end
 
-PrintMod.print = print
-PrintMod.printError = printError
-PrintMod.printErrorTrace = printErrorTrace
-return PrintMod
+_G.print = print
+_G.printError = printError
+_G.printErrorTrace = printErrorTrace

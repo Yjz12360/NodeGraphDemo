@@ -1,19 +1,29 @@
-require "Config/Game"
-require "Config/Model"
-require "Config/Monster"
-require "Config/NodeGraph"
-require "Config/Player"
+require("LuaPanda").start("127.0.0.1", 8818)
 
+require "ConfigHeader"
 require "PrintMod"
-CltGameMod = require "CltGameMod"
-SvrGameMod = require "SvrGameMod"
-Messager = require "Messager"
+
+_G.rawRequire = _G.require
+_G.require = function(sModulePath)
+    local sModuleName = string.match(sModulePath, ".+/(.+)") or sModulePath
+    _G[sModuleName] = {}
+    setmetatable(_G, {
+        __newindex = function(table, key, value)
+            table[sModuleName][key] = value
+        end,
+        __index = function(table, key)
+            return table[sModuleName][key]
+        end
+    })
+    _G.rawRequire(sModulePath)
+    setmetatable(_G, nil)
+end
+rawRequire("Header")
+_G.require = _G.rawRequire
 
 function Init()
-    require("LuaPanda").start("127.0.0.1", 8818)
 
     UE = CS.UnityEngine
-
 
     CltGameMod.init()
 end
@@ -25,8 +35,6 @@ function Update(nDeltaTime)
         SvrGameMod.update(nDeltaTime)
     end
     CltGameMod.update(nDeltaTime)
-
-    -- ServerMod.update(nDeltaTime)
 end
 
 Init()

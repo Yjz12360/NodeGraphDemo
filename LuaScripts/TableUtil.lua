@@ -96,10 +96,3 @@ end
 function isEmpty(tablevalue)
     return tablevalue == nil or not next(tablevalue)
 end
-
-return {
-    table2str = table2str,
-    clear = clear,
-    clearArray = clearArray,
-    isEmpty = isEmpty,
-}

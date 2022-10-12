@@ -1,18 +1,3 @@
-local SvrNodeGraphMod = {}
-package.loaded["SvrNodeGraphMod"] = SvrNodeGraphMod
-
-require "PrintMod"
-NodeGraphCfgMod = require "NodeGraphCfgMod"
-NodesHandlerMod = require "NodesHandlerMod"
-Messager = require "Messager"
-TableUtil = require "TableUtil"
-
-
-local NodeGraphState = {
-    Pending = 1,
-    Running = 2,
-    Finish = 3,
-}
 
 function addNodeGraph(tSvrGame, nNodeGraphId, nConfigId)
     local tConfig = Config.NodeGraph[nConfigId]
@@ -21,10 +6,10 @@ function addNodeGraph(tSvrGame, nNodeGraphId, nConfigId)
         return
     end
     local tNodeGraph = {}
-    tNodeGraph.tGame = tSvrGame
+    tNodeGraph.tSvrGame = tSvrGame
     tNodeGraph.nNodeGraphId = nNodeGraphId
     tNodeGraph.tConfigData = NodeGraphCfgMod.getConfigByName(tConfig.sName)
-    tNodeGraph.nState = NodeGraphState.Pending
+    tNodeGraph.nState = Const.NodeGraphState.Pending
     tNodeGraph.tRunningNodes = {}
     tNodeGraph.tPendingNodes = {}
     tNodeGraph.tRemoveNodes = {}
@@ -37,7 +22,7 @@ function startNodeGraph(tNodeGraph)
     end
     TableUtil.clear(tNodeGraph.tPendingNodes)
     TableUtil.clear(tNodeGraph.tRemoveNodes)
-    tNodeGraph.nState = NodeGraphState.Running
+    tNodeGraph.nState = Const.NodeGraphState.Running
     local sStartNodeId = tNodeGraph.tConfigData.sStartNodeId
     tNodeGraph.tPendingNodes[sStartNodeId] = true
 end
@@ -46,7 +31,7 @@ function updateNodeGraph(tNodeGraph, nDeltaTime)
     if tNodeGraph == nil then
         return
     end
-    if tNodeGraph.nState ~= NodeGraphState.Running then
+    if tNodeGraph.nState ~= Const.NodeGraphState.Running then
         return
     end
     local tClonePendingNodes = {}
@@ -68,7 +53,7 @@ function updateNodeGraph(tNodeGraph, nDeltaTime)
     end
     TableUtil.clear(tNodeGraph.tRemoveNodes)
     if(TableUtil.isEmpty(tNodeGraph.tRunningNodes) and TableUtil.isEmpty(tNodeGraph.tPendingNodes)) then
-        tNodeGraph.nState = NodeGraphState.Finish
+        tNodeGraph.nState = Const.NodeGraphState.Finish
     end
 end
 
@@ -81,7 +66,7 @@ function triggerNode(tNodeGraph, sNodeId)
         SvrNodeGraphMod.finishNode(tNodeGraph, sNodeId)
         return
     end
-    if tNodeData.nNodeType == NodeType.Start then
+    if tNodeData.nNodeType == Const.NodeType.Start then
         SvrNodeGraphMod.finishNode(tNodeGraph, sNodeId)
         return
     end
@@ -101,7 +86,7 @@ function finishNode(tNodeGraph, sNodeId, nPath)
     if tNodeGraph == nil then
         return
     end
-    if tNodeGraph.nState ~= NodeGraphState.Running then
+    if tNodeGraph.nState ~= Const.NodeGraphState.Running then
         return
     end
     tNodeGraph.tRemoveNodes[sNodeId] = true
@@ -111,19 +96,10 @@ function finishNode(tNodeGraph, sNodeId, nPath)
             tNodeGraph.tPendingNodes[tTransition.sToNodeId] = true
         end
     end
-    Messager.S2CFinishNode(tNodeGraph.nNodeGraphId, sNodeId, nPath)
+    local nGameId = tNodeGraph.tSvrGame.nGameId
+    Messager.S2CFinishNode(nGameId, tNodeGraph.nNodeGraphId, sNodeId, nPath)
 end
 
 function isFinish(tNodeGraph)
-    return tNodeGraph.nState == NodeGraphState.Finish
+    return tNodeGraph.nState == Const.NodeGraphState.Finish
 end
-
-
-SvrNodeGraphMod.addNodeGraph = addNodeGraph
-SvrNodeGraphMod.getNodeGraphById = getNodeGraphById
-SvrNodeGraphMod.startNodeGraph = startNodeGraph
-SvrNodeGraphMod.updateNodeGraph = updateNodeGraph
-SvrNodeGraphMod.triggerNode = triggerNode
-SvrNodeGraphMod.finishNode = finishNode
-SvrNodeGraphMod.isFinish = isFinish
-return SvrNodeGraphMod

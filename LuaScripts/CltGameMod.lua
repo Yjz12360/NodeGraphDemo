@@ -1,13 +1,3 @@
-local CltGameMod = {}
-package.loaded["CltGameMod"] = CltGameMod
-
-require "PrintMod"
-Messager = require "Messager"
-
-local GameObjectType = {
-    Player = 1,
-    Monster = 2,
-}
 
 local nCurrGameId = 0
 local tCltGame = nil
@@ -32,6 +22,10 @@ function isLocalGame()
     return true
 end
 
+function getGameId()
+    return nCurrGameId
+end
+
 function addNodeGraph(nGameId, nNodeGraphId, nConfigId)
     if nGameId ~= nCurrGameId then
         return
@@ -52,7 +46,7 @@ function addPlayer(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     end
     local tPlayer = {}
     tPlayer.nObjectId = nObjectId
-    tPlayer.nObjectType = GameObjectType.Player
+    tPlayer.nObjectType = Const.GameObjectType.Player
     tPlayer.tConfig = tConfig
     tPlayer.tPos = {
         x = nPosX,
@@ -78,6 +72,17 @@ function update(nDeltaTime)
     end
 end
 
+function recvFinishNode(nGameId, nNodeGraphId, sNodeId, nPath)
+    if nGameId ~= nCurrGameId then
+        return
+    end
+    local tNodeGraph = tCltGame.tNodeGraphs[nNodeGraphId]
+    if tNodeGraph == nil then
+        return
+    end
+    CltNodeGraphMod.finishNode(tNodeGraph, sNodeId, nPath)
+end
+
 -- function monsterMove(nObjectId, nPosX, nPosY, nPosZ)
 
 -- end
@@ -90,18 +95,3 @@ end
 -- function removeObject(nObjectId)
 
 -- end
-
-
-CltGameMod.init = init
-CltGameMod.recvCreateGameSucc = recvCreateGameSucc
-CltGameMod.createGame = createGame
-CltGameMod.isLocalGame = isLocalGame
-CltGameMod.addNodeGraph = addNodeGraph
-CltGameMod.addPlayer = addPlayer
-CltGameMod.update = update
-
-return CltGameMod
-
--- return {
---     Init = Init,
--- }

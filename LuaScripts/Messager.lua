@@ -1,13 +1,3 @@
-local Messager = {}
-package.loaded["Messager"] = Messager
-
-PrintMod = require "PrintMod"
-ServerMod = require "ServerMod"
-CltGameMod = require "CltGameMod"
-SvrGameMod = require "SvrGameMod"
-CltNodeGraphMod = require "CltNodeGraphMod"
-SvrNodeGraphMod = require "SvrNodeGraphMod"
-TableUtil = require "TableUtil"
 
 local tMessages = nil
 local function addMessage(fHandler, ...)
@@ -19,7 +9,7 @@ local function addMessage(fHandler, ...)
     table.insert(tMessages, tMessage)
 end
 
-function Messager.update()
+function update()
     if tMessages ~= nil and #tMessages > 0 then
         for _, tMessage in ipairs(tMessages) do
             local fHandler = tMessage.fHandler
@@ -40,26 +30,24 @@ end
 
 
 -- NodeGraph
-Messager.S2CAddNodeGraph = function(nGameId, nNodeGraphId, nConfigId)
+S2CAddNodeGraph = function(nGameId, nNodeGraphId, nConfigId)
     addMessage(CltGameMod.addNodeGraph, nGameId, nNodeGraphId, nConfigId)
 end
 
-Messager.S2CFinishNode = function(nNodeGraphId, sNodeId, nPath)
-    addMessage(CltNodeGraphMod.recvFinishNode, sNodeId, nPath)
+S2CFinishNode = function(nGameId, nNodeGraphId, sNodeId, nPath)
+    addMessage(CltNodeGraphMod.recvFinishNode, nGameId, nNodeGraphId, sNodeId, nPath)
 end
 
 
 -- Game
-Messager.C2SCreateGame = function(nGameConfigId)
+C2SCreateGame = function(nGameConfigId)
     addMessage(SvrGameMod.addGame, nGameConfigId)
 end
 
-Messager.S2CCreateGameSucc = function(nGameId)
+S2CCreateGameSucc = function(nGameId)
     addMessage(CltGameMod.recvCreateGameSucc, nGameId)
 end
 
-Messager.S2CAddPlayer = function(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
+S2CAddPlayer = function(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     addMessage(CltGameMod.addPlayer, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
 end
-
-return Messager

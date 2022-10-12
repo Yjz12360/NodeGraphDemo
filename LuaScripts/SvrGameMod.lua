@@ -1,14 +1,3 @@
-local SvrGameMod = {}
-package.loaded["SvrGameMod"] = SvrGameMod
-
-require "PrintMod"
-Messager = require "Messager"
-SvrNodeGraphMod = require "SvrNodeGraphMod"
-
-local GameObjectType = {
-    Player = 1,
-    Monster = 2,
-}
 
 local nCurrGameId = 0
 local function genGameId()
@@ -37,8 +26,6 @@ function addGame(nGameConfigId)
 
     Messager.S2CCreateGameSucc(tSvrGame.nGameId)
     SvrGameMod.initGame(tSvrGame)
-
-    -- return tSvrGame
 end
 
 function getGameById(nGameId)
@@ -49,7 +36,7 @@ function initGame(tSvrGame)
     local tGameConfig = tSvrGame.tGameConfig
     local nInitNodeGraph = tGameConfig.nInitNodeGraph
     if nInitNodeGraph ~= nil and nInitNodeGraph > 0 then
-        startNodeGraph(tSvrGame, nInitNodeGraph)
+        SvrGameMod.startNodeGraph(tSvrGame, nInitNodeGraph)
     end
     SvrGameMod.addPlayer(tSvrGame, 1, 0, 0, 0)
 end
@@ -81,7 +68,7 @@ function addPlayer(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
     local nObjectId = getNextObjectId(tSvrGame)
     local tPlayer = {}
     tPlayer.nObjectId = nObjectId
-    tPlayer.nObjectType = GameObjectType.Player
+    tPlayer.nObjectType = Const.GameObjectType.Player
     tPlayer.tConfig = tConfig
     tPlayer.tPos = {
         x = nPosX,
@@ -102,12 +89,3 @@ function updateGame(tSvrGame, nDeltaTime)
         SvrNodeGraphMod.updateNodeGraph(tNodeGraph, nDeltaTime)
     end
 end
-
-SvrGameMod.addGame = addGame
-SvrGameMod.getGameById = getGameById
-SvrGameMod.initGame = initGame
-SvrGameMod.startNodeGraph = startNodeGraph
-SvrGameMod.addPlayer = addPlayer
-SvrGameMod.update = update
-SvrGameMod.updateGame = updateGame
-return SvrGameMod
