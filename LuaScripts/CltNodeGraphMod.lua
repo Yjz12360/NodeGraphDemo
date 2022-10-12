@@ -96,16 +96,15 @@ function finishNode(tNodeGraph, sNodeId, nPath)
 end
 
 function isFinish(tNodeGraph)
+    if tNodeGraph == nil then
+        return false
+    end
     return tNodeGraph.nState == Const.NodeGraphState.Finish
 end
 
-
-
-
--- CltNodeGraphMod.addNodeGraph = addNodeGraph
--- CltNodeGraphMod.getNodeGraphById = getNodeGraphById
--- CltNodeGraphMod.startNodeGraph = startNodeGraph
--- CltNodeGraphMod.updateNodeGraph = updateNodeGraph
--- CltNodeGraphMod.triggerNode = triggerNode
--- CltNodeGraphMod.finishNode = finishNode
--- return CltNodeGraphMod
+function setFinish(tNodeGraph)
+    if tNodeGraph == nil then
+        return
+    end
+    tNodeGraph.nState = Const.NodeGraphState.Finish
+end

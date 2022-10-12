@@ -48,11 +48,6 @@ function addPlayer(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     tPlayer.nObjectId = nObjectId
     tPlayer.nObjectType = Const.GameObjectType.Player
     tPlayer.tConfig = tConfig
-    tPlayer.tPos = {
-        x = nPosX,
-        y = nPosY,
-        z = nPosZ,
-    }
     local nModelId = tConfig.nModelId
     local tModelConfig = Config.Model[nModelId]
     if tModelConfig ~= nil then
@@ -60,6 +55,11 @@ function addPlayer(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
         local goPrefab = UE.Resources.Load(sPrefabFile)
         local goInstance = UE.GameObject.Instantiate(goPrefab)
         tPlayer.goInstance = goInstance
+        local goPlayerRoot = UE.GameObject.Find("GameObjects/Players")
+        if goPlayerRoot ~= nil then
+            goInstance.transform:SetParent(goPlayerRoot.transform)
+        end
+        goInstance.transform.position = UE.Vector3(nPosX, nPosY, nPosZ)
     end
 end
 
@@ -67,8 +67,11 @@ function update(nDeltaTime)
     if tCltGame == nil then
         return
     end
-    for _, tNodeGraph in pairs(tCltGame.tNodeGraphs) do
+    for nNodeGraphId, tNodeGraph in pairs(tCltGame.tNodeGraphs) do
         CltNodeGraphMod.updateNodeGraph(tNodeGraph, nDeltaTime)
+        if CltNodeGraphMod.isFinish(tNodeGraph) then
+            tCltGame.tNodeGraphs[nNodeGraphId] = nil
+        end
     end
 end
 
@@ -81,6 +84,17 @@ function recvFinishNode(nGameId, nNodeGraphId, sNodeId, nPath)
         return
     end
     CltNodeGraphMod.finishNode(tNodeGraph, sNodeId, nPath)
+end
+
+function recvFinishNodeGraph(nGameId, nNodeGraphId)
+    if nGameId ~= nCurrGameId then
+        return
+    end
+    local tNodeGraph = tCltGame.tNodeGraphs[nNodeGraphId]
+    if tNodeGraph == nil then
+        return
+    end
+    CltNodeGraphMod.setFinish(tNodeGraph)
 end
 
 -- function monsterMove(nObjectId, nPosX, nPosY, nPosZ)

@@ -85,7 +85,10 @@ function update(nDeltaTime)
 end
 
 function updateGame(tSvrGame, nDeltaTime)
-    for _, tNodeGraph in pairs(tSvrGame.tNodeGraphs) do
+    for nNodeGraphId, tNodeGraph in pairs(tSvrGame.tNodeGraphs) do
         SvrNodeGraphMod.updateNodeGraph(tNodeGraph, nDeltaTime)
+        if SvrNodeGraphMod.isFinish(tNodeGraph) then
+            tSvrGame.tNodeGraphs[nNodeGraphId] = nil
+        end
     end
 end
