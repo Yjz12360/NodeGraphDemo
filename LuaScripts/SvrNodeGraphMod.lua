@@ -14,12 +14,6 @@ local NodeGraphState = {
     Finish = 3,
 }
 
--- local nCurrId = 0
--- local function getNextId()
---     nCurrId = nCurrId + 1
---     return nCurrId
--- end
-
 function addNodeGraph(tSvrGame, nNodeGraphId, nConfigId)
     local tConfig = Config.NodeGraph[nConfigId]
     if tConfig == nil or tConfig.sName == nil then

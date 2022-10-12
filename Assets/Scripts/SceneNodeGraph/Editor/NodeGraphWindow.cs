@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEditor;
 using System.Reflection;
+using System.IO;
 
 namespace SceneNodeGraph
 {
@@ -20,7 +21,7 @@ namespace SceneNodeGraph
         private NodeType nAddNodeType = NodeType.Print;
         private int nAddNodePath = 1;
 
-        private string sJsonFolder;
+        private string sLuaFolder;
 
         [MenuItem("节点图编辑器/打开")]
         static void Init()
@@ -31,7 +32,7 @@ namespace SceneNodeGraph
 
         private void OnEnable()
         {
-            sJsonFolder = Application.dataPath + "/NodeGraphData/";
+            sLuaFolder = Application.dataPath + "/../LuaScripts/Config/NodeGraphData/";
         }
 
         private void OnGUI()
@@ -70,10 +71,10 @@ namespace SceneNodeGraph
                     }
                     if (GUILayout.Button("打开配置文件"))
                     {
-                        sSearchPath = EditorUtility.OpenFilePanel("打开配置文件", sJsonFolder, "json");
+                        sSearchPath = EditorUtility.OpenFilePanel("打开配置文件", sLuaFolder, "lua");
                         if (!string.IsNullOrEmpty(sSearchPath))
                         {
-                            NodeGraphData nodeGraphData = SceneNodeGraphSerializer.LoadPath(sSearchPath);
+                            NodeGraphData nodeGraphData = SceneNodeGraphSerializer.LoadLua(sSearchPath);
                             nodeGraphEditor = new NodeGraphEditor(nodeGraphData, this);
                             bIsNew = false;
                         }
@@ -84,13 +85,26 @@ namespace SceneNodeGraph
                         {
                             if (string.IsNullOrEmpty(sSearchPath))
                             {
-                                sSearchPath = EditorUtility.SaveFilePanel("选择保存文件", sJsonFolder, "New Graph", "json");
+                                sSearchPath = EditorUtility.SaveFilePanel("选择保存文件", sLuaFolder, "New Graph", "lua");
                             }
                             NodeGraphData nodeGraphData = nodeGraphEditor.GetNodeGraphData();
-                            SceneNodeGraphSerializer.SavePath(nodeGraphData, sSearchPath);
-                            string sFileName = sSearchPath.Substring(sSearchPath.LastIndexOf("/") + 1);
-                            sFileName = sFileName.Replace(".json", ".lua");
-                            SceneNodeGraphSerializer.SaveLua(nodeGraphData, sFileName);
+                            bool bConfirm = true;
+                            if (File.Exists(sSearchPath))
+                                if (!EditorUtility.DisplayDialog("提示", "将覆盖原有文件", "保存", "取消"))
+                                    bConfirm = false;
+                            if (bConfirm)
+                                SceneNodeGraphSerializer.SaveLua(nodeGraphData, sSearchPath);
+                        }
+                        else
+                            EditorUtility.DisplayDialog("提示", "没有配置文件", "确定");
+                    }
+                    if (GUILayout.Button("另存为..."))
+                    {
+                        if (nodeGraphEditor != null)
+                        {
+                            sSearchPath = EditorUtility.SaveFilePanel("选择保存文件", sLuaFolder, "", "lua");
+                            NodeGraphData nodeGraphData = nodeGraphEditor.GetNodeGraphData();
+                            SceneNodeGraphSerializer.SaveLua(nodeGraphData, sSearchPath);
                         }
                         else
                             EditorUtility.DisplayDialog("提示", "没有配置文件", "确定");
