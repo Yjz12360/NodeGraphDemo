@@ -1,5 +1,3 @@
--- CltNodeGraphMod = require "CltNodeGraphMod"
--- SvrNodeGraphMod = require "SvrNodeGraphMod"
 
 function CltHandler(tNodeGraph, tNodeData)
     local nTimer = 0
@@ -22,8 +20,3 @@ function SvrHandler(tNodeGraph, tNodeData)
     end
     return fUpdate
 end
-
--- return {
---     CltHandler = CltHandler,
---     SvrHandler = SvrHandler,
--- }
