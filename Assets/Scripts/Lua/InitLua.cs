@@ -19,7 +19,7 @@ public class InitLua : MonoBehaviour
         luaenv = new LuaEnv();
         luaenv.AddLoader((ref string filename) =>
         {
-            string fixFileName = $"{Application.dataPath}/../../LuaScripts/{filename}.lua";
+            string fixFileName = $"{Application.dataPath}/../LuaScripts/{filename}.lua";
             filename = fixFileName;
             FileStream f = new FileStream(fixFileName, FileMode.Open, FileAccess.Read);
             if (f == null) return null;

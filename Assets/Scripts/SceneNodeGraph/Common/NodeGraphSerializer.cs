@@ -11,8 +11,8 @@ namespace SceneNodeGraph
     {
 
         public static string sDataPath = Application.dataPath + "/NodeGraphData/";
-        public static string sLuaPath = Application.dataPath + "/../../LuaScripts/";
-        public static string sLuaConfigPath = Application.dataPath + "/../../LuaScripts/Config/NodeGraphData/";
+        public static string sLuaPath = Application.dataPath + "/../LuaScripts/";
+        public static string sLuaConfigPath = Application.dataPath + "/../LuaScripts/Config/NodeGraphData/";
 
         [MenuItem("Test/保存节点图")]
         public static void TestSave()

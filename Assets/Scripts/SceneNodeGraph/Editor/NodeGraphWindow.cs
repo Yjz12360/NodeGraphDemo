@@ -20,7 +20,6 @@ namespace SceneNodeGraph
         private NodeType nAddNodeType = NodeType.Print;
         private int nAddNodePath = 1;
 
-        private string sLuaFolder;
         private string sJsonFolder;
 
         [MenuItem("节点图编辑器/打开")]
@@ -32,7 +31,6 @@ namespace SceneNodeGraph
 
         private void OnEnable()
         {
-            sLuaFolder = Application.dataPath + "/LuaScripts/NodeGraphConfig/";
             sJsonFolder = Application.dataPath + "/NodeGraphData/";
         }
 
