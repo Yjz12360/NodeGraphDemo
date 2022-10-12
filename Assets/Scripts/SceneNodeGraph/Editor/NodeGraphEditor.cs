@@ -20,11 +20,11 @@ namespace SceneNodeGraph
 
         private static Texture2D backgroundTexture = null;
 
-        private NodeGraphEditorWindow window;
+        private NodeGraphWindow window;
         private NodeGraphData nodeGraphData;
 
         private Dictionary<string, Vector2Int> tNodeCoords = new Dictionary<string, Vector2Int>();
-        public NodeGraphEditor(NodeGraphData nodeGraphData, NodeGraphEditorWindow window)
+        public NodeGraphEditor(NodeGraphData nodeGraphData, NodeGraphWindow window)
         {
             this.nodeGraphData = nodeGraphData;
             this.window = window;
