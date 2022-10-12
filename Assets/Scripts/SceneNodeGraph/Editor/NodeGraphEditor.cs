@@ -48,9 +48,9 @@ namespace SceneNodeGraph
             int nCoordOffsetY = 0;
             Vector2Int coord = tNodeCoords[sRootNodeId];
             bool bFirst = true;
-            foreach(NodeTransitionData transition in nodeGraphData.tTransitions)
+            foreach (NodeTransitionData transition in nodeGraphData.tTransitions)
             {
-                if(transition.sFromNodeId == sRootNodeId)
+                if (transition.sFromNodeId == sRootNodeId)
                 {
                     string sToNodeId = transition.sToNodeId;
                     if (tNodeCoords.ContainsKey(sToNodeId))
@@ -110,7 +110,7 @@ namespace SceneNodeGraph
 
         private void DrawBackground()
         {
-            if(backgroundTexture == null)
+            if (backgroundTexture == null)
             {
                 backgroundTexture = new Texture2D(2000, 1000);
                 for (int i = 0; i < backgroundTexture.width; ++i)
@@ -155,7 +155,7 @@ namespace SceneNodeGraph
                 pathTextPos.x -= nPathTextWidth / 2;
                 pathTextPos.y -= nPathTextHeight / 2;
                 string sPath = transition.nPath.ToString();
-                using (new EditorGUI.DisabledScope()) 
+                using (new EditorGUI.DisabledScope())
                     GUI.TextField(new Rect(pathTextPos.x, pathTextPos.y, nPathTextWidth, nPathTextHeight), sPath);
             }
         }

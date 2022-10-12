@@ -11,6 +11,8 @@ namespace SceneNodeGraph
     {
 
         public static string sDataPath = Application.dataPath + "/NodeGraphData/";
+        public static string sLuaPath = Application.dataPath + "/../../LuaScripts/";
+        public static string sLuaConfigPath = Application.dataPath + "/../../LuaScripts/Config/NodeGraphData/";
 
         [MenuItem("Test/保存节点图")]
         public static void TestSave()
@@ -55,10 +57,11 @@ namespace SceneNodeGraph
         public static void SavePath(NodeGraphData nodeGraph, string sPath)
         {
             string sContext = JsonConvert.SerializeObject(nodeGraph, Formatting.Indented, NodeGraphConverter.converter);
-            FileStream f = new FileStream(sPath, FileMode.OpenOrCreate, FileAccess.Write);
-            byte[] bytes = new UTF8Encoding(true).GetBytes(sContext);
-            f.Write(bytes, 0, bytes.Length);
-            f.Close();
+            File.WriteAllText(sPath, sContext);
+            //FileStream f = new FileStream(sPath, FileMode.OpenOrCreate, FileAccess.Write);
+            //byte[] bytes = new UTF8Encoding(true).GetBytes(sContext);
+            //f.Write(bytes, 0, bytes.Length);
+            //f.Close();
         }
         public static void Save(NodeGraphData nodeGraph, string sFileName)
         {
@@ -72,6 +75,7 @@ namespace SceneNodeGraph
             byte[] bytes = new byte[f.Length];
             f.Read(bytes, 0, (int)f.Length);
             string sContext = Encoding.UTF8.GetString(bytes, 0, (int)f.Length);
+            f.Close();
             NodeGraphData nodeGraphData = JsonConvert.DeserializeObject<NodeGraphData>(sContext, NodeGraphConverter.converter);
             return nodeGraphData;
         }
@@ -82,5 +86,30 @@ namespace SceneNodeGraph
             return LoadPath(sPath);
         }
 
+        public static void SaveLua(NodeGraphData nodeGraph, string sFileName)
+        {
+            string sPath = sLuaConfigPath + sFileName;
+            string sContext = JsonConvert.SerializeObject(nodeGraph, Formatting.None, NodeGraphConverter.converter);
+
+            XLua.LuaEnv luaEnv = new XLua.LuaEnv();
+            luaEnv.AddLoader((ref string filename) =>
+            {
+                string fixFileName = $"{sLuaPath}{filename}.lua";
+                string strLuaContent = File.ReadAllText(fixFileName);
+                byte[] result = System.Text.Encoding.UTF8.GetBytes(strLuaContent);
+                return result;
+            });
+            luaEnv.DoString("json = require 'json'");
+            luaEnv.DoString("require 'TableUtil'");
+
+            object[] resultArray = luaEnv.DoString($"return table2str(json.decode('{sContext}'))");
+            string sFixFileName = sFileName.Replace(" ", "").Replace(".lua", "");
+            string sLuaText = "Config = Config or {}\nConfig.NodeGraphData = Config.NodeGraphData or {}\n";
+            sLuaText += $"Config.NodeGraphData.{sFixFileName} = {(string)resultArray[0]}";
+            //string sLuaText = string.Format("tConfig = tConfig or {}\n tConfig.{0} = {1}", sFileName, (string)resultArray[0]);
+
+            File.WriteAllText(sPath, sLuaText);
+            luaEnv.Dispose();
+        }
     }
 }

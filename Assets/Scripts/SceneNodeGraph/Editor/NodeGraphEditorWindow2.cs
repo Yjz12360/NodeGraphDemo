@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace SceneNodeGraph
 {
-    class NodeGraphEditorWindow : EditorWindow
+    class NodeGraphEditorWindow2 : NodeGraphEditorWindow
     {
         private string sSearchPath = "";
         private bool bIsNew = false;
@@ -20,17 +20,19 @@ namespace SceneNodeGraph
         private NodeType nAddNodeType = NodeType.Print;
         private int nAddNodePath = 1;
 
+        private string sLuaFolder;
         private string sJsonFolder;
 
-        [MenuItem("节点图编辑器/打开")]
+        [MenuItem("节点图编辑器/打开2")]
         static void Init()
         {
-            var window = GetWindow<NodeGraphEditorWindow>();
+            var window = GetWindow<NodeGraphEditorWindow2>();
             window.Show();
         }
 
         private void OnEnable()
         {
+            sLuaFolder = Application.dataPath + "/LuaScripts/NodeGraphConfig/";
             sJsonFolder = Application.dataPath + "/NodeGraphData/";
         }
 
@@ -177,9 +179,9 @@ namespace SceneNodeGraph
             }
         }
 
-        public void OnNodeSelect(string sNodeId)
-        {
-            sSelectNode = sNodeId;
-        }
+        //public void OnNodeSelect(string sNodeId)
+        //{
+        //    sSelectNode = sNodeId;
+        //}
     }
 }
