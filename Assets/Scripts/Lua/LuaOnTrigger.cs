@@ -8,17 +8,21 @@ using System;
 
 public class LuaOnTrigger : MonoBehaviour
 {
-    private LuaEnv luaenv = null;
+    private InitLua initLua = null;
 
     void Start()
     {
         GameObject lua = GameObject.Find("Lua");
-        luaenv = lua.GetComponent<InitLua>().GetLuaEnv();
+        initLua = lua.GetComponent<InitLua>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        
+        LuaEnv luaEnv = initLua.GetLuaEnv();
+        if (luaEnv == null) return;
+        Action<GameObject, Collider> triggerEnterFunc = luaEnv.Global.Get<Action<GameObject, Collider>>("OnTriggerEnter");
+        if (triggerEnterFunc != null)
+            triggerEnterFunc(gameObject, other);
     }
 }
 

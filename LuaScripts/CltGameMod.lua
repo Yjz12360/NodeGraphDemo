@@ -1,5 +1,4 @@
 
-local nCurrGameId = 0
 local tCltGame = nil
 
 function init()
@@ -8,12 +7,12 @@ function init()
 end
 
 function recvCreateGameSucc(nGameId)
-    nCurrGameId = nGameId
-    CltGameMod.createGame()
+    CltGameMod.createGame(nGameId)
 end
 
-function createGame()
+function createGame(nGameId)
     tCltGame = {}
+    tCltGame.nGameId = nGameId
     tCltGame.tGameObjects = {}
     tCltGame.tMainNodeGraph = nil
 end
@@ -22,8 +21,11 @@ function isLocalGame()
     return true
 end
 
-function getGameId()
-    return nCurrGameId
+function checkGameId(nGameId)
+    if tCltGame == nil then
+        return false
+    end
+    return tCltGame.nGameId == nGameId
 end
 
 function getGame()
@@ -31,7 +33,7 @@ function getGame()
 end
 
 function addNodeGraph(nGameId, nNodeGraphId, nConfigId)
-    if nGameId ~= nCurrGameId then
+    if not CltGameMod.checkGameId(nGameId) then
         return
     end
     local tNodeGraph = CltNodeGraphMod.addNodeGraph(tCltGame, nNodeGraphId, nConfigId)
@@ -40,7 +42,7 @@ function addNodeGraph(nGameId, nNodeGraphId, nConfigId)
 end
 
 function addPlayer(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
-    if nGameId ~= nCurrGameId then
+    if not CltGameMod.checkGameId(nGameId) then
         return
     end
     local tConfig = Config.Player[nConfigId]
