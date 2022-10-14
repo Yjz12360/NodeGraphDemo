@@ -12,11 +12,12 @@ function getSvrNodeHandler(nNodeType)
     return tHandlers.tSvrHandler
 end
 
-function getTriggerHandler(nNodeType)
-    local tHandlers = tNodeHandlers[nNodeType]
-    if tHandlers == nil then return end
-    return tHandlers.tTriggerHandler
-end
+-- function getTriggerHandler(nNodeType)
+--     local tHandlers = tNodeHandlers[nNodeType]
+--     if tHandlers == nil then return end
+--     return tHandlers.tTriggerHandler
+-- end
+
 
 tNodeHandlers[Const.NodeType.Print] = {
     tCltHandler = function(tNodeGraph, tNodeData)
@@ -30,6 +31,15 @@ tNodeHandlers[Const.NodeType.Delay] = {
     end,
     tSvrHandler = function(tNodeGraph, tNodeData)
         return DelayNode.SvrHandler(tNodeGraph, tNodeData)
+    end
+}
+
+tNodeHandlers[Const.NodeType.WaitEnterTrigger] = {
+    tCltHandler = function(tNodeGraph, tNodeData)
+        return WaitEnterTriggerNode.CltHandler(tNodeGraph, tNodeData)
+    end,
+    tSvrHandler = function(tNodeGraph, tNodeData)
+        return WaitEnterTriggerNode.SvrHandler(tNodeGraph, tNodeData)
     end
 }
 

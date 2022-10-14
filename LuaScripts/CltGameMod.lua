@@ -86,13 +86,12 @@ function onTriggerEnter(goSource, uCollider)
         return
     end
 
-    
     if tCltGame ~= nil then
+        local tNodeGraph = tCltGame.tMainNodeGraph
+        if tNodeGraph ~= nil then
+            CltNodeGraphMod.handleEnterTrigger(tNodeGraph, nTriggerId)
+        end
         Messager.C2SEnterTrigger(tCltGame.nGameId, nTriggerId)
-        -- local tMainNodeGraph = tCltGame.tMainNodeGraph
-        -- if tMainNodeGraph ~= nil then
-        --     CltNodeGraphMod.onPlayerEnterTrigger(tMainNodeGraph, nTriggerId)
-        -- end
     end
 end
 
