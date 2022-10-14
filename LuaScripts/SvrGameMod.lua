@@ -20,7 +20,7 @@ function addGame(nGameConfigId)
     tSvrGame.tGameConfig = tGameConfig
     tSvrGame.tGameObjects = {}
     tSvrGame.nCurrGameObjectId = 1
-    tSvrGame.tNodeGraphs = {}
+    tSvrGame.tMainNodeGraph = nil
     tSvrGame.nCurrNodeGraphId = 1
     tSvrGames[nGameId] = tSvrGame
 
@@ -47,7 +47,7 @@ function startNodeGraph(tSvrGame, nConfigId)
     end
     local nNodeGraphId = tSvrGame.nCurrNodeGraphId
     local tNodeGraph = SvrNodeGraphMod.addNodeGraph(tSvrGame, nNodeGraphId, nConfigId)
-    tSvrGame.tNodeGraphs[nNodeGraphId] = tNodeGraph
+    tSvrGame.tMainNodeGraph = tNodeGraph
     Messager.S2CAddNodeGraph(tSvrGame.nGameId, nNodeGraphId, nConfigId)
     tSvrGame.nCurrNodeGraphId = nNodeGraphId + 1
     SvrNodeGraphMod.startNodeGraph(tNodeGraph)
@@ -78,6 +78,15 @@ function addPlayer(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
     Messager.S2CAddPlayer(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
 end
 
+function onEnterTrigger(nGameId, nTriggerId)
+    local tSvrGame = SvrGameMod.getGameById(nGameId)
+    if tSvrGame == nil then return end
+    local tMainNodeGraph = tSvrGame.tMainNodeGraph
+    if tMainNodeGraph ~= nil then
+        SvrNodeGraphMod.handleEnterTrigger(tMainNodeGraph, nTriggerId)
+    end
+end
+
 function update(nDeltaTime)
     for _, tSvrGame in pairs(tSvrGames) do
         SvrGameMod.updateGame(tSvrGame, nDeltaTime)
@@ -85,10 +94,11 @@ function update(nDeltaTime)
 end
 
 function updateGame(tSvrGame, nDeltaTime)
-    for nNodeGraphId, tNodeGraph in pairs(tSvrGame.tNodeGraphs) do
-        SvrNodeGraphMod.updateNodeGraph(tNodeGraph, nDeltaTime)
-        if SvrNodeGraphMod.isFinish(tNodeGraph) then
-            tSvrGame.tNodeGraphs[nNodeGraphId] = nil
+    local tMainNodeGraph = tSvrGame.tMainNodeGraph
+    if tMainNodeGraph ~= nil then
+        SvrNodeGraphMod.updateNodeGraph(tMainNodeGraph, nDeltaTime)
+        if SvrNodeGraphMod.isFinish(tMainNodeGraph) then
+            tSvrGame.tMainNodeGraph = nil
         end
     end
 end

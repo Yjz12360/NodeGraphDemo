@@ -15,7 +15,7 @@ end
 function createGame()
     tCltGame = {}
     tCltGame.tGameObjects = {}
-    tCltGame.tNodeGraphs = {}
+    tCltGame.tMainNodeGraph = nil
 end
 
 function isLocalGame()
@@ -26,12 +26,16 @@ function getGameId()
     return nCurrGameId
 end
 
+function getGame()
+    return tCltGame
+end
+
 function addNodeGraph(nGameId, nNodeGraphId, nConfigId)
     if nGameId ~= nCurrGameId then
         return
     end
     local tNodeGraph = CltNodeGraphMod.addNodeGraph(tCltGame, nNodeGraphId, nConfigId)
-    tCltGame.tNodeGraphs[nNodeGraphId] = tNodeGraph
+    tCltGame.tMainNodeGraph = tNodeGraph
     CltNodeGraphMod.startNodeGraph(tNodeGraph)
 end
 
@@ -63,38 +67,44 @@ function addPlayer(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     end
 end
 
+function onTriggerEnter(goSource, uCollider)
+    local nTriggerId = tonumber(goSource.name)
+    if nTriggerId == nil then
+        printError("Game Trigger Id error: " .. goSource.name)
+        return
+    end
+    local transParent = goSource.transform.parent
+    if transParent == nil then
+        return
+    end
+    if transParent:GetComponent(typeof(CS.Game.GameTriggerContainer)) == nil then
+        return
+    end
+    if uCollider.gameObject:GetComponent(typeof(CS.Game.PlayerCollider)) == nil then
+        return
+    end
+
+    
+    if tCltGame ~= nil then
+        Messager.C2SEnterTrigger(tCltGame.nGameId, nTriggerId)
+        -- local tMainNodeGraph = tCltGame.tMainNodeGraph
+        -- if tMainNodeGraph ~= nil then
+        --     CltNodeGraphMod.onPlayerEnterTrigger(tMainNodeGraph, nTriggerId)
+        -- end
+    end
+end
+
 function update(nDeltaTime)
     if tCltGame == nil then
         return
     end
-    for nNodeGraphId, tNodeGraph in pairs(tCltGame.tNodeGraphs) do
-        CltNodeGraphMod.updateNodeGraph(tNodeGraph, nDeltaTime)
-        if CltNodeGraphMod.isFinish(tNodeGraph) then
-            tCltGame.tNodeGraphs[nNodeGraphId] = nil
+    local tMainNodeGraph = tCltGame.tMainNodeGraph
+    if tMainNodeGraph ~= nil then
+        CltNodeGraphMod.updateNodeGraph(tMainNodeGraph, nDeltaTime)
+        if CltNodeGraphMod.isFinish(tMainNodeGraph) then
+            tCltGame.tMainNodeGraph = nil
         end
     end
-end
-
-function recvFinishNode(nGameId, nNodeGraphId, sNodeId, nPath)
-    if nGameId ~= nCurrGameId then
-        return
-    end
-    local tNodeGraph = tCltGame.tNodeGraphs[nNodeGraphId]
-    if tNodeGraph == nil then
-        return
-    end
-    CltNodeGraphMod.finishNode(tNodeGraph, sNodeId, nPath)
-end
-
-function recvFinishNodeGraph(nGameId, nNodeGraphId)
-    if nGameId ~= nCurrGameId then
-        return
-    end
-    local tNodeGraph = tCltGame.tNodeGraphs[nNodeGraphId]
-    if tNodeGraph == nil then
-        return
-    end
-    CltNodeGraphMod.setFinish(tNodeGraph)
 end
 
 -- function monsterMove(nObjectId, nPosX, nPosY, nPosZ)

@@ -71,9 +71,12 @@ function triggerNode(tNodeGraph, sNodeId)
     end
     local fHandler = NodesHandlerMod.getCltNodeHandler(tNodeData.nNodeType)
     if fHandler ~= nil then
-        local fUpdate = fHandler(tNodeGraph, tNodeData)
-        if fUpdate ~= nil then
-            tNodeGraph.tRunningNodes[sNodeId] = fUpdate
+        local tFuncs = fHandler(tNodeGraph, tNodeData)
+        if tFuncs ~= nil then
+            local fUpdate = tFuncs.fUpdate
+            if fUpdate ~= nil then
+                tNodeGraph.tRunningNodes[sNodeId] = fUpdate
+            end
         end
     end
 end
@@ -102,9 +105,36 @@ function isFinish(tNodeGraph)
     return tNodeGraph.nState == Const.NodeGraphState.Finish
 end
 
-function setFinish(tNodeGraph)
-    if tNodeGraph == nil then
+function onPlayerEnterTrigger(tNodeGraph, nTriggerId)
+
+end
+
+function recvFinishNode(nGameId, nNodeGraphId, sNodeId, nPath)
+    local tCltGame = CltGameMod.getGame()
+    if tCltGame == nil then
         return
     end
-    tNodeGraph.nState = Const.NodeGraphState.Finish
+    if tCltGame.nGameId ~= nCurrGameId then
+        return
+    end
+    local tMainNodeGraph = tCltGame.tMainNodeGraph
+    if tMainNodeGraph == nil or tMainNodeGraph.nNodeGraphId ~= nNodeGraphId then
+        return
+    end
+    CltNodeGraphMod.finishNode(tMainNodeGraph, sNodeId, nPath)
+end
+
+function recvFinishNodeGraph(nGameId, nNodeGraphId)
+    local tCltGame = CltGameMod.getGame()
+    if tCltGame == nil then
+        return
+    end
+    if tCltGame.nGameId ~= nCurrGameId then
+        return
+    end
+    local tMainNodeGraph = tCltGame.tMainNodeGraph
+    if tMainNodeGraph == nil or tMainNodeGraph.nNodeGraphId ~= nNodeGraphId then
+        return
+    end
+    tMainNodeGraph.nState = Const.NodeGraphState.Finish
 end

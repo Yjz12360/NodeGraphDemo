@@ -35,11 +35,11 @@ S2CAddNodeGraph = function(nGameId, nNodeGraphId, nConfigId)
 end
 
 S2CFinishNode = function(nGameId, nNodeGraphId, sNodeId, nPath)
-    addMessage(CltGameMod.recvFinishNode, nGameId, nNodeGraphId, sNodeId, nPath)
+    addMessage(CltNodeGraphMod.recvFinishNode, nGameId, nNodeGraphId, sNodeId, nPath)
 end
 
 S2CFinishNodeGraph = function(nGameId, nNodeGraphId)
-    addMessage(CltGameMod.recvFinishNodeGraph, nGameId, nNodeGraphId)
+    addMessage(CltNodeGraphMod.recvFinishNodeGraph, nGameId, nNodeGraphId)
 end
 
 
@@ -54,4 +54,8 @@ end
 
 S2CAddPlayer = function(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     addMessage(CltGameMod.addPlayer, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
+end
+
+C2SEnterTrigger = function(nGameId, nTriggerId)
+    addMessage(SvrGameMod.onEnterTrigger, nGameId, nTriggerId)
 end

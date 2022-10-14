@@ -8,14 +8,13 @@ using System;
 
 public class InitLua : MonoBehaviour
 {
-    LuaEnv luaenv = null;
+    private LuaEnv luaenv = null;
 
     public delegate byte[] CustomLoader(ref string filepath);
 
     // Use this for initialization
     void Start()
     {
-        //LuaEnv.AddL
         luaenv = new LuaEnv();
         luaenv.AddLoader((ref string filename) =>
         {
@@ -48,6 +47,11 @@ public class InitLua : MonoBehaviour
     void OnDestroy()
     {
         luaenv.Dispose();
+    }
+
+    public LuaEnv GetLuaEnv()
+    {
+        return luaenv;
     }
 }
 

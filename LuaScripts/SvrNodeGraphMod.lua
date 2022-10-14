@@ -54,6 +54,10 @@ function updateNodeGraph(tNodeGraph, nDeltaTime)
     TableUtil.clear(tNodeGraph.tRemoveNodes)
     if(TableUtil.isEmpty(tNodeGraph.tRunningNodes) and TableUtil.isEmpty(tNodeGraph.tPendingNodes)) then
         tNodeGraph.nState = Const.NodeGraphState.Finish
+        local tSvrGame = tNodeGraph.tSvrGame
+        if tSvrGame ~= nil then
+            Messager.S2CFinishNodeGraph(tSvrGame.nGameId, tNodeGraph.nNodeGraphId)
+        end
     end
 end
 
@@ -72,9 +76,12 @@ function triggerNode(tNodeGraph, sNodeId)
     end
     local fHandler = NodesHandlerMod.getSvrNodeHandler(tNodeData.nNodeType)
     if fHandler ~= nil then
-        local fUpdate = fHandler(tNodeGraph, tNodeData)
-        if fUpdate ~= nil then
-            tNodeGraph.tRunningNodes[sNodeId] = fUpdate
+        local tFuncs = fHandler(tNodeGraph, tNodeData)
+        if tFuncs ~= nil then
+            local fUpdate = tFuncs.fUpdate
+            if fUpdate ~= nil then
+                tNodeGraph.tRunningNodes[sNodeId] = fUpdate
+            end
         end
     else
         SvrNodeGraphMod.finishNode(tNodeGraph, sNodeId)
@@ -82,13 +89,13 @@ function triggerNode(tNodeGraph, sNodeId)
 end
 
 function finishNode(tNodeGraph, sNodeId, nPath)
-    nPath = nPath or 1
     if tNodeGraph == nil then
         return
     end
     if tNodeGraph.nState ~= Const.NodeGraphState.Running then
         return
     end
+    nPath = nPath or 1
     tNodeGraph.tRemoveNodes[sNodeId] = true
     local tTransitions = NodeGraphCfgMod.getTransitions(tNodeGraph.tConfigData)
     for _, tTransition in pairs(tTransitions) do
@@ -100,6 +107,20 @@ function finishNode(tNodeGraph, sNodeId, nPath)
     Messager.S2CFinishNode(nGameId, tNodeGraph.nNodeGraphId, sNodeId, nPath)
 end
 
+function handleEnterTrigger(tNodeGraph, nTriggerId)
+    if tNodeGraph == nil then
+        return 
+    end
+    print("99999")
+    -- for sNodeId, _ in pairs(tNodeGraph.tRunningNodes) do
+    --     -- local fUpdate = tNodeGraph.tRunningNodes[sNodeId]
+    --     -- if fUpdate ~= nil then
+    --     --     fUpdate(nDeltaTime)
+    --     -- end
+    -- end
+end
+
 function isFinish(tNodeGraph)
     return tNodeGraph.nState == Const.NodeGraphState.Finish
 end
+

@@ -7,7 +7,9 @@ function CltHandler(tNodeGraph, tNodeData)
             CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
         end
     end
-    return fUpdate
+    return {
+        fUpdate = fUpdate,
+    }
 end
 
 function SvrHandler(tNodeGraph, tNodeData)
@@ -18,5 +20,7 @@ function SvrHandler(tNodeGraph, tNodeData)
             SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
         end
     end
-    return fUpdate
+    return {
+        fUpdate = fUpdate,
+    }
 end
