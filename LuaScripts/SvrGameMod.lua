@@ -19,9 +19,7 @@ function addGame(nGameConfigId)
     tSvrGame.nGameId = nGameId
     tSvrGame.tGameConfig = tGameConfig
     tSvrGame.tGameObjects = {}
-    tSvrGame.nCurrGameObjectId = 1
     tSvrGame.tMainNodeGraph = nil
-    tSvrGame.nCurrNodeGraphId = 1
     tSvrGames[nGameId] = tSvrGame
 
     Messager.S2CCreateGameSucc(tSvrGame.nGameId)
