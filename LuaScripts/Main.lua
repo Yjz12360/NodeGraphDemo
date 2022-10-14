@@ -37,8 +37,8 @@ function Update(nDeltaTime)
     CltGameMod.update(nDeltaTime)
 end
 
-function OnTriggerEnter(goSource, uCollider)
-    CltGameMod.onTriggerEnter(goSource, uCollider)
+function OnTriggerEnter(nTriggerId, uCollider)
+    CltGameMod.onTriggerEnter(nTriggerId, uCollider)
 end
 
 Init()

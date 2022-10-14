@@ -69,19 +69,7 @@ function addPlayer(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     end
 end
 
-function onTriggerEnter(goSource, uCollider)
-    local nTriggerId = tonumber(goSource.name)
-    if nTriggerId == nil then
-        printError("Game Trigger Id error: " .. goSource.name)
-        return
-    end
-    local transParent = goSource.transform.parent
-    if transParent == nil then
-        return
-    end
-    if transParent:GetComponent(typeof(CS.Game.GameTriggerContainer)) == nil then
-        return
-    end
+function onTriggerEnter(nTriggerId, uCollider)
     if uCollider.gameObject:GetComponent(typeof(CS.Game.PlayerCollider)) == nil then
         return
     end
