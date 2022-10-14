@@ -6,23 +6,53 @@ using System.Text;
 using System.IO;
 using System;
 
-public class LuaOnTrigger : MonoBehaviour
+public class InitLua : MonoBehaviour
 {
-    private InitLua initLua = null;
+    private LuaEnv luaenv = null;
 
+    public delegate byte[] CustomLoader(ref string filepath);
+
+    // Use this for initialization
     void Start()
     {
-        GameObject lua = GameObject.Find("Lua");
-        initLua = lua.GetComponent<InitLua>();
+        //LuaEnv.AddL
+        luaenv = new LuaEnv();
+        luaenv.AddLoader((ref string filename) =>
+        {
+            string fixFileName = $"{Application.dataPath}/../LuaScripts/{filename}.lua";
+            if (!File.Exists(fixFileName))
+                return null;
+            filename = fixFileName;
+            FileStream f = new FileStream(fixFileName, FileMode.Open, FileAccess.Read);
+            if (f == null) return null;
+            byte[] bytes = new byte[f.Length];
+            f.Read(bytes, 0, (int)f.Length);
+            return bytes;
+        });
+        luaenv.DoString("require 'Main'");
     }
 
-    private void OnTriggerEnter(Collider other)
+    // Update is called once per frame
+    void Update()
     {
-        LuaEnv luaEnv = initLua.GetLuaEnv();
-        if (luaEnv == null) return;
-        Action<GameObject, Collider> triggerEnterFunc = luaEnv.Global.Get<Action<GameObject, Collider>>("OnTriggerEnter");
-        if (triggerEnterFunc != null)
-            triggerEnterFunc(gameObject, other);
+        if (luaenv != null)
+        {
+            luaenv.Tick();
+
+            Action<double> updateFunc = luaenv.Global.Get<Action<double>>("Update");
+            if (updateFunc != null)
+                updateFunc(Time.deltaTime);
+        }
+    }
+
+    void OnDestroy()
+    {
+        luaenv.Dispose();
+    }
+
+    public LuaEnv GetLuaEnv()
+    {
+        return luaenv;
     }
 }
 
