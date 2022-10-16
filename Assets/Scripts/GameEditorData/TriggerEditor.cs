@@ -20,7 +20,6 @@ namespace Game
             if (GUILayout.Button("添加触发器"))
             {
                 int genId = GenTriggerId();
-                //GameObject newObject = new GameObject(genId.ToString());
                 GameObject prefab = Resources.Load<GameObject>("GamePrefabs/Trigger/Trigger");
                 GameObject newObject = Instantiate(prefab);
                 newObject.name = genId.ToString();
