@@ -10,13 +10,14 @@ using System;
 public class LuaOnTrigger : MonoBehaviour
 {
     private InitLua initLua = null;
-    private int triggerId;
+    [HideInInspector]
+    public int triggerId;
     void Start()
     {
         GameObject lua = GameObject.Find("Lua");
         initLua = lua.GetComponent<InitLua>();
-        if (!int.TryParse(gameObject.name, out triggerId))
-            triggerId = -1;
+        //if (!int.TryParse(gameObject.name, out triggerId))
+        //    triggerId = -1;
     }
 
     private void OnTriggerEnter(Collider other)

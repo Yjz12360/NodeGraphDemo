@@ -43,11 +43,11 @@ function startNodeGraph(tSvrGame, nConfigId)
     if tSvrGame == nil then
         return
     end
-    local nNodeGraphId = tSvrGame.nCurrNodeGraphId
+    local nNodeGraphId = 1
     local tNodeGraph = SvrNodeGraphMod.addNodeGraph(tSvrGame, nNodeGraphId, nConfigId)
     tSvrGame.tMainNodeGraph = tNodeGraph
+    tSvrGame.nCurrGameObjectId = 1
     Messager.S2CAddNodeGraph(tSvrGame.nGameId, nNodeGraphId, nConfigId)
-    tSvrGame.nCurrNodeGraphId = nNodeGraphId + 1
     SvrNodeGraphMod.startNodeGraph(tNodeGraph)
 end
 
