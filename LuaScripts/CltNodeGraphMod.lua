@@ -10,8 +10,7 @@ function addNodeGraph(tCltGame, nNodeGraphId, nConfigId)
     tNodeGraph.nNodeGraphId = nNodeGraphId
     tNodeGraph.tConfigData = NodeGraphCfgMod.getConfigByName(tConfig.sName)
     tNodeGraph.nState = Const.NodeGraphState.Pending
-    tNodeGraph.tActiveNodeState = {}
-    tNodeGraph.tNodeHandlers = {}
+    tNodeGraph.tEventListeners = {}
     tNodeGraph.tFinishedNodes = {}
     return tNodeGraph
 end
@@ -20,13 +19,11 @@ function startNodeGraph(tNodeGraph)
     if tNodeGraph == nil or tNodeGraph.tConfigData == nil then
         return
     end
-    TableUtil.clear(tNodeGraph.tActiveNodeState)
-    TableUtil.clear(tNodeGraph.tNodeHandlers)
     TableUtil.clear(tNodeGraph.tFinishedNodes)
 
     tNodeGraph.nState = Const.NodeGraphState.Running
     local sStartNodeId = tNodeGraph.tConfigData.sStartNodeId
-    tNodeGraph.tActiveNodeState[sStartNodeId] = Const.NodeState.Pending
+    CltNodeGraphMod.finishNode(tNodeGraph, sStartNodeId)
 end
 
 function triggerNode(tNodeGraph, sNodeId)
@@ -37,53 +34,10 @@ function triggerNode(tNodeGraph, sNodeId)
     if tNodeData == nil then
         return
     end
-    if tNodeData.nNodeType == Const.NodeType.Start then
-        CltNodeGraphMod.finishNode(tNodeGraph, sNodeId)
-        return
-    end
 
     local fNodeHandler = NodesHandlerMod.getCltNodeHandler(tNodeData.nNodeType)
     if fNodeHandler ~= nil then
-        local tHandlers = fNodeHandler(tNodeGraph, tNodeData)
-        if tHandlers ~= nil then
-            tNodeGraph.tNodeHandlers[sNodeId] = tHandlers
-            if tHandlers.fUpdate ~= nil then
-                tNodeGraph.tActiveNodeState[sNodeId] = Const.NodeState.Running
-            else
-                tNodeGraph.tActiveNodeState[sNodeId] = Const.NodeState.Hanging
-            end
-        end
-    end
-end
-
-function updateNodeGraph(tNodeGraph, nDeltaTime)
-    if tNodeGraph == nil then
-        return
-    end
-    if tNodeGraph.nState ~= Const.NodeGraphState.Running then
-        return
-    end
-
-    for sNodeId, nNodeState in pairs(tNodeGraph.tActiveNodeState) do
-        if nNodeState == Const.NodeState.Activated then
-            tNodeGraph.tActiveNodeState[sNodeId] = Const.NodeState.Pending
-        end
-    end
-    for sNodeId, nNodeState in pairs(tNodeGraph.tActiveNodeState) do
-        if nNodeState == Const.NodeState.Pending then
-            CltNodeGraphMod.triggerNode(tNodeGraph, sNodeId)
-        end
-    end
-    for sNodeId, nNodeState in pairs(tNodeGraph.tActiveNodeState) do
-        if nNodeState == Const.NodeState.Running then
-            local tHandlers = tNodeGraph.tNodeHandlers[sNodeId]
-            if tHandlers ~= nil then
-                local fUpdate = tHandlers.fUpdate
-                if fUpdate ~= nil then
-                    fUpdate(nDeltaTime)
-                end
-            end
-        end
+        fNodeHandler(tNodeGraph, tNodeData)
     end
 end
 
@@ -97,19 +51,14 @@ function finishNode(tNodeGraph, sNodeId, nPath)
     if tNodeGraph.tFinishedNodes[sNodeId] then
         return
     end
-    if tNodeGraph.tActiveNodeState[sNodeId] == nil then
-        return
-    end
     
     nPath = nPath or 1
     local tTransitions = NodeGraphCfgMod.getTransitions(tNodeGraph.tConfigData)
     for _, tTransition in pairs(tTransitions) do
         if tTransition.sFromNodeId == sNodeId and tTransition.nPath == nPath then
-            tNodeGraph.tActiveNodeState[tTransition.sToNodeId] = Const.NodeState.Activated
+            CltNodeGraphMod.triggerNode(tNodeGraph, tTransition.sToNodeId)
         end
     end
-    tNodeGraph.tActiveNodeState[sNodeId] = nil
-    tNodeGraph.tNodeHandlers[sNodeId] = nil
     tNodeGraph.tFinishedNodes[sNodeId] = true
 
     local bAllFinish = true
@@ -121,8 +70,6 @@ function finishNode(tNodeGraph, sNodeId, nPath)
         end
     end
     if bAllFinish then
-        TableUtil.clear(tNodeGraph.tActiveNodeState)
-        TableUtil.clear(tNodeGraph.tNodeHandlers)
         tNodeGraph.nState = Const.NodeGraphState.Finish
     end
 end
@@ -134,11 +81,35 @@ function isFinish(tNodeGraph)
     return tNodeGraph.nState == Const.NodeGraphState.Finish
 end
 
-function handleEnterTrigger(tNodeGraph, nTriggerId)
-    for sNodeId, tHandler in pairs(tNodeGraph.tNodeHandlers) do
-        local fTriggerEnter = tHandler.fTriggerEnter
-        if fTriggerEnter then
-            fTriggerEnter(nTriggerId)
+function addEventListener(tNodeGraph, tNodeData, nEventType)
+    local tEventListeners = tNodeGraph.tEventListeners
+    if tEventListeners == nil then
+        tEventListeners = {}
+        tNodeGraph.tEventListeners = tEventListeners
+    end
+    local tListeners = tEventListeners[nEventType]
+    if tListeners == nil then
+        tListeners = {}
+        tEventListeners[nEventType] = tListeners
+    end
+    tListeners[tNodeData.sNodeId] = true
+end
+
+function processEvent(tNodeGraph, nEventType, ...)
+    local tEventListeners = tNodeGraph.tEventListeners
+    if tEventListeners == nil then 
+        return
+    end
+    local tListeners = tEventListeners[nEventType]
+    if tListeners == nil then
+        return
+    end
+    for sNodeId, _ in pairs(tListeners) do
+        local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, sNodeId)
+        local nNodeType = tNodeData.nNodeType
+        local fEventHandler = NodesHandlerMod.getCltEventHandler(nNodeType, nEventType)
+        if fEventHandler ~= nil then
+            fEventHandler(tNodeGraph, tNodeData, ...)
         end
     end
 end
@@ -170,7 +141,5 @@ function recvFinishNodeGraph(nGameId, nNodeGraphId)
     if tNodeGraph == nil or tNodeGraph.nNodeGraphId ~= nNodeGraphId then
         return
     end
-    TableUtil.clear(tNodeGraph.tActiveNodeState)
-    TableUtil.clear(tNodeGraph.tNodeHandlers)
     tNodeGraph.nState = Const.NodeGraphState.Finish
 end

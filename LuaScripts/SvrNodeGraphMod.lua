@@ -10,8 +10,7 @@ function addNodeGraph(tSvrGame, nNodeGraphId, nConfigId)
     tNodeGraph.nNodeGraphId = nNodeGraphId
     tNodeGraph.tConfigData = NodeGraphCfgMod.getConfigByName(tConfig.sName)
     tNodeGraph.nState = Const.NodeGraphState.Pending
-    tNodeGraph.tActiveNodeState = {}
-    tNodeGraph.tNodeHandlers = {}
+    tNodeGraph.tEventListeners = {}
     tNodeGraph.tFinishedNodes = {}
     return tNodeGraph
 end
@@ -20,13 +19,10 @@ function startNodeGraph(tNodeGraph)
     if tNodeGraph == nil or tNodeGraph.tConfigData == nil then
         return
     end
-    TableUtil.clear(tNodeGraph.tActiveNodeState)
-    TableUtil.clear(tNodeGraph.tNodeHandlers)
-    TableUtil.clear(tNodeGraph.tFinishedNodes)
 
     tNodeGraph.nState = Const.NodeGraphState.Running
     local sStartNodeId = tNodeGraph.tConfigData.sStartNodeId
-    tNodeGraph.tActiveNodeState[sStartNodeId] = Const.NodeState.Pending
+    SvrNodeGraphMod.finishNode(tNodeGraph, sStartNodeId)
 end
 
 function triggerNode(tNodeGraph, sNodeId)
@@ -34,55 +30,16 @@ function triggerNode(tNodeGraph, sNodeId)
         return
     end
     local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, sNodeId)
-    if tNodeData == nil or tNodeData.nNodeType == Const.NodeType.Start then
+    if tNodeData == nil then
         SvrNodeGraphMod.finishNode(tNodeGraph, sNodeId)
         return
     end
+
     local fNodeHandler = NodesHandlerMod.getSvrNodeHandler(tNodeData.nNodeType)
     if fNodeHandler ~= nil then
-        local tHandlers = fNodeHandler(tNodeGraph, tNodeData)
-        if tHandlers ~= nil then
-            tNodeGraph.tNodeHandlers[sNodeId] = tHandlers
-            if tHandlers.fUpdate ~= nil then
-                tNodeGraph.tActiveNodeState[sNodeId] = Const.NodeState.Running
-            else
-                tNodeGraph.tActiveNodeState[sNodeId] = Const.NodeState.Hanging
-            end
-        else
-            SvrNodeGraphMod.finishNode(tNodeGraph, sNodeId)
-        end
+        fNodeHandler(tNodeGraph, tNodeData)
     else
         SvrNodeGraphMod.finishNode(tNodeGraph, sNodeId)
-    end
-end
-
-function updateNodeGraph(tNodeGraph, nDeltaTime)
-    if tNodeGraph == nil then
-        return
-    end
-    if tNodeGraph.nState ~= Const.NodeGraphState.Running then
-        return
-    end
-    for sNodeId, nNodeState in pairs(tNodeGraph.tActiveNodeState) do
-        if nNodeState == Const.NodeState.Activated then
-            tNodeGraph.tActiveNodeState[sNodeId] = Const.NodeState.Pending
-        end
-    end
-    for sNodeId, nNodeState in pairs(tNodeGraph.tActiveNodeState) do
-        if nNodeState == Const.NodeState.Pending then
-            SvrNodeGraphMod.triggerNode(tNodeGraph, sNodeId)
-        end
-    end
-    for sNodeId, nNodeState in pairs(tNodeGraph.tActiveNodeState) do
-        if nNodeState == Const.NodeState.Running then
-            local tHandlers = tNodeGraph.tNodeHandlers[sNodeId]
-            if tHandlers ~= nil then
-                local fUpdate = tHandlers.fUpdate
-                if fUpdate ~= nil then
-                    fUpdate(nDeltaTime)
-                end
-            end
-        end
     end
 end
 
@@ -93,21 +50,24 @@ function finishNode(tNodeGraph, sNodeId, nPath)
     if tNodeGraph.nState ~= Const.NodeGraphState.Running then
         return
     end
-    nPath = nPath or 1
-    local tTransitions = NodeGraphCfgMod.getTransitions(tNodeGraph.tConfigData)
-    for _, tTransition in pairs(tTransitions) do
-        if tTransition.sFromNodeId == sNodeId and tTransition.nPath == nPath then
-            tNodeGraph.tActiveNodeState[tTransition.sToNodeId] = Const.NodeState.Activated
-        end
+    if tNodeGraph.tFinishedNodes[sNodeId] then
+        return
     end
-    tNodeGraph.tActiveNodeState[sNodeId] = nil
-    tNodeGraph.tNodeHandlers[sNodeId] = nil
-    tNodeGraph.tFinishedNodes[sNodeId] = true
+
+    nPath = nPath or 1
 
     local tSvrGame = tNodeGraph.tSvrGame
     if tSvrGame ~= nil then
         local nGameId = tSvrGame.nGameId
         Messager.S2CFinishNode(nGameId, tNodeGraph.nNodeGraphId, sNodeId, nPath)
+    end
+    tNodeGraph.tFinishedNodes[sNodeId] = true
+
+    local tTransitions = NodeGraphCfgMod.getTransitions(tNodeGraph.tConfigData)
+    for _, tTransition in pairs(tTransitions) do
+        if tTransition.sFromNodeId == sNodeId and tTransition.nPath == nPath then
+            SvrNodeGraphMod.triggerNode(tNodeGraph, tTransition.sToNodeId)
+        end
     end
 
     local bAllFinish = true
@@ -119,8 +79,6 @@ function finishNode(tNodeGraph, sNodeId, nPath)
         end
     end
     if bAllFinish then
-        TableUtil.clear(tNodeGraph.tActiveNodeState)
-        TableUtil.clear(tNodeGraph.tNodeHandlers)
         tNodeGraph.nState = Const.NodeGraphState.Finish
         if tSvrGame ~= nil then
             Messager.S2CFinishNodeGraph(tSvrGame.nGameId, tNodeGraph.nNodeGraphId)
@@ -128,14 +86,35 @@ function finishNode(tNodeGraph, sNodeId, nPath)
     end
 end
 
-function handleEnterTrigger(tNodeGraph, nTriggerId)
-    if tNodeGraph == nil then
-        return 
+function addEventListener(tNodeGraph, tNodeData, nEventType)
+    local tEventListeners = tNodeGraph.tEventListeners
+    if tEventListeners == nil then
+        tEventListeners = {}
+        tNodeGraph.tEventListeners = tEventListeners
     end
-    for sNodeId, tHandler in pairs(tNodeGraph.tNodeHandlers) do
-        local fTriggerEnter = tHandler.fTriggerEnter
-        if fTriggerEnter then
-            fTriggerEnter(nTriggerId)
+    local tListeners = tEventListeners[nEventType]
+    if tListeners == nil then
+        tListeners = {}
+        tEventListeners[nEventType] = tListeners
+    end
+    tListeners[tNodeData.sNodeId] = true
+end
+
+function processEvent(tNodeGraph, nEventType, ...)
+    local tEventListeners = tNodeGraph.tEventListeners
+    if tEventListeners == nil then 
+        return
+    end
+    local tListeners = tEventListeners[nEventType]
+    if tListeners == nil then
+        return
+    end
+    for sNodeId, _ in pairs(tListeners) do
+        local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, sNodeId)
+        local nNodeType = tNodeData.nNodeType
+        local fEventHandler = NodesHandlerMod.getSvrEventHandler(nNodeType, nEventType)
+        if fEventHandler ~= nil then
+            fEventHandler(tNodeGraph, tNodeData, ...)
         end
     end
 end

@@ -105,7 +105,7 @@ function onTriggerEnter(nTriggerId, uCollider)
     if tCltGame ~= nil then
         local tNodeGraph = tCltGame.tMainNodeGraph
         if tNodeGraph ~= nil then
-            CltNodeGraphMod.handleEnterTrigger(tNodeGraph, nTriggerId)
+            CltNodeGraphMod.processEvent(tNodeGraph, Const.EventType.EnterTrigger, nTriggerId)
         end
         Messager.C2SEnterTrigger(tCltGame.nGameId, nTriggerId)
     end
@@ -124,15 +124,3 @@ function update(nDeltaTime)
     end
 end
 
--- function monsterMove(nObjectId, nPosX, nPosY, nPosZ)
-
--- end
-
--- function monsterChase(nMonsterId, nTargetId, nChaseTime, nStopDistance)
-
--- end
-
-
--- function removeObject(nObjectId)
-
--- end

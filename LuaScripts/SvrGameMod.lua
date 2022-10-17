@@ -111,22 +111,6 @@ function onEnterTrigger(nGameId, nTriggerId)
     if tSvrGame == nil then return end
     local tMainNodeGraph = tSvrGame.tMainNodeGraph
     if tMainNodeGraph ~= nil then
-        SvrNodeGraphMod.handleEnterTrigger(tMainNodeGraph, nTriggerId)
-    end
-end
-
-function update(nDeltaTime)
-    for _, tSvrGame in pairs(tSvrGames) do
-        SvrGameMod.updateGame(tSvrGame, nDeltaTime)
-    end
-end
-
-function updateGame(tSvrGame, nDeltaTime)
-    local tMainNodeGraph = tSvrGame.tMainNodeGraph
-    if tMainNodeGraph ~= nil then
-        SvrNodeGraphMod.updateNodeGraph(tMainNodeGraph, nDeltaTime)
-        if SvrNodeGraphMod.isFinish(tMainNodeGraph) then
-            tSvrGame.tMainNodeGraph = nil
-        end
+        SvrNodeGraphMod.processEvent(tMainNodeGraph, Const.EventType.EnterTrigger, nTriggerId)
     end
 end

@@ -25,6 +25,13 @@ function getNodeConfig(tNodeGraphConfig, sNodeId)
     return tNodeGraphConfig.tNodeMap[sNodeId]
 end
 
+function getNodeCount(tNodeGraphConfig)
+    if tNodeGraphConfig == nil or tNodeGraphConfig.tNodeMap == nil then
+        return 0
+    end
+    return TableUtil.dictCount(tNodeGraphConfig.tNodeMap)
+end
+
 function getTransitions(tNodeGraphConfig)
     if tNodeGraphConfig == nil then
         return

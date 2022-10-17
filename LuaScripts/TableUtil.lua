@@ -96,3 +96,11 @@ end
 function isEmpty(tablevalue)
     return tablevalue == nil or not next(tablevalue)
 end
+
+function dictCount(tablevalue)
+    local nCount = 0
+    for _, _ in pairs(tablevalue) do
+        nCount = nCount + 1
+    end
+    return nCount
+end

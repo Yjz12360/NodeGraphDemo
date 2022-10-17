@@ -32,10 +32,10 @@ end
 function Update(nDeltaTime)
     Messager.update()
 
-    if CltGameMod.isLocalGame() then
-        SvrGameMod.update(nDeltaTime)
-    end
-    CltGameMod.update(nDeltaTime)
+    -- if CltGameMod.isLocalGame() then
+    --     SvrGameMod.update(nDeltaTime)
+    -- end
+    -- CltGameMod.update(nDeltaTime)
 end
 
 function OnTriggerEnter(nTriggerId, uCollider)
