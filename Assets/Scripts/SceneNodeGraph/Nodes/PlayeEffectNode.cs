@@ -16,17 +16,17 @@ namespace SceneNodeGraph
 
     }
 
-    public class CltPlayEffectNode : CltRuntimeNode
-    {
-        public PlayEffectNodeData NodeData { get { return (PlayEffectNodeData)baseNodeData; } }
+    //public class CltPlayEffectNode : CltRuntimeNode
+    //{
+    //    public PlayEffectNodeData NodeData { get { return (PlayEffectNodeData)baseNodeData; } }
 
-        public override void StartNode()
-        {
-            Vector3 center = new Vector3(NodeData.nPosX, NodeData.nPosY, NodeData.nPosZ);
-            nodeGraph.game.PlayEffect(center, NodeData.nEffectId, NodeData.nDisplayScale);
-            //nodeGraph.game.PlayExplosion(center, NodeData.nEffectId, NodeData.nDisplayScale);
-            FinishNode();
-        }
-    }
+    //    public override void StartNode()
+    //    {
+    //        Vector3 center = new Vector3(NodeData.nPosX, NodeData.nPosY, NodeData.nPosZ);
+    //        nodeGraph.game.PlayEffect(center, NodeData.nEffectId, NodeData.nDisplayScale);
+    //        //nodeGraph.game.PlayExplosion(center, NodeData.nEffectId, NodeData.nDisplayScale);
+    //        FinishNode();
+    //    }
+    //}
 
 }

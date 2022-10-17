@@ -15,22 +15,22 @@ namespace SceneNodeGraph
         public bool bActive;
     }
 
-    public class CltComponentSetActiveNode : CltRuntimeNode
-    {
-        public ComponentSetActiveNodeData NodeData { get { return (ComponentSetActiveNodeData)baseNodeData; } }
+    //public class CltComponentSetActiveNode : CltRuntimeNode
+    //{
+    //    public ComponentSetActiveNodeData NodeData { get { return (ComponentSetActiveNodeData)baseNodeData; } }
 
-        public override void StartNode()
-        {
-            GameObject sourceObject = GameObject.Find(NodeData.sSourcePath);
-            if(sourceObject != null)
-            {
-                Component component = sourceObject.GetComponent(NodeData.sComponentName);
-                if (component != null && component.GetType().IsSubclassOf(typeof(Behaviour)))
-                    ((Behaviour)component).enabled = NodeData.bActive;
-            }
+    //    public override void StartNode()
+    //    {
+    //        GameObject sourceObject = GameObject.Find(NodeData.sSourcePath);
+    //        if(sourceObject != null)
+    //        {
+    //            Component component = sourceObject.GetComponent(NodeData.sComponentName);
+    //            if (component != null && component.GetType().IsSubclassOf(typeof(Behaviour)))
+    //                ((Behaviour)component).enabled = NodeData.bActive;
+    //        }
 
-            FinishNode();
-        }
-    }
+    //        FinishNode();
+    //    }
+    //}
 
 }

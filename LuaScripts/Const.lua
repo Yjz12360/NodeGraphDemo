@@ -4,6 +4,7 @@ NodeType = {
     Print = 1,
     Delay = 3,
     AddMonster = 4,
+    HasMonster = 5,
     WaitEnterTrigger = 15,
 }
 

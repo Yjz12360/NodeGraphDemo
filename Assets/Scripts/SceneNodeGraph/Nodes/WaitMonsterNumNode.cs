@@ -18,18 +18,18 @@ namespace SceneNodeGraph
         public int nNum = 0;
     }
 
-    public class SvrWaitMonsterNumNode : SvrRuntimeNode
-    {
-        public override bool SyncFinishNode() { return true; }
-        public WaitMonsterNumNodeData NodeData { get { return (WaitMonsterNumNodeData)baseNodeData; } }
+    //public class SvrWaitMonsterNumNode : SvrRuntimeNode
+    //{
+    //    public override bool SyncFinishNode() { return true; }
+    //    public WaitMonsterNumNodeData NodeData { get { return (WaitMonsterNumNodeData)baseNodeData; } }
 
-        public override void OnMonsterNumChange(int nNum)
-        {
-            if ((NodeData.nCompareType == CompareType.LessThan && nNum < NodeData.nNum) ||
-                (NodeData.nCompareType == CompareType.MoreThan && nNum > NodeData.nNum) ||
-                (NodeData.nCompareType == CompareType.Equal && nNum == NodeData.nNum))
-                FinishNode();
-        }
+    //    public override void OnMonsterNumChange(int nNum)
+    //    {
+    //        if ((NodeData.nCompareType == CompareType.LessThan && nNum < NodeData.nNum) ||
+    //            (NodeData.nCompareType == CompareType.MoreThan && nNum > NodeData.nNum) ||
+    //            (NodeData.nCompareType == CompareType.Equal && nNum == NodeData.nNum))
+    //            FinishNode();
+    //    }
 
-    }
+    //}
 }

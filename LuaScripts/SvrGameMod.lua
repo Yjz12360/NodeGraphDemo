@@ -73,6 +73,7 @@ function addPlayer(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
         y = nPosY,
         z = nPosZ,
     }
+    tSvrGame.tGameObjects[nObjectId] = tPlayer
     Messager.S2CAddPlayer(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
 end
 
@@ -92,7 +93,17 @@ function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
         y = nPosY,
         z = nPosZ,
     }
+    tSvrGame.tGameObjects[nObjectId] = tMonster
     Messager.S2CAddMonster(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
+end
+
+function hasMonster(tSvrGame)
+    for _, tGameObject in pairs(tSvrGame.tGameObjects) do
+        if tGameObject.nObjectType == Const.GameObjectType.Monster then
+            return true
+        end
+    end
+    return false
 end
 
 function onEnterTrigger(nGameId, nTriggerId)

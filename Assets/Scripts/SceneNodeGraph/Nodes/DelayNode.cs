@@ -12,33 +12,33 @@ namespace SceneNodeGraph
         public float nDelayTime;
     }
 
-    public class CltDelayNode : CltRuntimeNode
-    {
-        public DelayNodeData NodeData { get { return (DelayNodeData)baseNodeData; } }
+    //public class CltDelayNode : CltRuntimeNode
+    //{
+    //    public DelayNodeData NodeData { get { return (DelayNodeData)baseNodeData; } }
 
-        public override void StartNode()
-        {
-            float nDelayTime = NodeData.nDelayTime;
-            Task t = Task.Run(async delegate
-            {
-                await Task.Delay((int)(nDelayTime * 1000));
-                FinishNode();
-            });
-        }
-    }
+    //    public override void StartNode()
+    //    {
+    //        float nDelayTime = NodeData.nDelayTime;
+    //        Task t = Task.Run(async delegate
+    //        {
+    //            await Task.Delay((int)(nDelayTime * 1000));
+    //            FinishNode();
+    //        });
+    //    }
+    //}
 
-    public class SvrDelayNode : SvrRuntimeNode
-    {
-        public DelayNodeData NodeData { get { return (DelayNodeData)baseNodeData; } }
+    //public class SvrDelayNode : SvrRuntimeNode
+    //{
+    //    public DelayNodeData NodeData { get { return (DelayNodeData)baseNodeData; } }
 
-        public override void StartNode()
-        {
-            float nDelayTime = NodeData.nDelayTime;
-            Task t = Task.Run(async delegate
-            {
-                await Task.Delay((int)(nDelayTime * 1000));
-                FinishNode();
-            });
-        }
-    }
+    //    public override void StartNode()
+    //    {
+    //        float nDelayTime = NodeData.nDelayTime;
+    //        Task t = Task.Run(async delegate
+    //        {
+    //            await Task.Delay((int)(nDelayTime * 1000));
+    //            FinishNode();
+    //        });
+    //    }
+    //}
 }

@@ -11,26 +11,26 @@ namespace SceneNodeGraph
         public int nStaticId;
     }
 
-    public class SvrWaitMonsterDeadNode : SvrRuntimeNode
-    {
-        public override bool SyncFinishNode() { return true; }
-        public WaitMonsterDeadNodeData NodeData { get { return (WaitMonsterDeadNodeData)baseNodeData; } }
+    //public class SvrWaitMonsterDeadNode : SvrRuntimeNode
+    //{
+    //    public override bool SyncFinishNode() { return true; }
+    //    public WaitMonsterDeadNodeData NodeData { get { return (WaitMonsterDeadNodeData)baseNodeData; } }
 
-        public override void StartNode()
-        {
-            Game.SvrObjectData objectData = nodeGraph.game.GetMonsterByStaticId(NodeData.nStaticId);
-            if (objectData == null)
-                FinishNode();
-        }
+    //    public override void StartNode()
+    //    {
+    //        Game.SvrObjectData objectData = nodeGraph.game.GetMonsterByStaticId(NodeData.nStaticId);
+    //        if (objectData == null)
+    //            FinishNode();
+    //    }
 
-        public override void OnMonsterDead(int nObjectId)
-        {
-            Game.SvrObjectData objectData = nodeGraph.game.GetObject(nObjectId);
-            if (objectData == null) return;
-            if (NodeData.nStaticId <= 0) return;
-            if (objectData.nStaticId == NodeData.nStaticId)
-                FinishNode();
-        }
+    //    public override void OnMonsterDead(int nObjectId)
+    //    {
+    //        Game.SvrObjectData objectData = nodeGraph.game.GetObject(nObjectId);
+    //        if (objectData == null) return;
+    //        if (NodeData.nStaticId <= 0) return;
+    //        if (objectData.nStaticId == NodeData.nStaticId)
+    //            FinishNode();
+    //    }
 
-    }
+    //}
 }

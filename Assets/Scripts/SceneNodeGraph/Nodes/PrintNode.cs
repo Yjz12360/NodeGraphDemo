@@ -12,20 +12,20 @@ namespace SceneNodeGraph
         public bool bIsError;
     }
 
-    public class CltPrintNode : CltRuntimeNode
-    {
-        public PrintNodeData NodeData { get { return (PrintNodeData)baseNodeData; } }
+    //public class CltPrintNode : CltRuntimeNode
+    //{
+    //    public PrintNodeData NodeData { get { return (PrintNodeData)baseNodeData; } }
 
-        public override void StartNode()
-        {
-            string sContext = NodeData.sContext;
-            if (NodeData.bIsError)
-                Debug.LogError(sContext);
-            else
-                Debug.Log(sContext);
-            FinishNode();
-        }
-    }
+    //    public override void StartNode()
+    //    {
+    //        string sContext = NodeData.sContext;
+    //        if (NodeData.bIsError)
+    //            Debug.LogError(sContext);
+    //        else
+    //            Debug.Log(sContext);
+    //        FinishNode();
+    //    }
+    //}
 }
 
 //namespace SceneNodeGraph

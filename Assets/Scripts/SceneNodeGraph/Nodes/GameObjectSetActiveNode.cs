@@ -14,20 +14,20 @@ namespace SceneNodeGraph
         public bool bActive;
     }
 
-    public class CltGameObjectSetActiveNode : CltRuntimeNode
-    {
-        public GameObjectSetActiveNodeData NodeData { get { return (GameObjectSetActiveNodeData)baseNodeData; } }
+    //public class CltGameObjectSetActiveNode : CltRuntimeNode
+    //{
+    //    public GameObjectSetActiveNodeData NodeData { get { return (GameObjectSetActiveNodeData)baseNodeData; } }
 
-        public override void StartNode()
-        {
-            GameObject sourceObject = GameObject.Find(NodeData.sSourcePath);
-            if(sourceObject != null)
-            {
-                sourceObject.SetActive(NodeData.bActive);
-            }
+    //    public override void StartNode()
+    //    {
+    //        GameObject sourceObject = GameObject.Find(NodeData.sSourcePath);
+    //        if(sourceObject != null)
+    //        {
+    //            sourceObject.SetActive(NodeData.bActive);
+    //        }
 
-            FinishNode();
-        }
-    }
+    //        FinishNode();
+    //    }
+    //}
 
 }

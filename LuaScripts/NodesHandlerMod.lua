@@ -40,6 +40,12 @@ tNodeHandlers[Const.NodeType.AddMonster] = {
     end
 }
 
+tNodeHandlers[Const.NodeType.HasMonster] = {
+    tSvrHandler = function(tNodeGraph, tNodeData)
+        return HasMonsterNode.SvrHandler(tNodeGraph, tNodeData)
+    end
+}
+
 tNodeHandlers[Const.NodeType.WaitEnterTrigger] = {
     tCltHandler = function(tNodeGraph, tNodeData)
         return WaitEnterTriggerNode.CltHandler(tNodeGraph, tNodeData)

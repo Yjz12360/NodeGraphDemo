@@ -2628,6 +2628,8 @@ MonoBehaviour:
   initConfigFiles:
   - {fileID: 4900000, guid: 0c9040b2870034b409683c85b2a7ddff, type: 3}
   - {fileID: 4900000, guid: f676a934dad92d649be3661bc6fb3994, type: 3}
+  nCurrId: 0
+  game: {fileID: 0}
 --- !u!114 &706143569
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2640,6 +2642,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd63d8309979340419e8e36d998e30f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nCurrId: 1
+  nodeGraphManager: {fileID: 0}
 --- !u!1001 &737710580
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3417,6 +3421,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0011729eaf7c5824ba9595a4505bf4be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  game: {fileID: 0}
 --- !u!114 &873272573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3429,6 +3434,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e638821fc7a983f42bc5b32bf6a62577, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  triggerPrefab: {fileID: 0}
+  playerRoot: {fileID: 0}
+  monsterRoot: {fileID: 0}
+  triggerRoot: {fileID: 0}
+  explosionRoot: {fileID: 0}
+  mainCamera: {fileID: 0}
+  localPlayer: {fileID: 0}
+  nSyncTime: 0.2
+  nSyncTimer: 0
+  rolePrefabs: {fileID: 0}
+  effectPrefabs: {fileID: 0}
 --- !u!1001 &912190500
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6731,7 +6747,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1984206249
 Transform:
   m_ObjectHideFlags: 0

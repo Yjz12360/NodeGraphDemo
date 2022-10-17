@@ -13,35 +13,35 @@ namespace SceneNodeGraph
         public float nSpeed;
     }
 
-    public class CltMoveNode : CltRuntimeNode
-    {
-        public MoveNodeData NodeData { get { return (MoveNodeData)baseNodeData; } }
+    //public class CltMoveNode : CltRuntimeNode
+    //{
+    //    public MoveNodeData NodeData { get { return (MoveNodeData)baseNodeData; } }
 
 
-        public override void StartNode()
-        {
+    //    public override void StartNode()
+    //    {
 
-        }
+    //    }
 
-        public override void UpdateNode(float nDeltaTime)
-        {
+    //    public override void UpdateNode(float nDeltaTime)
+    //    {
 
-        }
-    }
+    //    }
+    //}
 
-    public class SvrMoveNode : SvrRuntimeNode
-    {
-        public override bool SyncFinishNode() { return true; }
+    //public class SvrMoveNode : SvrRuntimeNode
+    //{
+    //    public override bool SyncFinishNode() { return true; }
 
-        public override void StartNode()
-        {
+    //    public override void StartNode()
+    //    {
 
-        }
+    //    }
 
-        public override void UpdateNode(float nDeltaTime)
-        {
+    //    public override void UpdateNode(float nDeltaTime)
+    //    {
 
-        }
-    }
+    //    }
+    //}
 }
 
