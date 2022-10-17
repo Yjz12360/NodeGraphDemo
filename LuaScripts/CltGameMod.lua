@@ -41,6 +41,16 @@ function addNodeGraph(nGameId, nNodeGraphId, nConfigId)
     CltNodeGraphMod.startNodeGraph(tNodeGraph)
 end
 
+local function procNodeGraphEvent(nEventType, ...)
+    if tCltGame == nil then
+        return
+    end
+    local tNodeGraph = tCltGame.tMainNodeGraph
+    if tNodeGraph ~= nil then
+        CltNodeGraphMod.processEvent(tNodeGraph, nEventType, ...)
+    end
+end
+
 function addPlayer(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     if not CltGameMod.checkGameId(nGameId) then
         return
@@ -105,6 +115,7 @@ function addMonster(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
             uGameObjectId.ID = nObjectId
         end
     end
+    procNodeGraphEvent(Const.EventType.AddMonster)
 end
 
 function roleDead(nGameId, nObjectId)
@@ -115,11 +126,20 @@ function roleDead(nGameId, nObjectId)
     if tRole == nil then
         return
     end
+    if tRole.nObjectType == Const.GameObjectType.Monster then
+        procNodeGraphEvent(Const.EventType.MonsterDead, nObjectId)
+    end
+    
     local goInstance = tRole.goInstance
     if goInstance ~= nil then
         UE.GameObject.Destroy(goInstance)
     end
     tCltGame.tGameObjects[nObjectId] = nil
+
+    -- local tNodeGraph = tCltGame.tMainNodeGraph
+    -- if tNodeGraph ~= nil then
+    --     CltNodeGraphMod.processEvent(tNodeGraph, Const.EventType.MonsterDead, nObjectId)
+    -- end
 end
 
 function onTriggerEnter(nTriggerId, uCollider)
@@ -128,10 +148,7 @@ function onTriggerEnter(nTriggerId, uCollider)
     end
 
     if tCltGame ~= nil then
-        local tNodeGraph = tCltGame.tMainNodeGraph
-        if tNodeGraph ~= nil then
-            CltNodeGraphMod.onTriggerEnter(tNodeGraph, nTriggerId)
-        end
+        procNodeGraphEvent(Const.EventType.EnterTrigger, nTriggerId)
         Messager.C2SEnterTrigger(tCltGame.nGameId, nTriggerId)
     end
 end

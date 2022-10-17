@@ -5,6 +5,7 @@ NodeType = {
     Delay = 3,
     AddMonster = 4,
     HasMonster = 5,
+    WaitMonsterNum = 6,
     WaitEnterTrigger = 15,
 }
 
@@ -30,4 +31,6 @@ GameObjectType = {
 
 EventType = {
     EnterTrigger = 1,
+    AddMonster = 2,
+    MonsterDead = 3,
 }

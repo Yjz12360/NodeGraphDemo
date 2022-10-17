@@ -18,6 +18,7 @@ require "Nodes/PrintNode"
 require "Nodes/DelayNode"
 require "Nodes/AddMonsterNode"
 require "Nodes/HasMonsterNode"
+require "Nodes/WaitMonsterNumNode"
 require "Nodes/WaitEnterTriggerNode"
 
 

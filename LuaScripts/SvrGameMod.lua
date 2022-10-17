@@ -51,6 +51,16 @@ function startNodeGraph(tSvrGame, nConfigId)
     SvrNodeGraphMod.startNodeGraph(tNodeGraph)
 end
 
+local function procNodeGraphEvent(tSvrGame, nEventType, ...)
+    if tSvrGame == nil then
+        return
+    end
+    local tMainNodeGraph = tSvrGame.tMainNodeGraph
+    if tMainNodeGraph ~= nil then
+        SvrNodeGraphMod.processEvent(tMainNodeGraph, nEventType, ...)
+    end
+end
+
 local function getNextObjectId(tSvrGame)
     local nObjectId = tSvrGame.nCurrGameObjectId
     tSvrGame.nCurrGameObjectId = nObjectId + 1
@@ -97,6 +107,7 @@ function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
     tMonster.nCurrHP = tConfig.nHP
     tSvrGame.tGameObjects[nObjectId] = tMonster
     Messager.S2CAddMonster(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
+    procNodeGraphEvent(tSvrGame, Const.EventType.AddMonster)
 end
 
 function roleDead(tSvrGame, nObjectId)
@@ -104,8 +115,13 @@ function roleDead(tSvrGame, nObjectId)
     if tRole == nil then
         return
     end
+    local tGameObject = tSvrGame.tGameObjects[nObjectId]
     tSvrGame.tGameObjects[nObjectId] = nil
     Messager.S2CRoleDead(tSvrGame.nGameId, nObjectId)
+    
+    if tGameObject.nObjectType == Const.GameObjectType.Monster then
+        procNodeGraphEvent(tSvrGame, Const.EventType.MonsterDead, nObjectId)
+    end
 end
 
 function hasMonster(tSvrGame)
@@ -117,13 +133,20 @@ function hasMonster(tSvrGame)
     return false
 end
 
+function getMonsterNum(tSvrGame)
+    local nCount = 0
+    for _, tGameObject in pairs(tSvrGame.tGameObjects) do
+        if tGameObject.nObjectType == Const.GameObjectType.Monster then
+            nCount = nCount + 1
+        end
+    end
+    return nCount
+end
+
 function onEnterTrigger(nGameId, nTriggerId)
     local tSvrGame = SvrGameMod.getGameById(nGameId)
     if tSvrGame == nil then return end
-    local tMainNodeGraph = tSvrGame.tMainNodeGraph
-    if tMainNodeGraph ~= nil then
-        SvrNodeGraphMod.onTriggerEnter(tMainNodeGraph, nTriggerId)
-    end
+    procNodeGraphEvent(tSvrGame, Const.EventType.EnterTrigger, nTriggerId)
 end
 
 function onAttackHit(nGameId, nAttackerId, nTargetId)

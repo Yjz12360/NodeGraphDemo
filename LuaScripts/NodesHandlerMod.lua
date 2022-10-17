@@ -101,9 +101,6 @@ tNodeHandlers[Const.NodeType.WaitEnterTrigger] = {
             return WaitEnterTriggerNode.CltOnTriggerEnter(tNodeGraph, tNodeData, nTriggerId)
         end
     },
-    tSvrHandler = function(tNodeGraph, tNodeData)
-
-    end,
     tSvrEventHandlers = {
         [Const.EventType.EnterTrigger] = function(tNodeGraph, tNodeData, nTriggerId)
             return WaitEnterTriggerNode.SvrOnTriggerEnter(tNodeGraph, tNodeData, nTriggerId)
@@ -111,6 +108,18 @@ tNodeHandlers[Const.NodeType.WaitEnterTrigger] = {
     },
 }
 
-
+tNodeHandlers[Const.NodeType.WaitMonsterNum] = {
+    tSvrHandler = function(tNodeGraph, tNodeData)
+        return WaitMonsterNumNode.SvrOnCheck(tNodeGraph, tNodeData)
+    end,
+    tSvrEventHandlers = {
+        [Const.EventType.AddMonster] = function(tNodeGraph, tNodeData)
+            return WaitMonsterNumNode.SvrOnCheck(tNodeGraph, tNodeData)
+        end,
+        [Const.EventType.MonsterDead] = function(tNodeGraph, tNodeData)
+            return WaitMonsterNumNode.SvrOnCheck(tNodeGraph, tNodeData)
+        end
+    },
+}
 
 init()

@@ -24,26 +24,6 @@ local function delEventListener(tNodeGraph, tNodeData, nEventType)
     tListeners[tNodeData.sNodeId] = nil
 end
 
-local function processEvent(tNodeGraph, nEventType, ...)
-    local tEventListeners = tNodeGraph.tEventListeners
-    if tEventListeners == nil then 
-        return
-    end
-    local tListeners = tEventListeners[nEventType]
-    if tListeners == nil then
-        return
-    end
-    for sNodeId, _ in pairs(tListeners) do
-        local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, sNodeId)
-        local nNodeType = tNodeData.nNodeType
-        local fEventHandler = NodesHandlerMod.getCltEventHandler(nNodeType, nEventType)
-        if fEventHandler ~= nil then
-            fEventHandler(tNodeGraph, tNodeData, ...)
-        end
-    end
-end
-
-
 function addNodeGraph(tCltGame, nNodeGraphId, nConfigId)
     local tConfig = Config.NodeGraph[nConfigId]
     if tConfig == nil or tConfig.sName == nil then
@@ -142,8 +122,23 @@ function isFinish(tNodeGraph)
     return tNodeGraph.nState == Const.NodeGraphState.Finish
 end
 
-function onTriggerEnter(tNodeGraph, nTriggerId)
-    processEvent(tNodeGraph, Const.EventType.EnterTrigger, nTriggerId)
+function processEvent(tNodeGraph, nEventType, ...)
+    local tEventListeners = tNodeGraph.tEventListeners
+    if tEventListeners == nil then 
+        return
+    end
+    local tListeners = tEventListeners[nEventType]
+    if tListeners == nil then
+        return
+    end
+    for sNodeId, _ in pairs(tListeners) do
+        local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, sNodeId)
+        local nNodeType = tNodeData.nNodeType
+        local fEventHandler = NodesHandlerMod.getCltEventHandler(nNodeType, nEventType)
+        if fEventHandler ~= nil then
+            fEventHandler(tNodeGraph, tNodeData, ...)
+        end
+    end
 end
 
 function recvFinishNode(nGameId, nNodeGraphId, sNodeId, nPath)
