@@ -1,4 +1,51 @@
 
+local function addEventListener(tNodeGraph, tNodeData, nEventType)
+    local tEventListeners = tNodeGraph.tEventListeners
+    if tEventListeners == nil then
+        tEventListeners = {}
+        tNodeGraph.tEventListeners = tEventListeners
+    end
+    local tListeners = tEventListeners[nEventType]
+    if tListeners == nil then
+        tListeners = {}
+        tEventListeners[nEventType] = tListeners
+    end
+    tListeners[tNodeData.sNodeId] = true
+end
+
+local function delEventListener(tNodeGraph, tNodeData, nEventType)
+    local tEventListeners = tNodeGraph.tEventListeners
+    if tEventListeners == nil then
+        return
+    end
+    local tListeners = tEventListeners[nEventType]
+    if tListeners == nil then
+        return
+    end
+    tListeners[tNodeData.sNodeId] = nil
+end
+
+local function processEvent(tNodeGraph, nEventType, ...)
+    local tEventListeners = tNodeGraph.tEventListeners
+    if tEventListeners == nil then 
+        return
+    end
+    local tListeners = tEventListeners[nEventType]
+    if tListeners == nil then
+        return
+    end
+    for sNodeId, _ in pairs(tListeners) do
+        if not tNodeGraph.tFinishedNodes[sNodeId] then
+            local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, sNodeId)
+            local nNodeType = tNodeData.nNodeType
+            local fEventHandler = NodesHandlerMod.getSvrEventHandler(nNodeType, nEventType)
+            if fEventHandler ~= nil then
+                fEventHandler(tNodeGraph, tNodeData, ...)
+            end
+        end
+    end
+end
+
 function addNodeGraph(tSvrGame, nNodeGraphId, nConfigId)
     local tConfig = Config.NodeGraph[nConfigId]
     if tConfig == nil or tConfig.sName == nil then
@@ -38,6 +85,13 @@ function triggerNode(tNodeGraph, sNodeId)
     local fNodeHandler = NodesHandlerMod.getSvrNodeHandler(tNodeData.nNodeType)
     if fNodeHandler ~= nil then
         fNodeHandler(tNodeGraph, tNodeData)
+
+        local tSvrEvents = NodesHandlerMod.getSvrEvents(tNodeData.nNodeType)
+        if tSvrEvents ~= nil then
+            for nEventType, _ in pairs(tSvrEvents) do
+                addEventListener(tNodeGraph, tNodeData, nEventType)
+            end
+        end
     else
         SvrNodeGraphMod.finishNode(tNodeGraph, sNodeId)
     end
@@ -63,6 +117,16 @@ function finishNode(tNodeGraph, sNodeId, nPath)
     end
     tNodeGraph.tFinishedNodes[sNodeId] = true
 
+    local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, sNodeId)
+    if tNodeData ~= nil then
+        local tSvrEvents = NodesHandlerMod.getSvrEvents(tNodeData.nNodeType)
+        if tSvrEvents ~= nil then
+            for nEventType, _ in pairs(tSvrEvents) do
+                delEventListener(tNodeGraph, tNodeData, nEventType)
+            end
+        end
+    end
+
     local tTransitions = NodeGraphCfgMod.getTransitions(tNodeGraph.tConfigData)
     for _, tTransition in pairs(tTransitions) do
         if tTransition.sFromNodeId == sNodeId and tTransition.nPath == nPath then
@@ -86,37 +150,8 @@ function finishNode(tNodeGraph, sNodeId, nPath)
     end
 end
 
-function addEventListener(tNodeGraph, tNodeData, nEventType)
-    local tEventListeners = tNodeGraph.tEventListeners
-    if tEventListeners == nil then
-        tEventListeners = {}
-        tNodeGraph.tEventListeners = tEventListeners
-    end
-    local tListeners = tEventListeners[nEventType]
-    if tListeners == nil then
-        tListeners = {}
-        tEventListeners[nEventType] = tListeners
-    end
-    tListeners[tNodeData.sNodeId] = true
-end
-
-function processEvent(tNodeGraph, nEventType, ...)
-    local tEventListeners = tNodeGraph.tEventListeners
-    if tEventListeners == nil then 
-        return
-    end
-    local tListeners = tEventListeners[nEventType]
-    if tListeners == nil then
-        return
-    end
-    for sNodeId, _ in pairs(tListeners) do
-        local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, sNodeId)
-        local nNodeType = tNodeData.nNodeType
-        local fEventHandler = NodesHandlerMod.getSvrEventHandler(nNodeType, nEventType)
-        if fEventHandler ~= nil then
-            fEventHandler(tNodeGraph, tNodeData, ...)
-        end
-    end
+function onTriggerEnter(tNodeGraph, nTriggerId)
+    processEvent(tNodeGraph, Const.EventType.EnterTrigger, nTriggerId)
 end
 
 function isFinish(tNodeGraph)

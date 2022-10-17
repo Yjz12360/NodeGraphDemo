@@ -105,22 +105,10 @@ function onTriggerEnter(nTriggerId, uCollider)
     if tCltGame ~= nil then
         local tNodeGraph = tCltGame.tMainNodeGraph
         if tNodeGraph ~= nil then
-            CltNodeGraphMod.processEvent(tNodeGraph, Const.EventType.EnterTrigger, nTriggerId)
+            CltNodeGraphMod.onTriggerEnter(tNodeGraph, nTriggerId)
         end
         Messager.C2SEnterTrigger(tCltGame.nGameId, nTriggerId)
     end
 end
 
-function update(nDeltaTime)
-    if tCltGame == nil then
-        return
-    end
-    local tMainNodeGraph = tCltGame.tMainNodeGraph
-    if tMainNodeGraph ~= nil then
-        CltNodeGraphMod.updateNodeGraph(tMainNodeGraph, nDeltaTime)
-        if CltNodeGraphMod.isFinish(tMainNodeGraph) then
-            tCltGame.tMainNodeGraph = nil
-        end
-    end
-end
 

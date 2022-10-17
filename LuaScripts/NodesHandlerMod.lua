@@ -1,4 +1,6 @@
 local tNodeHandlers = tNodeHandlers or {}
+local tCltEvents = {}
+local tSvrEvents = {}
 
 function getCltNodeHandler(nNodeType)
     local tHandlers = tNodeHandlers[nNodeType]
@@ -14,6 +16,10 @@ function getCltEventHandler(nNodeType, nEventType)
     return tEventHandlers[nEventType]
 end
 
+function getCltEvents(nNodeType)
+    return tCltEvents[nNodeType]
+end
+
 function getSvrNodeHandler(nNodeType)
     local tHandlers = tNodeHandlers[nNodeType]
     if tHandlers == nil then return end
@@ -26,6 +32,40 @@ function getSvrEventHandler(nNodeType, nEventType)
     local tEventHandlers = tHandlers.tSvrEventHandlers
     if tEventHandlers == nil then return end
     return tEventHandlers[nEventType]
+end
+
+function getSvrEvents(nNodeType)
+    return tSvrEvents[nNodeType]
+end
+
+function init()
+    for _, nNodeType in pairs(Const.NodeType) do
+        local tHandlers = tNodeHandlers[nNodeType]
+        if tHandlers ~= nil then
+            local tCltEventHandlers = tHandlers.tCltEventHandlers
+            if tCltEventHandlers ~= nil then
+                for nEventType, _ in pairs(tCltEventHandlers) do
+                    local tEvents = tCltEvents[nNodeType]
+                    if tEvents == nil then
+                        tEvents = {}
+                        tCltEvents[nNodeType] = tEvents
+                    end
+                    tEvents[nEventType] = true
+                end
+            end
+            local tSvrEventHandlers = tHandlers.tSvrEventHandlers
+            if tSvrEventHandlers ~= nil then
+                for nEventType, _ in pairs(tSvrEventHandlers) do
+                    local tEvents = tSvrEvents[nNodeType]
+                    if tEvents == nil then
+                        tEvents = {}
+                        tSvrEvents[nNodeType] = tEvents
+                    end
+                    tEvents[nEventType] = true
+                end
+            end
+        end
+    end
 end
 
 tNodeHandlers[Const.NodeType.Print] = {
@@ -56,16 +96,13 @@ tNodeHandlers[Const.NodeType.HasMonster] = {
 }
 
 tNodeHandlers[Const.NodeType.WaitEnterTrigger] = {
-    tCltHandler = function(tNodeGraph, tNodeData)
-        return WaitEnterTriggerNode.CltHandler(tNodeGraph, tNodeData)
-    end,
     tCltEventHandlers = {
         [Const.EventType.EnterTrigger] = function(tNodeGraph, tNodeData, nTriggerId)
             return WaitEnterTriggerNode.CltOnTriggerEnter(tNodeGraph, tNodeData, nTriggerId)
         end
     },
     tSvrHandler = function(tNodeGraph, tNodeData)
-        return WaitEnterTriggerNode.SvrHandler(tNodeGraph, tNodeData)
+
     end,
     tSvrEventHandlers = {
         [Const.EventType.EnterTrigger] = function(tNodeGraph, tNodeData, nTriggerId)
@@ -73,3 +110,7 @@ tNodeHandlers[Const.NodeType.WaitEnterTrigger] = {
         end
     },
 }
+
+
+
+init()

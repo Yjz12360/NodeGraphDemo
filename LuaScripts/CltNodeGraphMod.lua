@@ -1,3 +1,48 @@
+local function addEventListener(tNodeGraph, tNodeData, nEventType)
+    local tEventListeners = tNodeGraph.tEventListeners
+    if tEventListeners == nil then
+        tEventListeners = {}
+        tNodeGraph.tEventListeners = tEventListeners
+    end
+    local tListeners = tEventListeners[nEventType]
+    if tListeners == nil then
+        tListeners = {}
+        tEventListeners[nEventType] = tListeners
+    end
+    tListeners[tNodeData.sNodeId] = true
+end
+
+local function delEventListener(tNodeGraph, tNodeData, nEventType)
+    local tEventListeners = tNodeGraph.tEventListeners
+    if tEventListeners == nil then
+        return
+    end
+    local tListeners = tEventListeners[nEventType]
+    if tListeners == nil then
+        return
+    end
+    tListeners[tNodeData.sNodeId] = nil
+end
+
+local function processEvent(tNodeGraph, nEventType, ...)
+    local tEventListeners = tNodeGraph.tEventListeners
+    if tEventListeners == nil then 
+        return
+    end
+    local tListeners = tEventListeners[nEventType]
+    if tListeners == nil then
+        return
+    end
+    for sNodeId, _ in pairs(tListeners) do
+        local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, sNodeId)
+        local nNodeType = tNodeData.nNodeType
+        local fEventHandler = NodesHandlerMod.getCltEventHandler(nNodeType, nEventType)
+        if fEventHandler ~= nil then
+            fEventHandler(tNodeGraph, tNodeData, ...)
+        end
+    end
+end
+
 
 function addNodeGraph(tCltGame, nNodeGraphId, nConfigId)
     local tConfig = Config.NodeGraph[nConfigId]
@@ -39,6 +84,12 @@ function triggerNode(tNodeGraph, sNodeId)
     if fNodeHandler ~= nil then
         fNodeHandler(tNodeGraph, tNodeData)
     end
+    local tCltEvents = NodesHandlerMod.getSvrEvents(tNodeData.nNodeType)
+    if tCltEvents ~= nil then
+        for nEventType, _ in pairs(tCltEvents) do
+            addEventListener(tNodeGraph, tNodeData, nEventType)
+        end
+    end
 end
 
 function finishNode(tNodeGraph, sNodeId, nPath)
@@ -52,6 +103,16 @@ function finishNode(tNodeGraph, sNodeId, nPath)
         return
     end
     
+    local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, sNodeId)
+    if tNodeData ~= nil then
+        local tCltEvents = NodesHandlerMod.getSvrEvents(tNodeData.nNodeType)
+        if tCltEvents ~= nil then
+            for nEventType, _ in pairs(tCltEvents) do
+                delEventListener(tNodeGraph, tNodeData, nEventType)
+            end
+        end
+    end
+
     nPath = nPath or 1
     local tTransitions = NodeGraphCfgMod.getTransitions(tNodeGraph.tConfigData)
     for _, tTransition in pairs(tTransitions) do
@@ -81,37 +142,8 @@ function isFinish(tNodeGraph)
     return tNodeGraph.nState == Const.NodeGraphState.Finish
 end
 
-function addEventListener(tNodeGraph, tNodeData, nEventType)
-    local tEventListeners = tNodeGraph.tEventListeners
-    if tEventListeners == nil then
-        tEventListeners = {}
-        tNodeGraph.tEventListeners = tEventListeners
-    end
-    local tListeners = tEventListeners[nEventType]
-    if tListeners == nil then
-        tListeners = {}
-        tEventListeners[nEventType] = tListeners
-    end
-    tListeners[tNodeData.sNodeId] = true
-end
-
-function processEvent(tNodeGraph, nEventType, ...)
-    local tEventListeners = tNodeGraph.tEventListeners
-    if tEventListeners == nil then 
-        return
-    end
-    local tListeners = tEventListeners[nEventType]
-    if tListeners == nil then
-        return
-    end
-    for sNodeId, _ in pairs(tListeners) do
-        local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, sNodeId)
-        local nNodeType = tNodeData.nNodeType
-        local fEventHandler = NodesHandlerMod.getCltEventHandler(nNodeType, nEventType)
-        if fEventHandler ~= nil then
-            fEventHandler(tNodeGraph, tNodeData, ...)
-        end
-    end
+function onTriggerEnter(tNodeGraph, nTriggerId)
+    processEvent(tNodeGraph, Const.EventType.EnterTrigger, nTriggerId)
 end
 
 function recvFinishNode(nGameId, nNodeGraphId, sNodeId, nPath)

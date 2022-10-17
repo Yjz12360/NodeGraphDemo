@@ -111,6 +111,6 @@ function onEnterTrigger(nGameId, nTriggerId)
     if tSvrGame == nil then return end
     local tMainNodeGraph = tSvrGame.tMainNodeGraph
     if tMainNodeGraph ~= nil then
-        SvrNodeGraphMod.processEvent(tMainNodeGraph, Const.EventType.EnterTrigger, nTriggerId)
+        SvrNodeGraphMod.onTriggerEnter(tMainNodeGraph, nTriggerId)
     end
 end
