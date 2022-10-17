@@ -122,4 +122,15 @@ tNodeHandlers[Const.NodeType.WaitMonsterNum] = {
     },
 }
 
+tNodeHandlers[Const.NodeType.WaitMonsterDead] = {
+    tSvrHandler = function(tNodeGraph, tNodeData)
+        return WaitMonsterDeadNode.SvrHandler(tNodeGraph, tNodeData)
+    end,
+    tSvrEventHandlers = {
+        [Const.EventType.BeforeMonsterDead] = function(tNodeGraph, tNodeData, nObjectId)
+            return WaitMonsterDeadNode.SvrBeforeMonsterDead(tNodeGraph, tNodeData, nObjectId)
+        end
+    },
+}
+
 init()

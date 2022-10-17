@@ -68,6 +68,9 @@ local function getNextObjectId(tSvrGame)
 end
 
 function addPlayer(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
+    if tSvrGame == nil then
+        return
+    end
     local tConfig = Config.Player[nConfigId]
     if tConfig == nil then
         printError("PlayerConfig not exist configId: " .. nConfigId)
@@ -89,6 +92,9 @@ function addPlayer(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
 end
 
 function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
+    if tSvrGame == nil then
+        return
+    end
     local tConfig = Config.Monster[nConfigId]
     if tConfig == nil then
         printError("PlayerConfig not exist configId: " .. nConfigId)
@@ -108,23 +114,59 @@ function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
     tSvrGame.tGameObjects[nObjectId] = tMonster
     Messager.S2CAddMonster(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     procNodeGraphEvent(tSvrGame, Const.EventType.AddMonster)
+    return tMonster
+end
+
+function addSceneMonster(tSvrGame, nRefreshId)
+    if tSvrGame == nil then
+        return
+    end
+    if SvrGameMod.getMonsterByRefreshId(tSvrGame, nRefreshId) ~= nil then
+        printError("addSceneMonster error: monster already exists. nRefreshId: " .. nRefreshId)
+        return
+    end
+    local sSceneConfig = tSvrGame.tGameConfig.sSceneConfig
+    local tGameSceneConfig = GameSceneCfgMod.getConfigByName(sSceneConfig)
+    if tGameSceneConfig == nil then
+        return
+    end
+    local tRefreshConfig = GameSceneCfgMod.getRefreshMonsterConfig(tGameSceneConfig, nRefreshId)
+    if tRefreshConfig == nil then
+        printError("addSceneMonster error: tRefreshConfig not exist. nRefreshId: " .. nRefreshId)
+        return
+    end
+    local nMonsterCfgId = tRefreshConfig.nMonsterCfgId
+    local tPos = tRefreshConfig.tPos
+    local tMonster = SvrGameMod.addMonster(tSvrGame, nMonsterCfgId, tPos.x, tPos.y, tPos.z)
+    tMonster.nRefreshId = nRefreshId
 end
 
 function roleDead(tSvrGame, nObjectId)
+    if tSvrGame == nil then
+        return
+    end
     local tRole = tSvrGame.tGameObjects[nObjectId]
     if tRole == nil then
         return
     end
+
     local tGameObject = tSvrGame.tGameObjects[nObjectId]
+    if tGameObject.nObjectType == Const.GameObjectType.Monster then
+        procNodeGraphEvent(tSvrGame, Const.EventType.BeforeMonsterDead, nObjectId)
+    end
+
     tSvrGame.tGameObjects[nObjectId] = nil
     Messager.S2CRoleDead(tSvrGame.nGameId, nObjectId)
-    
+
     if tGameObject.nObjectType == Const.GameObjectType.Monster then
         procNodeGraphEvent(tSvrGame, Const.EventType.MonsterDead, nObjectId)
     end
 end
 
 function hasMonster(tSvrGame)
+    if tSvrGame == nil then
+        return false
+    end
     for _, tGameObject in pairs(tSvrGame.tGameObjects) do
         if tGameObject.nObjectType == Const.GameObjectType.Monster then
             return true
@@ -134,6 +176,9 @@ function hasMonster(tSvrGame)
 end
 
 function getMonsterNum(tSvrGame)
+    if tSvrGame == nil then
+        return 0
+    end
     local nCount = 0
     for _, tGameObject in pairs(tSvrGame.tGameObjects) do
         if tGameObject.nObjectType == Const.GameObjectType.Monster then
@@ -141,6 +186,26 @@ function getMonsterNum(tSvrGame)
         end
     end
     return nCount
+end
+
+function getMonsterByRefreshId(tSvrGame, nRefreshId)
+    if tSvrGame == nil then
+        return
+    end
+    for _, tGameObject in pairs(tSvrGame.tGameObjects) do
+        if tGameObject.nObjectType == Const.GameObjectType.Monster then
+            if tGameObject.nRefreshId == nRefreshId then
+                return tGameObject
+            end
+        end
+    end
+end
+
+function getObject(tSvrGame, nObjectId)
+    if tSvrGame == nil then
+        return
+    end
+    return tSvrGame.tGameObjects[nObjectId]
 end
 
 function onEnterTrigger(nGameId, nTriggerId)

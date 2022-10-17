@@ -6,6 +6,7 @@ NodeType = {
     AddMonster = 4,
     HasMonster = 5,
     WaitMonsterNum = 6,
+    WaitMonsterDead = 7,
     WaitEnterTrigger = 15,
 }
 
@@ -33,4 +34,5 @@ EventType = {
     EnterTrigger = 1,
     AddMonster = 2,
     MonsterDead = 3,
+    BeforeMonsterDead = 4,
 }

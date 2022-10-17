@@ -6,6 +6,7 @@ require "Const"
 
 require "CltGameMod"
 require "SvrGameMod"
+require "GameSceneCfgMod"
 require "Messager"
 
 
@@ -19,6 +20,7 @@ require "Nodes/DelayNode"
 require "Nodes/AddMonsterNode"
 require "Nodes/HasMonsterNode"
 require "Nodes/WaitMonsterNumNode"
+require "Nodes/WaitMonsterDeadNode"
 require "Nodes/WaitEnterTriggerNode"
 
 
