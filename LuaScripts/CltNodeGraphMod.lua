@@ -148,7 +148,7 @@ function recvFinishNode(nGameId, nNodeGraphId, sNodeId, nPath)
     if tCltGame == nil then
         return
     end
-    if tCltGame.nGameId ~= nCurrGameId then
+    if not CltGameMod.checkGameId(nGameId) then
         return
     end
     local tMainNodeGraph = tCltGame.tMainNodeGraph
@@ -163,7 +163,7 @@ function recvFinishNodeGraph(nGameId, nNodeGraphId)
     if tCltGame == nil then
         return
     end
-    if tCltGame.nGameId ~= nCurrGameId then
+    if not CltGameMod.checkGameId(nGameId) then
         return
     end
     local tNodeGraph = tCltGame.tMainNodeGraph
