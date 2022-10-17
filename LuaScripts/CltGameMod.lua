@@ -54,6 +54,7 @@ function addPlayer(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     tPlayer.nObjectId = nObjectId
     tPlayer.nObjectType = Const.GameObjectType.Player
     tPlayer.tConfig = tConfig
+    tCltGame.tGameObjects[nObjectId] = tPlayer
     local nModelId = tConfig.nModelId
     local tModelConfig = Config.Model[nModelId]
     if tModelConfig ~= nil then
@@ -66,6 +67,10 @@ function addPlayer(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
             goInstance.transform:SetParent(goPlayerRoot.transform)
         end
         goInstance.transform.position = UE.Vector3(nPosX, nPosY, nPosZ)
+        local uGameObjectId = goInstance:GetComponent(typeof(CS.Game.GameObjectId))
+        if uGameObjectId ~= nil then
+            uGameObjectId.ID = nObjectId
+        end
     end
 end
 
@@ -82,6 +87,7 @@ function addMonster(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     tMonster.nObjectId = nObjectId
     tMonster.nObjectType = Const.GameObjectType.Monster
     tMonster.tConfig = tConfig
+    tCltGame.tGameObjects[nObjectId] = tMonster
     local nModelId = tConfig.nModelId
     local tModelConfig = Config.Model[nModelId]
     if tModelConfig ~= nil then
@@ -94,7 +100,26 @@ function addMonster(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
             goInstance.transform:SetParent(goMonsterRoot.transform)
         end
         goInstance.transform.position = UE.Vector3(nPosX, nPosY, nPosZ)
+        local uGameObjectId = goInstance:GetComponent(typeof(CS.Game.GameObjectId))
+        if uGameObjectId ~= nil then
+            uGameObjectId.ID = nObjectId
+        end
     end
+end
+
+function roleDead(nGameId, nObjectId)
+    if not CltGameMod.checkGameId(nGameId) then
+        return
+    end
+    local tRole = tCltGame.tGameObjects[nObjectId]
+    if tRole == nil then
+        return
+    end
+    local goInstance = tRole.goInstance
+    if goInstance ~= nil then
+        UE.GameObject.Destroy(goInstance)
+    end
+    tCltGame.tGameObjects[nObjectId] = nil
 end
 
 function onTriggerEnter(nTriggerId, uCollider)
@@ -111,4 +136,9 @@ function onTriggerEnter(nTriggerId, uCollider)
     end
 end
 
-
+function onAttackHit(nAttackerId, nTargetId)
+    if tCltGame == nil then
+        return 
+    end
+    Messager.C2SAttackHit(tCltGame.nGameId, nAttackerId, nTargetId)
+end

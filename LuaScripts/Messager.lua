@@ -60,6 +60,15 @@ S2CAddMonster = function(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     addMessage(CltGameMod.addMonster, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
 end
 
+S2CRoleDead = function(nGameId, nObjectId)
+    addMessage(CltGameMod.roleDead, nGameId, nObjectId)
+end
+
 C2SEnterTrigger = function(nGameId, nTriggerId)
     addMessage(SvrGameMod.onEnterTrigger, nGameId, nTriggerId)
 end
+
+C2SAttackHit = function(nGameId, nAttackerId, nTargetId)
+    addMessage(SvrGameMod.onAttackHit, nGameId, nAttackerId, nTargetId)
+end
+

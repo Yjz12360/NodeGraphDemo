@@ -16,6 +16,7 @@ public class InitLua : MonoBehaviour
     void Start()
     {
         luaenv = new LuaEnv();
+        LuaFuncsCaller.Initialize(luaenv);
         luaenv.AddLoader((ref string filename) =>
         {
             string fixFileName = $"{Application.dataPath}/../LuaScripts/{filename}.lua";
@@ -47,11 +48,6 @@ public class InitLua : MonoBehaviour
     void OnDestroy()
     {
         luaenv.Dispose();
-    }
-
-    public LuaEnv GetLuaEnv()
-    {
-        return luaenv;
     }
 }
 

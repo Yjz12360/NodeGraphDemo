@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1720398214971748371}
   - component: {fileID: 587691479527531143}
+  - component: {fileID: 5528116250839680131}
   m_Layer: 0
   m_Name: Monster2
   m_TagString: Untagged
@@ -46,6 +47,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   modelAnimator: {fileID: 4092307196929486202}
+--- !u!114 &5528116250839680131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5410451273022153507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab26f80889f181a429cfef8df72c9f8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 0
 --- !u!1 &6786322433972993553
 GameObject:
   m_ObjectHideFlags: 0

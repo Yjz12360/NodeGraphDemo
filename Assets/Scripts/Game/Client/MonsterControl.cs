@@ -47,11 +47,12 @@ namespace Game
 
         private void Start()
         {
-            CltObjectData cltObjectData = gameObject.GetComponent<CltObjectData>();
-            if (cltObjectData != null)
-            {
-                nMoveSpeed = cltObjectData.nSpeed;
-            }
+            nMoveSpeed = 3;
+            //CltObjectData cltObjectData = gameObject.GetComponent<CltObjectData>();
+            //if (cltObjectData != null)
+            //{
+            //    nMoveSpeed = cltObjectData.nSpeed;
+            //}
         }
 
         private void Update()

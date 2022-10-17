@@ -86,6 +86,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7663364400635538358}
   - component: {fileID: 7663364400635538357}
+  - component: {fileID: 5311664166723826768}
   m_Layer: 0
   m_Name: Monster3
   m_TagString: Untagged
@@ -122,6 +123,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   modelAnimator: {fileID: 902434413978703726}
+--- !u!114 &5311664166723826768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7663364400635538356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab26f80889f181a429cfef8df72c9f8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 0
 --- !u!1001 &7663364399395973455
 PrefabInstance:
   m_ObjectHideFlags: 0

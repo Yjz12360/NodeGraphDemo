@@ -42,4 +42,8 @@ function OnTriggerEnter(nTriggerId, uCollider)
     CltGameMod.onTriggerEnter(nTriggerId, uCollider)
 end
 
+function OnAttackHit(nAttackerId, nTargetId)
+    CltGameMod.onAttackHit(nAttackerId, nTargetId)
+end
+
 Init()

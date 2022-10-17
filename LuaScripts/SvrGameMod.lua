@@ -73,6 +73,7 @@ function addPlayer(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
         y = nPosY,
         z = nPosZ,
     }
+    tPlayer.nCurrHP = tConfig.nHP
     tSvrGame.tGameObjects[nObjectId] = tPlayer
     Messager.S2CAddPlayer(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
 end
@@ -93,8 +94,18 @@ function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
         y = nPosY,
         z = nPosZ,
     }
+    tMonster.nCurrHP = tConfig.nHP
     tSvrGame.tGameObjects[nObjectId] = tMonster
     Messager.S2CAddMonster(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
+end
+
+function roleDead(tSvrGame, nObjectId)
+    local tRole = tSvrGame.tGameObjects[nObjectId]
+    if tRole == nil then
+        return
+    end
+    tSvrGame.tGameObjects[nObjectId] = nil
+    Messager.S2CRoleDead(tSvrGame.nGameId, nObjectId)
 end
 
 function hasMonster(tSvrGame)
@@ -112,5 +123,20 @@ function onEnterTrigger(nGameId, nTriggerId)
     local tMainNodeGraph = tSvrGame.tMainNodeGraph
     if tMainNodeGraph ~= nil then
         SvrNodeGraphMod.onTriggerEnter(tMainNodeGraph, nTriggerId)
+    end
+end
+
+function onAttackHit(nGameId, nAttackerId, nTargetId)
+    local tSvrGame = SvrGameMod.getGameById(nGameId)
+    if tSvrGame == nil then return end
+    local tAttacker = tSvrGame.tGameObjects[nAttackerId]
+    if tAttacker == nil then return end
+    local tTarget = tSvrGame.tGameObjects[nTargetId]
+    if tTarget == nil then return end
+    local nAtk = tAttacker.tConfig.nAtk
+    tTarget.nCurrHP = tTarget.nCurrHP - nAtk
+    if tTarget.nCurrHP <= 0 then
+        tTarget.nCurrHP = 0
+        SvrGameMod.roleDead(tSvrGame, nTargetId)
     end
 end
