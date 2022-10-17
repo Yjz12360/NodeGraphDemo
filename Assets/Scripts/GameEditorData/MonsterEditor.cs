@@ -8,7 +8,7 @@ namespace Game
     {
         public override void OnInspectorGUI()
         {
-            GameObject configContainer = GameObject.Find("Config/Monster");
+            GameObject configContainer = GameObject.Find("LuaConfig/Monster");
             Transform configTrans = configContainer.transform;
 
             EditorGUILayout.LabelField("当前怪物配置：");

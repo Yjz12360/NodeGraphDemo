@@ -3,6 +3,7 @@ NodeType = {
     Start = 0,
     Print = 1,
     Delay = 3,
+    AddMonster = 4,
     WaitEnterTrigger = 15,
 }
 

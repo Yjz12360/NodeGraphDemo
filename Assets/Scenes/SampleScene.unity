@@ -1550,7 +1550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4c5de7aac37b924782cafcd93143bac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nConfigId: 0
+  nConfigId: 1
 --- !u!1001 &420615960
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2513,6 +2513,10 @@ Light:
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
   m_Range: 10
+  m_DistanceCull: 1
+  m_AutoDistance: 1
+  m_FadeDistance: -1
+  m_HideDistance: -1
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -3368,7 +3372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4c5de7aac37b924782cafcd93143bac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nConfigId: 0
+  nConfigId: 2
 --- !u!1 &873272570
 GameObject:
   m_ObjectHideFlags: 0

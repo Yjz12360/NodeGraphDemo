@@ -56,6 +56,10 @@ S2CAddPlayer = function(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     addMessage(CltGameMod.addPlayer, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
 end
 
+S2CAddMonster = function(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ) 
+    addMessage(CltGameMod.addMonster, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
+end
+
 C2SEnterTrigger = function(nGameId, nTriggerId)
     addMessage(SvrGameMod.onEnterTrigger, nGameId, nTriggerId)
 end

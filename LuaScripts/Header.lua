@@ -16,5 +16,6 @@ require "NodesHandlerMod"
 
 require "Nodes/PrintNode"
 require "Nodes/DelayNode"
+require "Nodes/AddMonsterNode"
 require "Nodes/WaitEnterTriggerNode"
 

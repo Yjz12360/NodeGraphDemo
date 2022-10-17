@@ -76,6 +76,25 @@ function addPlayer(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
     Messager.S2CAddPlayer(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
 end
 
+function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
+    local tConfig = Config.Monster[nConfigId]
+    if tConfig == nil then
+        printError("PlayerConfig not exist configId: " .. nConfigId)
+        return
+    end
+    local nObjectId = getNextObjectId(tSvrGame)
+    local tMonster = {}
+    tMonster.nObjectId = nObjectId
+    tMonster.nObjectType = Const.GameObjectType.Monster
+    tMonster.tConfig = tConfig
+    tMonster.tPos = {
+        x = nPosX,
+        y = nPosY,
+        z = nPosZ,
+    }
+    Messager.S2CAddMonster(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
+end
+
 function onEnterTrigger(nGameId, nTriggerId)
     local tSvrGame = SvrGameMod.getGameById(nGameId)
     if tSvrGame == nil then return end

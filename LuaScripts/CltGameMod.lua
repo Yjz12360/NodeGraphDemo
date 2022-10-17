@@ -69,6 +69,34 @@ function addPlayer(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     end
 end
 
+function addMonster(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
+    if not CltGameMod.checkGameId(nGameId) then
+        return
+    end
+    local tConfig = Config.Monster[nConfigId]
+    if tConfig == nil then
+        printError("MonsterConfig not exist configId: " .. nConfigId)
+        return
+    end
+    local tMonster = {}
+    tMonster.nObjectId = nObjectId
+    tMonster.nObjectType = Const.GameObjectType.Monster
+    tMonster.tConfig = tConfig
+    local nModelId = tConfig.nModelId
+    local tModelConfig = Config.Model[nModelId]
+    if tModelConfig ~= nil then
+        local sPrefabFile = tModelConfig.sPrefabFile
+        local goPrefab = UE.Resources.Load(sPrefabFile)
+        local goInstance = UE.GameObject.Instantiate(goPrefab)
+        tMonster.goInstance = goInstance
+        local goMonsterRoot = UE.GameObject.Find("GameObjects/Monsters")
+        if goMonsterRoot ~= nil then
+            goInstance.transform:SetParent(goMonsterRoot.transform)
+        end
+        goInstance.transform.position = UE.Vector3(nPosX, nPosY, nPosZ)
+    end
+end
+
 function onTriggerEnter(nTriggerId, uCollider)
     if uCollider.gameObject:GetComponent(typeof(CS.Game.PlayerCollider)) == nil then
         return
