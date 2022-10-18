@@ -15,11 +15,20 @@ function getUpdateHandler(nActionType)
     return tActionHandlers[nActionType].fUpdate
 end
 
-tActionHandlers[AIConst.ActionType.Idle] = {
-    fStart = function(tMonsterAI, tAction)
-        return IdleAction.startAction(tMonsterAI, tAction)
+tActionHandlers[Const.AIActionType.Idle] = {
+    fStart = function(tAI, tAction)
+        return IdleAction.startAction(tAI, tAction)
     end,
-    fUpdate = function(tMonsterAI, tAction, nDeltaTime)
-        return IdleAction.updateAction(tMonsterAI, tAction, nDeltaTime)
+    fUpdate = function(tAI, tAction, nDeltaTime)
+        return IdleAction.updateAction(tAI, tAction, nDeltaTime)
+    end
+}
+
+tActionHandlers[Const.AIActionType.MoveTo] = {
+    fStart = function(tAI, tAction)
+        return MoveToAction.startAction(tAI, tAction)
+    end,
+    fUpdate = function(tAI, tAction, nDeltaTime)
+        return MoveToAction.updateAction(tAI, tAction, nDeltaTime)
     end
 }

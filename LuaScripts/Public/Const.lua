@@ -29,6 +29,11 @@ EventType = {
     BeforeMonsterDead = 4,
 }
 
+AIActionType = {
+    Idle = 1,
+    MoveTo = 2,
+}
+
 -- AIActionState = {
 --     Running = 1,
 --     Finish = 2,

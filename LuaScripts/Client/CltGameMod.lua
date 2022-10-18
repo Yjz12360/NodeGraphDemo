@@ -137,6 +137,13 @@ function roleDead(nGameId, nObjectId)
     tCltGame.tGameObjects[nObjectId] = nil
 end
 
+function getObject(nObjectId)
+    if tCltGame == nil then
+        return
+    end
+    return tCltGame.tGameObjects[nObjectId]
+end
+
 function onTriggerEnter(nTriggerId, uCollider)
     if uCollider.gameObject:GetComponent(typeof(CS.Game.PlayerCollider)) == nil then
         return

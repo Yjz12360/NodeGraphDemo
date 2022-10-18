@@ -9,7 +9,7 @@ local tSvrGames = {}
 
 local function addAIUpdateTimer(tSvrGame)
     local nLastTime = TimeMod.getTime()
-    TimerMod.add(0.2, function()
+    tSvrGame.nAIUpdateTimer = TimerMod.add(0.2, function()
         local nCurrTime =TimeMod.getTime()
         local nDeltaTime = nCurrTime - nLastTime
         AIManagerMod.updateAI(tSvrGame.tAIManager, nDeltaTime)
@@ -37,6 +37,7 @@ function addGame(nGameConfigId)
     tSvrGame.tGameSceneConfig = tGameSceneConfig
     tSvrGame.tGameObjects = {}
     tSvrGame.tMainNodeGraph = nil
+    tSvrGame.nAIUpdateTimer = 0
     tSvrGame.tAIManager = AIManagerMod.addAIManager(tSvrGame)
     addAIUpdateTimer(tSvrGame)
     tSvrGames[nGameId] = tSvrGame
@@ -56,6 +57,18 @@ function initGame(tSvrGame)
         SvrGameMod.startNodeGraph(tSvrGame, nInitNodeGraph)
     end
     SvrGameMod.addPlayer(tSvrGame, 1, 0, 0, 0)
+end
+
+function delGame(nGameId)
+    local tSvrGame = tSvrGames[nGameId]
+    if tSvrGame == nil then
+        return
+    end
+    local nAIUpdateTimer = tSvrGame.nAIUpdateTimer
+    if nAIUpdateTimer ~= nil then
+        TimerMod.remove(nAIUpdateTimer)
+    end
+    tSvrGames[nGameId] = nil
 end
 
 function startNodeGraph(tSvrGame, nConfigId)
@@ -100,11 +113,9 @@ function addPlayer(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
     tPlayer.nObjectId = nObjectId
     tPlayer.nObjectType = Const.GameObjectType.Player
     tPlayer.tConfig = tConfig
-    tPlayer.tPos = {
-        x = nPosX,
-        y = nPosY,
-        z = nPosZ,
-    }
+    tPlayer.nPosX = nPosX
+    tPlayer.nPosY = nPosY
+    tPlayer.nPosZ = nPosZ
     tPlayer.nCurrHP = tConfig.nHP
     tSvrGame.tGameObjects[nObjectId] = tPlayer
     Messager.S2CAddPlayer(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
@@ -124,11 +135,9 @@ function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
     tMonster.nObjectId = nObjectId
     tMonster.nObjectType = Const.GameObjectType.Monster
     tMonster.tConfig = tConfig
-    tMonster.tPos = {
-        x = nPosX,
-        y = nPosY,
-        z = nPosZ,
-    }
+    tMonster.nPosX = nPosX
+    tMonster.nPosY = nPosY
+    tMonster.nPosZ = nPosZ
     tMonster.nCurrHP = tConfig.nHP
     tSvrGame.tGameObjects[nObjectId] = tMonster
     AIManagerMod.addAI(tSvrGame.tAIManager, nObjectId)
@@ -192,6 +201,7 @@ function roleDead(tSvrGame, nObjectId)
     Messager.S2CRoleDead(tSvrGame.nGameId, nObjectId)
 
     if tGameObject.nObjectType == Const.GameObjectType.Monster then
+        AIManagerMod.delAI(tSvrGame.tAIManager, nObjectId)
         procNodeGraphEvent(tSvrGame, Const.EventType.MonsterDead, nObjectId)
     end
 end

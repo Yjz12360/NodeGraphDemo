@@ -72,3 +72,7 @@ C2SAttackHit = function(nGameId, nAttackerId, nTargetId)
     addMessage(SvrGameMod.onAttackHit, nGameId, nAttackerId, nTargetId)
 end
 
+-- AI
+S2CAIMoveTo = function(nGameId, nObjectId, nPosX, nPosY, nPosZ, nStopDistance)
+    addMessage(CltAIActionMod.onAIMoveTo, nGameId, nObjectId, nPosX, nPosY, nPosZ, nStopDistance)
+end

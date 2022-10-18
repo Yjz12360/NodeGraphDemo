@@ -4,6 +4,7 @@ function addAI(nGameId, nObjectId)
     tAI.nGameId = nGameId
     tAI.nObjectId = nObjectId
     tAI.tCurrAction = nil
+    tAI.tLastAction = nil
     return tAI
 end
 
@@ -31,10 +32,31 @@ function addAction(tAI, nActionType, tActionArgs)
     end
 end
 
+-- TODO 支持多种样式AI;仅在有怪物时更新
 function update(tAI, nDeltaTime)
     local tCurrAction = tAI.tCurrAction
     if tCurrAction == nil then
-        AIMod.addAction(tAI, AIConst.ActionType.Idle, {nTime = 1.0})
+        local tLastAction = tAI.tLastAction
+        if tLastAction == nil or tLastAction.nActionType == Const.AIActionType.MoveTo then
+            local nIdleTime = 0.5 + math.random() * 2
+            AIMod.addAction(tAI, Const.AIActionType.Idle, {nTime = nIdleTime})
+        else
+            local nRad = math.random() * 2 * math.pi
+            local nDirX, nDirY, nDirZ = VectorUtil.rad2Vec(nRad)
+            local nDistance = 2 + math.random() * 3
+            local nMoveX, nMoveY, nMoveZ = VectorUtil.mul(nDirX, nDirY, nDirZ, nDistance)
+            local tSvrGame = SvrGameMod.getGameById(tAI.nGameId)
+            local tGameObject = SvrGameMod.getObject(tSvrGame, tAI.nObjectId)
+            local nCurrX, nCurrY, nCurrZ = tGameObject.nPosX, tGameObject.nPosY, tGameObject.nPosZ
+            local nTarX, nTarY, nTarZ = VectorUtil.add(nCurrX, nCurrY, nCurrZ, nMoveX, nMoveY, nMoveZ)
+            AIMod.addAction(tAI, Const.AIActionType.MoveTo, {
+                nPosX = nTarX,
+                nPosY = nTarY,
+                nPosZ = nTarZ,
+                nStopDistance = 1,
+            })
+        end
+        -- AIMod.addAction(tAI, Const.AIActionType.Idle, {nTime = 1.0})
     else
         local fUpdate = AIActionHandlerMod.getUpdateHandler(tCurrAction.nActionType)
         if fUpdate ~= nil then
@@ -44,6 +66,6 @@ function update(tAI, nDeltaTime)
 end
 
 function finishAction(tAI)
-    printError("finishAction")
+    tAI.tLastAction = tAI.tCurrAction
     tAI.tCurrAction = nil
 end

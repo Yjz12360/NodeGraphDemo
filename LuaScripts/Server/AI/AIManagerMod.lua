@@ -11,20 +11,20 @@ function addAI(tAIManager, nObjectId)
     if tAIManager == nil then
         return
     end
-    local tMonsterAI = AIMod.addAI(tAIManager.nGameId, nObjectId)
-    tAIManager.tAIInstances[nObjectId] = tMonsterAI
-    return tMonsterAI
+    local tAI = AIMod.addAI(tAIManager.nGameId, nObjectId)
+    tAIManager.tAIInstances[nObjectId] = tAI
+    return tAI
 end
 
 function delAI(tAIManager, nObjectId)
     if tAIManager == nil then
         return
     end
-    tAIManager[nObjectId] = nil
+    tAIManager.tAIInstances[nObjectId] = nil
 end
 
 function updateAI(tAIManager, nDeltaTime)
-    for _, tMonsterAI in pairs(tAIManager.tAIInstances) do
-        AIMod.update(tMonsterAI, nDeltaTime)
+    for _, tAI in pairs(tAIManager.tAIInstances) do
+        AIMod.update(tAI, nDeltaTime)
     end
 end 

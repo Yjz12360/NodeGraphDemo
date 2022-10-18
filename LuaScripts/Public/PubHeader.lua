@@ -7,6 +7,7 @@ rawRequire "Public/Config/Player"
 
 
 require "Public/TableUtil"
+require "Public/VectorUtil"
 require "Public/Const"
 require "Public/TimeMod"
 require "Public/TimerMod"
