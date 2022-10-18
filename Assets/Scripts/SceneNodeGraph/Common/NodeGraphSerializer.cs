@@ -62,8 +62,8 @@ namespace SceneNodeGraph
                 byte[] result = System.Text.Encoding.UTF8.GetBytes(strLuaContent);
                 return result;
             });
-            luaEnv.DoString("json = require 'json'");
-            luaEnv.DoString("require 'TableUtil'");
+            luaEnv.DoString("json = require 'Tools/json'");
+            luaEnv.DoString("require 'Public/TableUtil'");
 
             object[] resultArray = luaEnv.DoString($"return table2str(json.decode('{sContext}'))");
             string sFixFileName = sFileName.Replace(" ", "").Replace(".lua", "");
@@ -91,7 +91,7 @@ namespace SceneNodeGraph
             });
 
             luaEnv.DoString(sLuaContext);
-            luaEnv.DoString("json = require 'json'");
+            luaEnv.DoString("json = require 'Tools/json'");
             string sFixFileName = sFileName.Replace(" ", "").Replace(".lua", "");
             luaEnv.DoString($"sJson = json.encode(Config.NodeGraphData.{sFixFileName})");
             string sJson = luaEnv.Global.Get<string>("sJson");

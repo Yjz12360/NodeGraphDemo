@@ -1,8 +1,4 @@
-require("LuaPanda").start("127.0.0.1", 8818)
-
-
--- require "Public/ConfigHeader"
-
+require("Tools/LuaPanda").start("127.0.0.1", 8818)
 
 _G.rawRequire = _G.require
 _G.require = function(sModulePath)

@@ -6,10 +6,8 @@ rawRequire "Public/Config/NodeGraph"
 rawRequire "Public/Config/Player"
 
 
-require "TableUtil"
-
+require "Public/TableUtil"
 require "Public/Const"
-
 require "Public/GameSceneCfgMod"
 require "Public/Messager"
 
