@@ -30,6 +30,7 @@ end
 function Update(nDeltaTime)
     Messager.update()
 
+    TimerMod.update(nDeltaTime)
     -- if CltGameMod.isLocalGame() then
     --     SvrGameMod.update(nDeltaTime)
     -- end

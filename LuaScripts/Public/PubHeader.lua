@@ -8,6 +8,7 @@ rawRequire "Public/Config/Player"
 
 require "Public/TableUtil"
 require "Public/Const"
+require "Public/TimerMod"
 require "Public/GameSceneCfgMod"
 require "Public/Messager"
 
