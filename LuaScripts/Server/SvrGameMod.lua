@@ -7,6 +7,16 @@ end
 
 local tSvrGames = {}
 
+local function addAIUpdateTimer(tSvrGame)
+    local nLastTime = TimeMod.getTime()
+    TimerMod.add(0.2, function()
+        local nCurrTime =TimeMod.getTime()
+        local nDeltaTime = nCurrTime - nLastTime
+        AIManagerMod.updateAI(tSvrGame.tAIManager, nDeltaTime)
+        nLastTime = nCurrTime
+    end)
+end
+
 function addGame(nGameConfigId)
     local tGameConfig = Config.Game[nGameConfigId]
     if tGameConfig == nil then
@@ -27,6 +37,8 @@ function addGame(nGameConfigId)
     tSvrGame.tGameSceneConfig = tGameSceneConfig
     tSvrGame.tGameObjects = {}
     tSvrGame.tMainNodeGraph = nil
+    tSvrGame.tAIManager = AIManagerMod.addAIManager(tSvrGame)
+    addAIUpdateTimer(tSvrGame)
     tSvrGames[nGameId] = tSvrGame
 
     Messager.S2CCreateGameSucc(tSvrGame.nGameId)
@@ -119,6 +131,7 @@ function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
     }
     tMonster.nCurrHP = tConfig.nHP
     tSvrGame.tGameObjects[nObjectId] = tMonster
+    AIManagerMod.addAI(tSvrGame.tAIManager, nObjectId)
     Messager.S2CAddMonster(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     procNodeGraphEvent(tSvrGame, Const.EventType.AddMonster)
     return tMonster

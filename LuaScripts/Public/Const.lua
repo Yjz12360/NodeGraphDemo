@@ -29,7 +29,7 @@ EventType = {
     BeforeMonsterDead = 4,
 }
 
-AIActionState = {
-    Running = 1,
-    Finish = 2,
-}
+-- AIActionState = {
+--     Running = 1,
+--     Finish = 2,
+-- }

@@ -2,15 +2,34 @@
 local tTimers = {}
 local nCurrId = 1
 
+function add(nTime, fHandler)
+    local tTimer = {
+        nCurrId = nCurrId,
+        nTime = nTime,
+        nCurrTime = 0,
+        fHandler = fHandler,
+        bLoop = true,
+    }
+    nCurrId = nCurrId + 1
+    tTimers[nCurrId] = tTimer
+    return nCurrId
+end
+
 function delay(nTime, fHandler)
     local tTimer = {
         nCurrId = nCurrId,
         nTime = nTime,
         nCurrTime = 0,
         fHandler = fHandler,
+        bLoop = false,
     }
     nCurrId = nCurrId + 1
     tTimers[nCurrId] = tTimer
+    return nCurrId
+end
+
+function remove(nTimerId)
+    tTimers[nTimerId] = nil
 end
 
 local tToDel = {}
@@ -21,7 +40,12 @@ function update(nDeltaTime)
             local fHandler = tTimer.fHandler
             if fHandler ~= nil then
                 fHandler()
-                table.insert(tToDel, nCurrId)
+                if tTimer.bLoop then
+                    tTimer.nCurrTime = 0
+                else
+                    table.insert(tToDel, nCurrId)
+                end
+                
             end
         end
     end
