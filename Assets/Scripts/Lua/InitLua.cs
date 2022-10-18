@@ -29,7 +29,7 @@ public class InitLua : MonoBehaviour
             f.Read(bytes, 0, (int)f.Length);
             return bytes;
         });
-        luaenv.DoString("require 'Main'");
+        luaenv.DoString("require 'Client/Main'");
     }
 
     // Update is called once per frame

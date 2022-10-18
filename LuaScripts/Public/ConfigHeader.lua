@@ -1,0 +1,5 @@
+require "Public/Config/Game"
+require "Public/Config/Model"
+require "Public/Config/Monster"
+require "Public/Config/NodeGraph"
+require "Public/Config/Player"

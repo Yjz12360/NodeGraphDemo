@@ -32,7 +32,7 @@ namespace SceneNodeGraph
 
         private void OnEnable()
         {
-            sLuaFolder = Application.dataPath + "/../LuaScripts/Config/NodeGraphData/";
+            sLuaFolder = Application.dataPath + "/../LuaScripts/Public/Config/NodeGraphData/";
         }
 
         private void OnGUI()

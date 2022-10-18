@@ -6,7 +6,7 @@ function getConfigByName(configName)
             return nodeGraphData
         end
     end
-    local sModuleName = string.format("Config/NodeGraphData/%s", configName)
+    local sModuleName = string.format("Public/Config/NodeGraphData/%s", configName)
     local bOK, sErrorMsg = pcall(require, sModuleName)
     if not bOK then
         printError(sErrorMsg)

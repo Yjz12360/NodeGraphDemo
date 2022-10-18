@@ -1,8 +1,8 @@
 require("LuaPanda").start("127.0.0.1", 8818)
 
 
-require "ConfigHeader"
-require "PrintMod"
+require "Public/ConfigHeader"
+require "Client/PrintMod"
 
 _G.rawRequire = _G.require
 _G.require = function(sModulePath)
@@ -19,7 +19,7 @@ _G.require = function(sModulePath)
     _G.rawRequire(sModulePath)
     setmetatable(_G, nil)
 end
-rawRequire("Header")
+rawRequire("Public/Header")
 _G.require = _G.rawRequire
 
 function Init()
