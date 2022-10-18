@@ -135,11 +135,6 @@ function roleDead(nGameId, nObjectId)
         UE.GameObject.Destroy(goInstance)
     end
     tCltGame.tGameObjects[nObjectId] = nil
-
-    -- local tNodeGraph = tCltGame.tMainNodeGraph
-    -- if tNodeGraph ~= nil then
-    --     CltNodeGraphMod.processEvent(tNodeGraph, Const.EventType.MonsterDead, nObjectId)
-    -- end
 end
 
 function onTriggerEnter(nTriggerId, uCollider)

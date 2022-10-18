@@ -1,17 +1,18 @@
 
+rawRequire "Public/Config/Game"
+rawRequire "Public/Config/Model"
+rawRequire "Public/Config/Monster"
+rawRequire "Public/Config/NodeGraph"
+rawRequire "Public/Config/Player"
+
 
 require "TableUtil"
 
 require "Public/Const"
 
-require "Client/CltGameMod"
-require "Server/SvrGameMod"
 require "Public/GameSceneCfgMod"
 require "Public/Messager"
 
-
-require "Client/CltNodeGraphMod"
-require "Server/SvrNodeGraphMod"
 require "Public/NodeGraph/NodeGraphCfgMod"
 require "Public/NodeGraph/NodesHandlerMod"
 
