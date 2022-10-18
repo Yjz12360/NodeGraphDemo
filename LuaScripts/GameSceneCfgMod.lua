@@ -25,6 +25,17 @@ function getRefreshMonsterConfig(tGameSceneConfig, nRefreshId)
     return tGameSceneConfig.tRefreshMonsters[nRefreshId]
 end
 
+function getRefreshMonsterGroup(tGameSceneConfig, nRefreshId)
+    if tGameSceneConfig == nil or tGameSceneConfig.tRefreshMonsterGroups == nil then
+        return
+    end
+    local tRefreshMonsterGroups = tGameSceneConfig.tRefreshMonsterGroups[nRefreshId]
+    if tRefreshMonsterGroups == nil then
+        return
+    end
+    return tRefreshMonsterGroups.tRefreshMonsters
+end
+
 -- function getNodeConfig(tNodeGraphConfig, sNodeId)
 --     if tNodeGraphConfig == nil or tNodeGraphConfig.tNodeMap == nil then
 --         return

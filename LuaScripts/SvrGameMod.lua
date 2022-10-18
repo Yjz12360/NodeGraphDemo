@@ -13,11 +13,18 @@ function addGame(nGameConfigId)
         printError("GameConfig not exist configId: " .. nGameConfigId)
         return
     end
+    local sSceneConfig = tGameConfig.sSceneConfig
+    local tGameSceneConfig = GameSceneCfgMod.getConfigByName(sSceneConfig)
+    if tGameSceneConfig == nil then
+        printError("GameSceneConfig not exist config: " .. sSceneConfig)
+        return
+    end
 
     local nGameId = genGameId()
     local tSvrGame = {}
     tSvrGame.nGameId = nGameId
     tSvrGame.tGameConfig = tGameConfig
+    tSvrGame.tGameSceneConfig = tGameSceneConfig
     tSvrGame.tGameObjects = {}
     tSvrGame.tMainNodeGraph = nil
     tSvrGames[nGameId] = tSvrGame
@@ -125,11 +132,7 @@ function addSceneMonster(tSvrGame, nRefreshId)
         printError("addSceneMonster error: monster already exists. nRefreshId: " .. nRefreshId)
         return
     end
-    local sSceneConfig = tSvrGame.tGameConfig.sSceneConfig
-    local tGameSceneConfig = GameSceneCfgMod.getConfigByName(sSceneConfig)
-    if tGameSceneConfig == nil then
-        return
-    end
+    local tGameSceneConfig = tSvrGame.tGameSceneConfig
     local tRefreshConfig = GameSceneCfgMod.getRefreshMonsterConfig(tGameSceneConfig, nRefreshId)
     if tRefreshConfig == nil then
         printError("addSceneMonster error: tRefreshConfig not exist. nRefreshId: " .. nRefreshId)
@@ -139,6 +142,23 @@ function addSceneMonster(tSvrGame, nRefreshId)
     local tPos = tRefreshConfig.tPos
     local tMonster = SvrGameMod.addMonster(tSvrGame, nMonsterCfgId, tPos.x, tPos.y, tPos.z)
     tMonster.nRefreshId = nRefreshId
+    return tMonster
+end
+
+function refreshMonsterGroup(tSvrGame, nRefreshId)
+    if tSvrGame == nil then
+        return
+    end
+    local tGameSceneConfig = tSvrGame.tGameSceneConfig
+    local tRefreshMonsterGroups = GameSceneCfgMod.getRefreshMonsterGroup(tGameSceneConfig, nRefreshId)
+    if tRefreshMonsterGroups == nil then
+        printError("refreshMonsterGroup error: config not exist. nRefreshId: " .. nRefreshId)
+        return
+    end
+    for _, nRefreshMonsterId in ipairs(tRefreshMonsterGroups) do
+        local tMonster = SvrGameMod.addSceneMonster(tSvrGame, nRefreshMonsterId)
+        tMonster.nGroupId = nRefreshId
+    end
 end
 
 function roleDead(tSvrGame, nObjectId)

@@ -24,5 +24,6 @@ namespace SceneNodeGraph
         ComponentSetActive = 13,
         GameObjectSetActive = 14,
         WaitEnterTrigger = 15,
+        RefreshMonsterGroup = 16,
     }
 }

@@ -8,6 +8,7 @@ NodeType = {
     WaitMonsterNum = 6,
     WaitMonsterDead = 7,
     WaitEnterTrigger = 15,
+    RefreshMonsterGroup = 16,
 }
 
 NodeGraphState = {

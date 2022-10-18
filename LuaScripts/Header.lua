@@ -22,5 +22,6 @@ require "Nodes/HasMonsterNode"
 require "Nodes/WaitMonsterNumNode"
 require "Nodes/WaitMonsterDeadNode"
 require "Nodes/WaitEnterTriggerNode"
+require "Nodes/RefreshMonsterGroupNode"
 
 

@@ -133,4 +133,10 @@ tNodeHandlers[Const.NodeType.WaitMonsterDead] = {
     },
 }
 
+tNodeHandlers[Const.NodeType.RefreshMonsterGroup] = {
+    tSvrHandler = function(tNodeGraph, tNodeData)
+        return RefreshMonsterGroupNode.SvrHandler(tNodeGraph, tNodeData)
+    end,
+}
+
 init()
