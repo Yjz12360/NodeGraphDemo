@@ -7,10 +7,13 @@ NodeType = {
     HasMonster = 5,
     WaitMonsterNum = 6,
     WaitMonsterDead = 7,
-    Explode = 8,
-    AOE = 9,
+    -- Explode = 8,
+    -- AOE = 9,
     AnimatorCtrl = 10,
     ActiveAI = 11,
+    -- PlayEffect = 12,
+    -- ActiveComponent = 13,
+    -- ActiveSceneObject = 14,
     WaitEnterTrigger = 15,
     RefreshMonsterGroup = 16,
 }
@@ -36,6 +39,7 @@ EventType = {
 AIActionType = {
     Idle = 1,
     MoveTo = 2,
+    Chase = 3,
 }
 
 -- AIActionState = {

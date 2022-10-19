@@ -19,6 +19,10 @@ function magnitude(nX, nY, nZ)
     return (nX * nX + nY * nY + nZ * nZ) ^ 0.5
 end
 
+function sqrMagnitude(nX, nY, nZ)
+    return nX * nX + nY * nY + nZ * nZ
+end
+
 function normalize(nX, nY, nZ)
     local nMagnitude = VectorUtil.magnitude(nX, nY, nZ)
     return nX / nMagnitude, nY / nMagnitude, nZ / nMagnitude

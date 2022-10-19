@@ -32,3 +32,12 @@ tActionHandlers[Const.AIActionType.MoveTo] = {
         return MoveToAction.updateAction(tAI, tAction, nDeltaTime)
     end
 }
+
+tActionHandlers[Const.AIActionType.Chase] = {
+    fStart = function(tAI, tAction)
+        return ChaseAction.startAction(tAI, tAction)
+    end,
+    fUpdate = function(tAI, tAction, nDeltaTime)
+        return ChaseAction.updateAction(tAI, tAction, nDeltaTime)
+    end
+}

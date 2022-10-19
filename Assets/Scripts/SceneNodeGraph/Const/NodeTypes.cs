@@ -21,8 +21,8 @@ namespace SceneNodeGraph
         AnimatorCtrl = 10,
         ActiveAI = 11,
         PlayEffect = 12,
-        ComponentSetActive = 13,
-        GameObjectSetActive = 14,
+        ActiveComponent = 13,
+        ActiveSceneObject = 14,
         WaitEnterTrigger = 15,
         RefreshMonsterGroup = 16,
     }

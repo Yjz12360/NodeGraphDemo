@@ -76,3 +76,7 @@ end
 S2CAIMoveTo = function(nGameId, nObjectId, nPosX, nPosY, nPosZ, nStopDistance)
     addMessage(CltAIActionMod.onAIMoveTo, nGameId, nObjectId, nPosX, nPosY, nPosZ, nStopDistance)
 end
+
+S2CAIChase = function(nGameId, nObjectId, nTargetId, nChaseTime, nStopDistance)
+    addMessage(CltAIActionMod.onAIChase, nGameId, nObjectId, nTargetId, nChaseTime, nStopDistance)
+end

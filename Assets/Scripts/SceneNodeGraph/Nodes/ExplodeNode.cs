@@ -17,29 +17,5 @@ namespace SceneNodeGraph
         public int nDamage;
     }
 
-    //public class CltExplodeNode : CltRuntimeNode
-    //{
-    //    public ExplodeNodeData NodeData { get { return (ExplodeNodeData)baseNodeData; } }
-
-    //    public override void StartNode()
-    //    {
-    //        Vector3 center = new Vector3(NodeData.nPosX, NodeData.nPosY, NodeData.nPosZ);
-    //        nodeGraph.game.PlayExplosion(center, NodeData.nEffectId, NodeData.nDisplayScale);
-    //        FinishNode();
-    //    }
-    //}
-
-    //public class SvrExplodeNode : SvrRuntimeNode
-    //{
-    //    public ExplodeNodeData NodeData { get { return (ExplodeNodeData)baseNodeData; } }
-
-    //    public override void StartNode()
-    //    {
-    //        Vector3 center = new Vector3(NodeData.nPosX, NodeData.nPosY, NodeData.nPosZ);
-    //        nodeGraph.game.DoExplosion(center, NodeData.nAffectRadius, NodeData.nDamage);
-    //        FinishNode();
-    //    }
-
-    //}
 }
 

@@ -15,18 +15,4 @@ namespace SceneNodeGraph
         public float nPosZ;
     }
 
-    //public class SvrAddMonsterNode : SvrRuntimeNode
-    //{
-    //    public override bool SyncFinishNode() { return true; }
-    //    public AddMonsterNodeData NodeData { get { return (AddMonsterNodeData)baseNodeData; } }
-
-    //    public override void StartNode()
-    //    {
-    //        float nPosX = NodeData.nPosX;
-    //        float nPosY = NodeData.nPosY;
-    //        float nPosZ = NodeData.nPosZ;
-    //        nodeGraph.game.AddMonster(NodeData.nConfigId, new Vector3(nPosX, nPosY, nPosZ));
-    //        FinishNode();
-    //    }
-    //}
 }

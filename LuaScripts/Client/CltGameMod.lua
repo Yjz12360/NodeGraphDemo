@@ -131,8 +131,17 @@ function roleDead(nGameId, nObjectId)
         procNodeGraphEvent(Const.EventType.MonsterDead, nObjectId)
     end
     
-    local goInstance = tRole.goInstance
-    if goInstance ~= nil then
+    -- TODO 移到特定的ActionMod
+    local uAnimator = CltAnimatorMod.getAnimator(tRole)
+    if uAnimator ~= nil then
+        uAnimator:SetTrigger("Die")
+        TimerMod.delay(2, function()
+            local goInstance = tRole.goInstance
+            if goInstance ~= nil then
+                UE.GameObject.Destroy(goInstance)
+            end
+        end)
+    else
         UE.GameObject.Destroy(goInstance)
     end
     tCltGame.tGameObjects[nObjectId] = nil

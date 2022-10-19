@@ -11,21 +11,4 @@ namespace SceneNodeGraph
         public string sRefreshId;
     }
 
-
-
-    //public class CltStartNode : CltRuntimeNode
-    //{
-    //    public override void StartNode()
-    //    {
-    //        FinishNode();
-    //    }
-    //}
-
-    //public class SvrStartNode : SvrRuntimeNode
-    //{
-    //    public override void StartNode()
-    //    {
-    //        FinishNode();
-    //    }
-    //}
 }

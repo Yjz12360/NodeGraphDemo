@@ -7,3 +7,4 @@ require "Client/CltAIActionMod"
 
 require "Client/AIActionHandler/CltIdleAction"
 require "Client/AIActionHandler/CltMoveToAction"
+require "Client/AIActionHandler/CltChaseAction"

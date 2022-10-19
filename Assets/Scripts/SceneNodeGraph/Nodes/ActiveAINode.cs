@@ -13,19 +13,4 @@ namespace SceneNodeGraph
         public bool bActive;
     }
 
-    //public class SvrActiveAINode : SvrRuntimeNode
-    //{
-    //    public override bool SyncFinishNode() { return true; }
-    //    public ActiveAINodeData NodeData { get { return (ActiveAINodeData)baseNodeData; } }
-
-    //    public override void StartNode()
-    //    {
-    //        Game.SvrObjectData svrObjectData = nodeGraph.game.GetMonsterByStaticId(NodeData.nStaticId);
-    //        if(svrObjectData != null)
-    //        {
-    //            nodeGraph.game.ActiveAI(svrObjectData.nGameObjectId, NodeData.bActive);
-    //        }
-    //        FinishNode();
-    //    }
-    //}
 }

@@ -27,6 +27,18 @@ tActionHandler[Const.AIActionType.MoveTo] = {
     end
 }
 
+tActionHandler[Const.AIActionType.Chase] = {
+    fStartAction = function(tGameObject, tAction)
+        return CltChaseAction.startAction(tGameObject, tAction)
+    end,
+    fUpdateAction = function(tGameObject, tAction, nDeltaTime)
+        return CltChaseAction.updateAction(tGameObject, tAction, nDeltaTime)
+    end,
+    fFinishAction = function(tGameObject, tAction)
+        return CltChaseAction.finishAction(tGameObject, tAction)
+    end
+}
+
 
 local function onAddAction(nGameId, nActionType, nObjectId, tActionArgs)
     if not CltGameMod.checkGameId(nGameId) then
@@ -37,6 +49,7 @@ local function onAddAction(nGameId, nActionType, nObjectId, tActionArgs)
         nObjectId = nObjectId,
         nActionType = nActionType,
         tActionArgs = tActionArgs,
+        tActionData = {},
     }
     tActions[nObjectId] = tAction
     local tHandlers = tActionHandler[nActionType]
@@ -61,6 +74,14 @@ function onAIMoveTo(nGameId, nObjectId, nPosX, nPosY, nPosZ, nStopDistance)
         nPosX = nPosX,
         nPosY = nPosY,
         nPosZ = nPosZ,
+        nStopDistance = nStopDistance,
+    })
+end
+
+function onAIChase(nGameId, nObjectId, nTargetId, nChaseTime, nStopDistance)
+    onAddAction(nGameId, Const.AIActionType.Chase, nObjectId, {
+        nTargetId = nTargetId,
+        nChaseTime = nChaseTime,
         nStopDistance = nStopDistance,
     })
 end

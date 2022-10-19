@@ -8,3 +8,4 @@ require "Server/AI/AIActionHandlerMod"
 
 require "Server/AI/AIAction/IdleAction"
 require "Server/AI/AIAction/MoveToAction"
+require "Server/AI/AIAction/ChaseAction"

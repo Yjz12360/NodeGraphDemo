@@ -23,8 +23,8 @@ function updateAction(tAI, tAction, nDeltaTime)
     tObject.nPosX, tObject.nPosY, tObject.nPosZ = nNewX, nNewY, nNewZ
 
     local nDiffX, nDiffY, nDiffZ = VectorUtil.sub(nTarX, nTarY, nTarZ, nNewX, nNewY, nNewZ)
-    local nDistance = VectorUtil.magnitude(nDiffX, nDiffY, nDiffZ)
-    if nDistance <= tActionArgs.nStopDistance then
+    local nSqrDistance = VectorUtil.sqrMagnitude(nDiffX, nDiffY, nDiffZ)
+    if nSqrDistance <= tActionArgs.nStopDistance ^ 2 then
         AIMod.finishAction(tAI)
     end
 end
