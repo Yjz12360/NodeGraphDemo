@@ -13,24 +13,24 @@ Config.GameScene.SampleScene = {
     },
     tRefreshMonsters = {
         ["2"] = {
-            tPos = {z = 0.0, x = 0.0, y = 0.0},
-            sRefreshId = "2",
+            tPos = {z = 0.0, y = 0.0, x = 0.0},
             nMonsterCfgId = 2,
-        },
-        ["3"] = {
-            tPos = {z = 5.0, x = 5.0, y = 0.0},
-            sRefreshId = "3",
-            nMonsterCfgId = 3,
-        },
-        ["4"] = {
-            tPos = {z = 5.0, x = 5.0, y = 0.0},
-            sRefreshId = "4",
-            nMonsterCfgId = 4,
+            sRefreshId = "2",
         },
         ["1"] = {
-            tPos = {z = 0.0, x = 0.0, y = 0.0},
-            sRefreshId = "1",
+            tPos = {z = 0.0, y = 0.0, x = -0.12},
             nMonsterCfgId = 1,
+            sRefreshId = "1",
+        },
+        ["4"] = {
+            tPos = {z = 5.0, y = 0.0, x = 5.0},
+            nMonsterCfgId = 4,
+            sRefreshId = "4",
+        },
+        ["3"] = {
+            tPos = {z = -0.38, y = 0.0, x = 0.05},
+            nMonsterCfgId = 3,
+            sRefreshId = "3",
         },
     },
 }

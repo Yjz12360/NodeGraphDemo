@@ -16,6 +16,7 @@ namespace SceneNodeGraph
 
         public CompareType nCompareType = CompareType.LessThan;
         public int nNum = 0;
+        public string sMonsterGroupId = "";
     }
 
     //public class SvrWaitMonsterNumNode : SvrRuntimeNode

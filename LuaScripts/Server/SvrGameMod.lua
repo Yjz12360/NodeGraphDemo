@@ -122,6 +122,7 @@ function addPlayer(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
 end
 
 function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
+    printError("addMonster" .. nConfigId)
     if tSvrGame == nil then
         return
     end
@@ -179,7 +180,7 @@ function refreshMonsterGroup(tSvrGame, sRefreshId)
     end
     for _, nRefreshMonsterId in ipairs(tRefreshMonsterGroups) do
         local tMonster = SvrGameMod.addSceneMonster(tSvrGame, nRefreshMonsterId)
-        tMonster.nGroupId = sRefreshId
+        tMonster.sGroupId = sRefreshId
     end
 end
 
@@ -204,6 +205,13 @@ function roleDead(tSvrGame, nObjectId)
         AIManagerMod.delAI(tSvrGame.tAIManager, nObjectId)
         procNodeGraphEvent(tSvrGame, Const.EventType.MonsterDead, nObjectId)
     end
+end
+
+function getObjects(tSvrGame)
+    if tSvrGame == nil then
+        return
+    end
+    return tSvrGame.tGameObjects
 end
 
 function hasMonster(tSvrGame)
