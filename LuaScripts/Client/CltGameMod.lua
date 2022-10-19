@@ -84,7 +84,7 @@ function addPlayer(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     end
 end
 
-function addMonster(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
+function addMonster(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, sRefreshId)
     if not CltGameMod.checkGameId(nGameId) then
         return
     end
@@ -97,6 +97,7 @@ function addMonster(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     tMonster.nObjectId = nObjectId
     tMonster.nObjectType = Const.GameObjectType.Monster
     tMonster.tConfig = tConfig
+    tMonster.sRefreshId = sRefreshId
     tCltGame.tGameObjects[nObjectId] = tMonster
     local nModelId = tConfig.nModelId
     local tModelConfig = Config.Model[nModelId]
@@ -142,6 +143,19 @@ function getObject(nObjectId)
         return
     end
     return tCltGame.tGameObjects[nObjectId]
+end
+
+function getMonsterByRefreshId(sRefreshId)
+    if tCltGame == nil then
+        return
+    end
+    for _, tGameObject in pairs(tCltGame.tGameObjects) do
+        if tGameObject.nObjectType == Const.GameObjectType.Monster then
+            if tGameObject.sRefreshId == sRefreshId then
+                return tGameObject
+            end
+        end
+    end
 end
 
 function onTriggerEnter(nTriggerId, uCollider)

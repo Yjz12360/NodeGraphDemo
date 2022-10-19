@@ -7,6 +7,10 @@ NodeType = {
     HasMonster = 5,
     WaitMonsterNum = 6,
     WaitMonsterDead = 7,
+    Explode = 8,
+    AOE = 9,
+    AnimatorCtrl = 10,
+    ActiveAI = 11,
     WaitEnterTrigger = 15,
     RefreshMonsterGroup = 16,
 }

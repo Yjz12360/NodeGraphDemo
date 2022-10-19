@@ -2,14 +2,7 @@
 function startAction(tGameObject, tAction)
     local tActionArgs = tAction.tActionArgs
     local goInstance = tGameObject.goInstance
-    local uAnimator = tGameObject.uAnimator
-    if uAnimator == nil then
-        local uMonsterControl = goInstance:GetComponent(typeof(CS.Game.MonsterControl))
-        if uMonsterControl ~= nil then
-            uAnimator = uMonsterControl.modelAnimator
-            tGameObject.uAnimator = uAnimator
-        end
-    end
+    local uAnimator = CltAnimatorMod.getAnimator(tGameObject)
     if uAnimator ~= nil then
         uAnimator:SetTrigger("Move")
     end
@@ -43,15 +36,7 @@ end
 
 function finishAction(tGameObject, tAction)
     local tActionArgs = tAction.tActionArgs
-    local goInstance = tGameObject.goInstance
-    local uAnimator = tGameObject.uAnimator
-    if uAnimator == nil then
-        local uMonsterControl = goInstance:GetComponent(typeof(CS.Game.MonsterControl))
-        if uMonsterControl ~= nil then
-            uAnimator = uMonsterControl.modelAnimator
-            tGameObject.uAnimator = uAnimator
-        end
-    end
+    local uAnimator = CltAnimatorMod.getAnimator(tGameObject)
     if uAnimator ~= nil then
         uAnimator:SetTrigger("EndMove")
     end

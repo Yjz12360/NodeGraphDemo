@@ -5,6 +5,7 @@ function addAI(nGameId, nObjectId)
     tAI.nObjectId = nObjectId
     tAI.tCurrAction = nil
     tAI.tLastAction = nil
+    tAI.bActive = true
     return tAI
 end
 
@@ -34,6 +35,9 @@ end
 
 -- TODO 支持多种样式AI;仅在有怪物时更新
 function update(tAI, nDeltaTime)
+    if not tAI.bActive then
+        return
+    end
     local tCurrAction = tAI.tCurrAction
     if tCurrAction == nil then
         local tLastAction = tAI.tLastAction
@@ -68,4 +72,14 @@ end
 function finishAction(tAI)
     tAI.tLastAction = tAI.tCurrAction
     tAI.tCurrAction = nil
+end
+
+function setAIActive(tAI, bActive)
+    if tAI == nil then
+        return
+    end
+    tAI.bActive = bActive
+    if not bActive then
+        AIMod.finishAction(tAI)
+    end
 end

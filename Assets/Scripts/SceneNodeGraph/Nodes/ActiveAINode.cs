@@ -8,7 +8,8 @@ namespace SceneNodeGraph
     {
         public override NodeType GetNodeType() { return NodeType.ActiveAI; }
 
-        public int nStaticId;
+        public string sRefreshId;
+        public string sGroupId;
         public bool bActive;
     }
 

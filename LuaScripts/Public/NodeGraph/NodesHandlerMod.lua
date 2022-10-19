@@ -133,6 +133,18 @@ tNodeHandlers[Const.NodeType.WaitMonsterDead] = {
     },
 }
 
+tNodeHandlers[Const.NodeType.AnimatorCtrl] = {
+    tCltHandler = function(tNodeGraph, tNodeData)
+        return AnimatorCtrlNode.CltHandler(tNodeGraph, tNodeData)
+    end,
+}
+
+tNodeHandlers[Const.NodeType.ActiveAI] = {
+    tSvrHandler = function(tNodeGraph, tNodeData)
+        return ActiveAINode.SvrHandler(tNodeGraph, tNodeData)
+    end,
+}
+
 tNodeHandlers[Const.NodeType.RefreshMonsterGroup] = {
     tSvrHandler = function(tNodeGraph, tNodeData)
         return RefreshMonsterGroupNode.SvrHandler(tNodeGraph, tNodeData)

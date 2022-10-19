@@ -121,14 +121,14 @@ function addPlayer(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
     Messager.S2CAddPlayer(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
 end
 
-function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
+function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ, sRefreshId)
     printError("addMonster" .. nConfigId)
     if tSvrGame == nil then
         return
     end
     local tConfig = Config.Monster[nConfigId]
     if tConfig == nil then
-        printError("PlayerConfig not exist configId: " .. nConfigId)
+        printError("MonsterConfig not exist configId: " .. nConfigId)
         return
     end
     local nObjectId = getNextObjectId(tSvrGame)
@@ -140,47 +140,42 @@ function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
     tMonster.nPosY = nPosY
     tMonster.nPosZ = nPosZ
     tMonster.nCurrHP = tConfig.nHP
+    tMonster.sRefreshId = sRefreshId
     tSvrGame.tGameObjects[nObjectId] = tMonster
     AIManagerMod.addAI(tSvrGame.tAIManager, nObjectId)
-    Messager.S2CAddMonster(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
+    Messager.S2CAddMonster(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, sRefreshId)
     procNodeGraphEvent(tSvrGame, Const.EventType.AddMonster)
     return tMonster
 end
 
-function addSceneMonster(tSvrGame, sRefreshId)
+function refreshMonster(tSvrGame, sRefreshId)
     if tSvrGame == nil then
-        return
-    end
-    if SvrGameMod.getMonsterByRefreshId(tSvrGame, sRefreshId) ~= nil then
-        printError("addSceneMonster error: monster already exists. sRefreshId: " .. sRefreshId)
         return
     end
     local tGameSceneConfig = tSvrGame.tGameSceneConfig
     local tRefreshConfig = GameSceneCfgMod.getRefreshMonsterConfig(tGameSceneConfig, sRefreshId)
     if tRefreshConfig == nil then
-        printError("addSceneMonster error: tRefreshConfig not exist. sRefreshId: " .. sRefreshId)
+        printError("refreshMonster error: tRefreshConfig not exist. sRefreshId: " .. sRefreshId)
         return
     end
     local nMonsterCfgId = tRefreshConfig.nMonsterCfgId
     local tPos = tRefreshConfig.tPos
-    local tMonster = SvrGameMod.addMonster(tSvrGame, nMonsterCfgId, tPos.x, tPos.y, tPos.z)
-    tMonster.sRefreshId = sRefreshId
+    local tMonster = SvrGameMod.addMonster(tSvrGame, nMonsterCfgId, tPos.x, tPos.y, tPos.z, sRefreshId)
     return tMonster
 end
 
-function refreshMonsterGroup(tSvrGame, sRefreshId)
+function refreshMonsterGroup(tSvrGame, sGroupId)
     if tSvrGame == nil then
         return
     end
     local tGameSceneConfig = tSvrGame.tGameSceneConfig
-    local tRefreshMonsterGroups = GameSceneCfgMod.getRefreshMonsterGroup(tGameSceneConfig, sRefreshId)
+    local tRefreshMonsterGroups = GameSceneCfgMod.getRefreshMonsterGroup(tGameSceneConfig, sGroupId)
     if tRefreshMonsterGroups == nil then
-        printError("refreshMonsterGroup error: config not exist. sRefreshId: " .. sRefreshId)
+        printError("refreshMonsterGroup error: config not exist. sGroupId: " .. sGroupId)
         return
     end
-    for _, nRefreshMonsterId in ipairs(tRefreshMonsterGroups) do
-        local tMonster = SvrGameMod.addSceneMonster(tSvrGame, nRefreshMonsterId)
-        tMonster.sGroupId = sRefreshId
+    for _, sRefreshId in ipairs(tRefreshMonsterGroups) do
+        SvrGameMod.refreshMonster(tSvrGame, sRefreshId)
     end
 end
 

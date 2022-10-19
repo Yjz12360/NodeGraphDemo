@@ -56,8 +56,8 @@ S2CAddPlayer = function(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     addMessage(CltGameMod.addPlayer, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
 end
 
-S2CAddMonster = function(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ) 
-    addMessage(CltGameMod.addMonster, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
+S2CAddMonster = function(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, sRefreshId)
+    addMessage(CltGameMod.addMonster, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, sRefreshId)
 end
 
 S2CRoleDead = function(nGameId, nObjectId)

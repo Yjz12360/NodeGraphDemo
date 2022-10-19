@@ -27,4 +27,15 @@ function updateAI(tAIManager, nDeltaTime)
     for _, tAI in pairs(tAIManager.tAIInstances) do
         AIMod.update(tAI, nDeltaTime)
     end
-end 
+end
+
+function setAIActive(tAIManager, nObjectId, bActive)
+    if tAIManager == nil then
+        return
+    end
+    local tAI = tAIManager.tAIInstances[nObjectId]
+    if tAI == nil then
+        return
+    end
+    AIMod.setAIActive(tAI, bActive)
+end

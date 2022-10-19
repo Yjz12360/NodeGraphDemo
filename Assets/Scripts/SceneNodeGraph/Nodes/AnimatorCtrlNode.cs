@@ -8,7 +8,7 @@ namespace SceneNodeGraph
     {
         public override NodeType GetNodeType() { return NodeType.AnimatorCtrl; }
 
-        public int nStaticId;
+        public string sRefreshId;
         public string sSetTrigger;
         //public string sAnimName;
     }

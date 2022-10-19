@@ -23,6 +23,8 @@ require "Public/NodeGraph/Nodes/AddMonsterNode"
 require "Public/NodeGraph/Nodes/HasMonsterNode"
 require "Public/NodeGraph/Nodes/WaitMonsterNumNode"
 require "Public/NodeGraph/Nodes/WaitMonsterDeadNode"
+require "Public/NodeGraph/Nodes/AnimatorCtrlNode"
+require "Public/NodeGraph/Nodes/ActiveAINode"
 require "Public/NodeGraph/Nodes/WaitEnterTriggerNode"
 require "Public/NodeGraph/Nodes/RefreshMonsterGroupNode"
 
