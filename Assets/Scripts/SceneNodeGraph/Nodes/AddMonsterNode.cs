@@ -8,7 +8,7 @@ namespace SceneNodeGraph
     {
         public override NodeType GetNodeType() { return NodeType.AddMonster; }
 
-        public int nRefreshId;
+        public string sRefreshId;
         public int nConfigId;
         public float nPosX;
         public float nPosY;

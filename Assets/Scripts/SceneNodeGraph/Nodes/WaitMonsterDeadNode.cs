@@ -8,7 +8,7 @@ namespace SceneNodeGraph
     {
         public override NodeType GetNodeType() { return NodeType.WaitMonsterDead; }
 
-        public int nRefreshId;
+        public string sRefreshId;
     }
 
     //public class SvrWaitMonsterDeadNode : SvrRuntimeNode

@@ -3,7 +3,7 @@ Config.NodeGraphData = Config.NodeGraphData or {}
 Config.NodeGraphData.MonsterDead = {
     tNodeMap = {
         ["2"] = {
-            nRefreshId = 1,
+            sRefreshId = "1",
             nPosX = 0.0,
             sNodeId = "2",
             nPosY = 0.0,
@@ -22,7 +22,7 @@ Config.NodeGraphData.MonsterDead = {
             sNodeId = "4",
         },
         ["3"] = {
-            nRefreshId = 1,
+            sRefreshId = "1",
             nNodeType = 7,
             sNodeId = "3",
         },

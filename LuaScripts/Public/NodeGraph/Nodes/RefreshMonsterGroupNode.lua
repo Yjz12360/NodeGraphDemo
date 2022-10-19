@@ -1,6 +1,6 @@
 
 function SvrHandler(tNodeGraph, tNodeData)
-    local nRefreshId = tNodeData.nRefreshId
-    SvrGameMod.refreshMonsterGroup(tNodeGraph.tSvrGame, nRefreshId)
+    local sRefreshId = tNodeData.sRefreshId
+    SvrGameMod.refreshMonsterGroup(tNodeGraph.tSvrGame, sRefreshId)
     SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
 end

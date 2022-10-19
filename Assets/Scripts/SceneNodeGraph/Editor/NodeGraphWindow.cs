@@ -23,7 +23,7 @@ namespace SceneNodeGraph
 
         private string sLuaFolder;
 
-        [MenuItem("节点图编辑器/打开")]
+        [MenuItem("编辑工具/关卡流程图")]
         static void Init()
         {
             var window = GetWindow<NodeGraphWindow>();

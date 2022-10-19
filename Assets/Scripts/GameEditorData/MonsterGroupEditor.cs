@@ -8,8 +8,8 @@ namespace Game
     {
         public override void OnInspectorGUI()
         {
-            GameObject configContainer = GameObject.Find("LuaConfig/MonsterGroup");
-            Transform configTrans = configContainer.transform;
+            MonsterGroupEditorData data = target as MonsterGroupEditorData;
+            Transform configTrans = data.transform.parent.Find("Config/MonsterGroup");
 
             EditorGUILayout.LabelField("当前怪物组配置：");
             for (int i = 0; i < configTrans.childCount; ++i)
@@ -18,7 +18,7 @@ namespace Game
             }
             if (GUILayout.Button("添加怪物组配置"))
             {
-                int genId = GenId(configContainer);
+                int genId = GenId(configTrans);
                 GameObject configObject = new GameObject(genId.ToString());
 
                 configObject.transform.SetParent(configTrans);
@@ -41,9 +41,8 @@ namespace Game
             }
         }
 
-        private int GenId(GameObject configContainer)
+        private int GenId(Transform containerTrans)
         {
-            Transform containerTrans = configContainer.transform;
             for (int i = 1; i < 10000; ++i)
             {
                 Transform child = containerTrans.Find(i.ToString());

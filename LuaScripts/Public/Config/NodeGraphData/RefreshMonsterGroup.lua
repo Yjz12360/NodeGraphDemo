@@ -13,7 +13,7 @@ Config.NodeGraphData.RefreshMonsterGroup = {
         ["2"] = {
             nNodeType = 16,
             sNodeId = "2",
-            nRefreshId = 1,
+            sRefreshId = "1",
         },
         ["1"] = {
             nNodeType = 0,

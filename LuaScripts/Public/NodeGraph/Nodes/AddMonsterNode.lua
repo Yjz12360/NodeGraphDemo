@@ -1,8 +1,8 @@
 
 function SvrHandler(tNodeGraph, tNodeData)
-    local nRefreshId = tNodeData.nRefreshId
-    if nRefreshId > 0 then
-        SvrGameMod.addSceneMonster(tNodeGraph.tSvrGame, nRefreshId)
+    local sRefreshId = tNodeData.sRefreshId
+    if sRefreshId > 0 then
+        SvrGameMod.addSceneMonster(tNodeGraph.tSvrGame, sRefreshId)
     else
         local nConfigId = tNodeData.nConfigId
         local nPosX = tNodeData.nPosX

@@ -146,40 +146,40 @@ function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
     return tMonster
 end
 
-function addSceneMonster(tSvrGame, nRefreshId)
+function addSceneMonster(tSvrGame, sRefreshId)
     if tSvrGame == nil then
         return
     end
-    if SvrGameMod.getMonsterByRefreshId(tSvrGame, nRefreshId) ~= nil then
-        printError("addSceneMonster error: monster already exists. nRefreshId: " .. nRefreshId)
+    if SvrGameMod.getMonsterByRefreshId(tSvrGame, sRefreshId) ~= nil then
+        printError("addSceneMonster error: monster already exists. sRefreshId: " .. sRefreshId)
         return
     end
     local tGameSceneConfig = tSvrGame.tGameSceneConfig
-    local tRefreshConfig = GameSceneCfgMod.getRefreshMonsterConfig(tGameSceneConfig, nRefreshId)
+    local tRefreshConfig = GameSceneCfgMod.getRefreshMonsterConfig(tGameSceneConfig, sRefreshId)
     if tRefreshConfig == nil then
-        printError("addSceneMonster error: tRefreshConfig not exist. nRefreshId: " .. nRefreshId)
+        printError("addSceneMonster error: tRefreshConfig not exist. sRefreshId: " .. sRefreshId)
         return
     end
     local nMonsterCfgId = tRefreshConfig.nMonsterCfgId
     local tPos = tRefreshConfig.tPos
     local tMonster = SvrGameMod.addMonster(tSvrGame, nMonsterCfgId, tPos.x, tPos.y, tPos.z)
-    tMonster.nRefreshId = nRefreshId
+    tMonster.sRefreshId = sRefreshId
     return tMonster
 end
 
-function refreshMonsterGroup(tSvrGame, nRefreshId)
+function refreshMonsterGroup(tSvrGame, sRefreshId)
     if tSvrGame == nil then
         return
     end
     local tGameSceneConfig = tSvrGame.tGameSceneConfig
-    local tRefreshMonsterGroups = GameSceneCfgMod.getRefreshMonsterGroup(tGameSceneConfig, nRefreshId)
+    local tRefreshMonsterGroups = GameSceneCfgMod.getRefreshMonsterGroup(tGameSceneConfig, sRefreshId)
     if tRefreshMonsterGroups == nil then
-        printError("refreshMonsterGroup error: config not exist. nRefreshId: " .. nRefreshId)
+        printError("refreshMonsterGroup error: config not exist. sRefreshId: " .. sRefreshId)
         return
     end
     for _, nRefreshMonsterId in ipairs(tRefreshMonsterGroups) do
         local tMonster = SvrGameMod.addSceneMonster(tSvrGame, nRefreshMonsterId)
-        tMonster.nGroupId = nRefreshId
+        tMonster.nGroupId = sRefreshId
     end
 end
 
@@ -231,13 +231,13 @@ function getMonsterNum(tSvrGame)
     return nCount
 end
 
-function getMonsterByRefreshId(tSvrGame, nRefreshId)
+function getMonsterByRefreshId(tSvrGame, sRefreshId)
     if tSvrGame == nil then
         return
     end
     for _, tGameObject in pairs(tSvrGame.tGameObjects) do
         if tGameObject.nObjectType == Const.GameObjectType.Monster then
-            if tGameObject.nRefreshId == nRefreshId then
+            if tGameObject.sRefreshId == sRefreshId then
                 return tGameObject
             end
         end

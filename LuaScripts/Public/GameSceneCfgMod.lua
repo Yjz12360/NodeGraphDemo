@@ -18,18 +18,18 @@ function getConfigByName(configName)
     return Config.GameScene[configName]
 end
 
-function getRefreshMonsterConfig(tGameSceneConfig, nRefreshId)
+function getRefreshMonsterConfig(tGameSceneConfig, sRefreshId)
     if tGameSceneConfig == nil or tGameSceneConfig.tRefreshMonsters == nil then
         return
     end
-    return tGameSceneConfig.tRefreshMonsters[nRefreshId]
+    return tGameSceneConfig.tRefreshMonsters[sRefreshId]
 end
 
-function getRefreshMonsterGroup(tGameSceneConfig, nRefreshId)
+function getRefreshMonsterGroup(tGameSceneConfig, sRefreshId)
     if tGameSceneConfig == nil or tGameSceneConfig.tRefreshMonsterGroups == nil then
         return
     end
-    local tRefreshMonsterGroups = tGameSceneConfig.tRefreshMonsterGroups[nRefreshId]
+    local tRefreshMonsterGroups = tGameSceneConfig.tRefreshMonsterGroups[sRefreshId]
     if tRefreshMonsterGroups == nil then
         return
     end
