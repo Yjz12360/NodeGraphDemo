@@ -37,13 +37,13 @@ namespace Game
             writer.WritePropertyName("tRefreshMonsters");
             writer.WriteStartObject();
             Transform monsterTrans = configObject.transform.Find("Monster");
-            List<Transform> monsterChilds = new List<Transform>();
-            for (int i = 0; i < monsterTrans.childCount; ++i)
-                monsterChilds.Add(monsterTrans.GetChild(i));
-            monsterChilds.Sort(CompareTrans);
             if(monsterTrans != null)
             {
-                foreach(Transform child in monsterChilds)
+                List<Transform> monsterChilds = new List<Transform>();
+                for (int i = 0; i < monsterTrans.childCount; ++i)
+                    monsterChilds.Add(monsterTrans.GetChild(i));
+                monsterChilds.Sort(CompareTrans);
+                foreach (Transform child in monsterChilds)
                 {
                     string refreshId = child.name;
                     ConfigId configId = child.GetComponent<ConfigId>();
@@ -74,12 +74,12 @@ namespace Game
             }
 
             Transform monsterGroupTrans = configObject.transform.Find("MonsterGroup");
-            List<Transform> monsterGroupChilds = new List<Transform>();
-            for (int i = 0; i < monsterGroupTrans.childCount; ++i)
-                monsterGroupChilds.Add(monsterGroupTrans.GetChild(i));
-            monsterGroupChilds.Sort(CompareTrans);
             if (monsterGroupTrans != null)
             {
+                List<Transform> monsterGroupChilds = new List<Transform>();
+                for (int i = 0; i < monsterGroupTrans.childCount; ++i)
+                    monsterGroupChilds.Add(monsterGroupTrans.GetChild(i));
+                monsterGroupChilds.Sort(CompareTrans);
                 writer.WritePropertyName("tRefreshMonsterGroups");
                 writer.WriteStartObject();
                 foreach(Transform child in monsterGroupChilds)
@@ -106,8 +106,8 @@ namespace Game
 
                 }
                 writer.WriteEndObject();
-                writer.WriteEndObject();
             }
+            writer.WriteEndObject();
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

@@ -47,6 +47,9 @@ namespace Game
         {
             string sPath = $"{sLuaConfigPath}{sConfigName}.lua";
 
+            if (!File.Exists(sPath))
+                return null;
+
             string sLuaContext = File.ReadAllText(sPath);
 
             XLua.LuaEnv luaEnv = new XLua.LuaEnv();

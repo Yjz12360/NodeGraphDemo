@@ -1,20 +1,33 @@
 
 local tCltGame = nil
+local nGameConfigId
 
 function init()
-    local nGameConfigId = 1
+    nGameConfigId = 1
     Messager.C2SCreateGame(nGameConfigId)
 end
 
 function recvCreateGameSucc(nGameId)
-    CltGameMod.createGame(nGameId)
+    CltGameMod.createGame(nGameId, nGameConfigId)
 end
 
-function createGame(nGameId)
+function createGame(nGameId, nGameConfigId)
+    local tGameConfig = Config.Game[nGameConfigId]
+    if tGameConfig == nil then
+        printError("createGame error: game config not exists. config id: " .. nGameConfigId)
+        return
+    end
+
     tCltGame = {}
     tCltGame.nGameId = nGameId
     tCltGame.tGameObjects = {}
+    tCltGame.tGameConfig = tGameConfig
     tCltGame.tMainNodeGraph = nil
+
+    local sSceneConfig = tGameConfig.sSceneConfig
+    local goDataPrefab = UE.Resources.Load("SceneData/" .. sSceneConfig)
+    local goInstance = UE.GameObject.Instantiate(goDataPrefab)
+    goInstance.name = "SceneData"
 end
 
 function isLocalGame()

@@ -14,11 +14,7 @@ function getAnimator(tGameObject)
 
     local uAnimator = tGameObject.uAnimator
     if uAnimator == nil then
-        local uMonsterControl = goInstance:GetComponent(typeof(CS.Game.MonsterControl))
-        if uMonsterControl ~= nil then
-            uAnimator = uMonsterControl.modelAnimator
-            tGameObject.uAnimator = uAnimator
-        end
+        uAnimator = goInstance:GetComponentInChildren(typeof(UE.Animator))
     end
     return uAnimator
 end

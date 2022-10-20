@@ -9,15 +9,32 @@ namespace Game
         public override void OnInspectorGUI()
         {
             MonsterEditorData data = target as MonsterEditorData;
-            Transform configTrans = data.transform.parent.Find("Config/Monster");
-
-            EditorGUILayout.LabelField("当前怪物配置：");
-            for (int i = 0; i < configTrans.childCount; ++i)
+            Transform configRoot = data.transform.parent.Find("Config");
+            if (configRoot == null)
+                return;
+            Transform configTrans = configRoot.Find("Monster");
+            if (configTrans != null && configTrans.childCount > 0)
             {
-                DisplayMonsterConfig(configTrans, i);
+                EditorGUILayout.LabelField("当前怪物配置：");
+                for (int i = 0; i < configTrans.childCount; ++i)
+                {
+                    DisplayMonsterConfig(configTrans, i);
+                }
             }
+            else
+            {
+                EditorGUILayout.HelpBox("当前没有配置怪物", MessageType.Info);
+            }
+
             if (GUILayout.Button("添加怪物配置"))
             {
+                if (configTrans == null)
+                {
+                    GameObject newObject = new GameObject("Monster");
+                    newObject.transform.parent = configRoot;
+                    configTrans = newObject.transform;
+                }
+
                 int genId = GenId(configTrans);
                 GameObject configObject = new GameObject(genId.ToString());
 
