@@ -26,8 +26,10 @@ function createGame(nGameId, nGameConfigId)
 
     local sSceneConfig = tGameConfig.sSceneConfig
     local goDataPrefab = UE.Resources.Load("SceneData/" .. sSceneConfig)
-    local goInstance = UE.GameObject.Instantiate(goDataPrefab)
-    goInstance.name = "SceneData"
+    if goDataPrefab ~= nil then
+        local goInstance = UE.GameObject.Instantiate(goDataPrefab)
+        goInstance.name = "SceneData"
+    end
 end
 
 function isLocalGame()
