@@ -128,7 +128,6 @@ GameObject:
   - component: {fileID: 9216413154613391839}
   - component: {fileID: 5672476031026856032}
   - component: {fileID: 7636072121516531297}
-  - component: {fileID: 9031073105282998340}
   - component: {fileID: 2711139572108936761}
   m_Layer: 0
   m_Name: Player
@@ -188,20 +187,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &9031073105282998340
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9216413154613391833}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20a798414e3b25e498dfd2d7aa2db826, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nMoveSpeed: 3
-  modelAnimator: {fileID: 7348138385721931825}
 --- !u!114 &2711139572108936761
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,12 +277,6 @@ PrefabInstance:
 --- !u!4 &7094134316711546219 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7025854304709532630, guid: 19eb620acc04b7c4d872dab0af0746c6,
-    type: 3}
-  m_PrefabInstance: {fileID: 284770010580932285}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &7348138385721931825 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 7352795164697587340, guid: 19eb620acc04b7c4d872dab0af0746c6,
     type: 3}
   m_PrefabInstance: {fileID: 284770010580932285}
   m_PrefabAsset: {fileID: 0}

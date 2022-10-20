@@ -23,7 +23,6 @@ function update()
             end
         end
         tMessages = nil
-        -- TableUtil.clearArray(tMessages)
     end
 end
 
@@ -53,7 +52,7 @@ S2CCreateGameSucc = function(nGameId)
 end
 
 S2CAddPlayer = function(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
-    addMessage(CltGameMod.addPlayer, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
+    addMessage(CltGameMod.addPlayer, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, true)
 end
 
 S2CAddMonster = function(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, sRefreshId)
@@ -70,6 +69,10 @@ end
 
 C2SAttackHit = function(nGameId, nAttackerId, nTargetId)
     addMessage(SvrGameMod.onAttackHit, nGameId, nAttackerId, nTargetId)
+end
+
+C2SSyncLocalPlayerPos = function(nGameId, nObjectId, nPosX, nPosY, nPosZ)
+    addMessage(SvrGameMod.onSyncLocalPlayerPos, nGameId, nObjectId, nPosX, nPosY, nPosZ)
 end
 
 -- AI

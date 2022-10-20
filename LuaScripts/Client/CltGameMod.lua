@@ -47,6 +47,13 @@ function getGame()
     return tCltGame
 end
 
+function getGameId()
+    if tCltGame == nil then
+        return 0
+    end
+    return tCltGame.nGameId
+end
+
 function addNodeGraph(nGameId, nNodeGraphId, nConfigId)
     if not CltGameMod.checkGameId(nGameId) then
         return
@@ -66,7 +73,7 @@ local function procNodeGraphEvent(nEventType, ...)
     end
 end
 
-function addPlayer(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
+function addPlayer(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, bLocalPlayer)
     if not CltGameMod.checkGameId(nGameId) then
         return
     end
@@ -79,6 +86,10 @@ function addPlayer(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     tPlayer.nObjectId = nObjectId
     tPlayer.nObjectType = Const.GameObjectType.Player
     tPlayer.tConfig = tConfig
+    if bLocalPlayer then
+        tPlayer.bLocalPlayer = true
+        CltLocalPlayerMod.setLocalPlayer(tPlayer)
+    end
     tCltGame.tGameObjects[nObjectId] = tPlayer
     local nModelId = tConfig.nModelId
     local tModelConfig = Config.Model[nModelId]

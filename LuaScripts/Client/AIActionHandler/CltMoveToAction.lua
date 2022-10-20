@@ -2,10 +2,7 @@
 function startAction(tGameObject, tAction)
     local tActionArgs = tAction.tActionArgs
     local goInstance = tGameObject.goInstance
-    local uAnimator = CltAnimatorMod.getAnimator(tGameObject)
-    if uAnimator ~= nil then
-        uAnimator:SetTrigger("Move")
-    end
+    CltAnimatorMod.startMove(tGameObject)
     local vecPos = goInstance.transform.position
     local nCurrX, nCurrY, nCurrZ = vecPos.x, vecPos.y, vecPos.z
     local nTarX, nTarY, nTarZ = tActionArgs.nPosX, tActionArgs.nPosY, tActionArgs.nPosZ
@@ -35,9 +32,10 @@ function updateAction(tGameObject, tAction, nDeltaTime)
 end
 
 function finishAction(tGameObject, tAction)
-    local tActionArgs = tAction.tActionArgs
-    local uAnimator = CltAnimatorMod.getAnimator(tGameObject)
-    if uAnimator ~= nil then
-        uAnimator:SetTrigger("EndMove")
-    end
+    CltAnimatorMod.endMove(tGameObject)
+    -- local tActionArgs = tAction.tActionArgs
+    -- local uAnimator = CltAnimatorMod.getAnimator(tGameObject)
+    -- if uAnimator ~= nil then
+    --     uAnimator:SetTrigger("EndMove")
+    -- end
 end

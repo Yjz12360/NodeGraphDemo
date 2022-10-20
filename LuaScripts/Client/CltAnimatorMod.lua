@@ -18,3 +18,19 @@ function getAnimator(tGameObject)
     end
     return uAnimator
 end
+
+function startMove(tGameObject)
+    local uAnimator = CltAnimatorMod.getAnimator(tGameObject)
+    if uAnimator == nil then
+        return
+    end
+    uAnimator:SetTrigger("Move")
+end
+
+function endMove(tGameObject)
+    local uAnimator = CltAnimatorMod.getAnimator(tGameObject)
+    if uAnimator == nil then
+        return
+    end
+    uAnimator:SetTrigger("EndMove")
+end

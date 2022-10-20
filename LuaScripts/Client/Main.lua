@@ -34,6 +34,7 @@ function Update(nDeltaTime)
     TimerMod.update(nDeltaTime)
 
     CltAIActionMod.update(nDeltaTime)
+    CltLocalPlayerMod.update(nDeltaTime)
 
     -- if CltGameMod.isLocalGame() then
     --     SvrGameMod.update(nDeltaTime)

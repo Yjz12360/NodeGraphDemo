@@ -41,8 +41,3 @@ AIActionType = {
     MoveTo = 2,
     Chase = 3,
 }
-
--- AIActionState = {
---     Running = 1,
---     Finish = 2,
--- }

@@ -2,18 +2,8 @@
 function startAction(tGameObject, tAction)
     local tActionArgs = tAction.tActionArgs
     local tActionData = tAction.tActionData
-    local goInstance = tGameObject.goInstance
-    local uAnimator = CltAnimatorMod.getAnimator(tGameObject)
-    if uAnimator ~= nil then
-        uAnimator:SetTrigger("Move")
-    end
+    CltAnimatorMod.startMove(tGameObject)
     tActionData.nChaseTimer = 0
-    -- local vecPos = goInstance.transform.position
-    -- local nCurrX, nCurrY, nCurrZ = vecPos.x, vecPos.y, vecPos.z
-    -- local nTarX, nTarY, nTarZ = tActionArgs.nPosX, tActionArgs.nPosY, tActionArgs.nPosZ
-    -- local nDirX, nDirY, nDirZ = VectorUtil.sub(nTarX, nTarY, nTarZ, nCurrX, nCurrY, nCurrZ)
-    -- nDirX, nDirY, nDirZ = VectorUtil.normalize(nDirX, nDirY, nDirZ)
-    -- goInstance.transform.forward = UE.Vector3(nDirX, nDirY, nDirZ)
 end
 
 function updateAction(tGameObject, tAction, nDeltaTime)
@@ -51,9 +41,5 @@ function updateAction(tGameObject, tAction, nDeltaTime)
 end
 
 function finishAction(tGameObject, tAction)
-    local tActionArgs = tAction.tActionArgs
-    local uAnimator = CltAnimatorMod.getAnimator(tGameObject)
-    if uAnimator ~= nil then
-        uAnimator:SetTrigger("EndMove")
-    end
+    CltAnimatorMod.endMove(tGameObject)
 end

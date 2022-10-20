@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.Light);
-			Utils.BeginObjectRegister(type, L, translator, 0, 8, 39, 38);
+			Utils.BeginObjectRegister(type, L, translator, 0, 8, 40, 39);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "Reset", _m_Reset);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetLightDirty", _m_SetLightDirty);
@@ -62,6 +62,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "autoDistance", _g_get_autoDistance);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "fadeDistance", _g_get_fadeDistance);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "hideDistance", _g_get_hideDistance);
+            Utils.RegisterFunc(L, Utils.GETTER_IDX, "effectLight", _g_get_effectLight);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "shadows", _g_get_shadows);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "shadowStrength", _g_get_shadowStrength);
             Utils.RegisterFunc(L, Utils.GETTER_IDX, "shadowResolution", _g_get_shadowResolution);
@@ -102,6 +103,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "autoDistance", _s_set_autoDistance);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "fadeDistance", _s_set_fadeDistance);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "hideDistance", _s_set_hideDistance);
+            Utils.RegisterFunc(L, Utils.SETTER_IDX, "effectLight", _s_set_effectLight);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "shadows", _s_set_shadows);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "shadowStrength", _s_set_shadowStrength);
             Utils.RegisterFunc(L, Utils.SETTER_IDX, "shadowResolution", _s_set_shadowResolution);
@@ -854,6 +856,20 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _g_get_effectLight(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.Light gen_to_be_invoked = (UnityEngine.Light)translator.FastGetCSObj(L, 1);
+                LuaAPI.lua_pushboolean(L, gen_to_be_invoked.effectLight);
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 1;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _g_get_shadows(RealStatePtr L)
         {
 		    try {
@@ -1430,6 +1446,21 @@ namespace XLua.CSObjectWrap
 			
                 UnityEngine.Light gen_to_be_invoked = (UnityEngine.Light)translator.FastGetCSObj(L, 1);
                 gen_to_be_invoked.hideDistance = (float)LuaAPI.lua_tonumber(L, 2);
+            
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            return 0;
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _s_set_effectLight(RealStatePtr L)
+        {
+		    try {
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+			
+                UnityEngine.Light gen_to_be_invoked = (UnityEngine.Light)translator.FastGetCSObj(L, 1);
+                gen_to_be_invoked.effectLight = LuaAPI.lua_toboolean(L, 2);
             
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
