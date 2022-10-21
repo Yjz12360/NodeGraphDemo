@@ -88,14 +88,22 @@ local function launchAttack()
     tLocalPlayer.bAttacking = true
     local uAttackCollider = tLocalPlayer.uAttackCollider
     if uAttackCollider == nil then
-        uAttackCollider = goInstance:GetComponentInChildren(typeof(CS.PlayerAttack))
-        tLocalPlayer.uAttackCollider = uAttackCollider
+        local transAttack = goInstance.transform:Find("AttackCollider")
+        if transAttack ~= nil then
+            uAttackCollider = transAttack:GetComponent(typeof(CS.Game.PlayerAttack))
+            tLocalPlayer.uAttackCollider = uAttackCollider
+        end
     end
+    CltAnimatorMod.setTrigger(tLocalPlayer, "Attack")
     TimerMod.delay(0.5, function()
-        uAttackCollider.gameObject.active = true
+        if uAttackCollider ~= nil then
+            uAttackCollider.gameObject:SetActive(true)
+        end
     end)
     TimerMod.delay(1, function()
-        uAttackCollider.gameObject.active = false
+        if uAttackCollider ~= nil then
+            uAttackCollider.gameObject:SetActive(false)
+        end
         tLocalPlayer.bAttacking = false
     end)
 end

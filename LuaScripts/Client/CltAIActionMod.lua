@@ -39,6 +39,12 @@ local function onAddAction(nGameId, nActionType, nObjectId, tActionArgs)
         return
     end
 
+    local tOriAction = tActions[nObjectId]
+    if tOriAction ~= nil then
+        CltAIActionMod.finishAction(tOriAction)
+        tActions[nObjectId] = nil
+    end
+
     local tAction = {
         nObjectId = nObjectId,
         nActionType = nActionType,

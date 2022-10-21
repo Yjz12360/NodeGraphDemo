@@ -20,25 +20,33 @@ function getAnimator(tGameObject)
 end
 
 function startMove(tGameObject)
-    local uAnimator = CltAnimatorMod.getAnimator(tGameObject)
-    if uAnimator == nil then
-        return
-    end
-    uAnimator:SetTrigger("Move")
+    CltAnimatorMod.setTrigger(tGameObject, "Move")
 end
 
 function endMove(tGameObject)
-    local uAnimator = CltAnimatorMod.getAnimator(tGameObject)
-    if uAnimator == nil then
-        return
-    end
-    uAnimator:SetTrigger("EndMove")
+    CltAnimatorMod.setTrigger(tGameObject, "EndMove")
 end
 
-function doPreform(tGameObject)
+function roleDead(tGameObject, fCallback)
+    local uAnimator = CltAnimatorMod.getAnimator(tGameObject)
+    if uAnimator ~= nil then
+        uAnimator:SetTrigger("Die")
+        TimerMod.delay(2, function()
+            if fCallback ~= nil then
+                fCallback()
+            end
+        end)
+    else
+        if fCallback ~= nil then
+            fCallback()
+        end
+    end
+end
+
+function setTrigger(tGameObject, sTrigger)
     local uAnimator = CltAnimatorMod.getAnimator(tGameObject)
     if uAnimator == nil then
         return
     end
-    uAnimator:SetTrigger("Preform")
+    uAnimator:SetTrigger(sTrigger)
 end

@@ -4,6 +4,6 @@ function startAction(tGameObject, tAction)
     TimerMod.add(tActionArgs.nTime, function()
         CltAIActionMod.finishAction(tAction.nObjectId)
     end)
-    CltAnimatorMod.doPreform(tGameObject)
+    CltAnimatorMod.setTrigger(tGameObject, "Preform")
 end
 

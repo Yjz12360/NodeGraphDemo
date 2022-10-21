@@ -149,27 +149,20 @@ function roleDead(nGameId, nObjectId)
     if not CltGameMod.checkGameId(nGameId) then
         return
     end
-    local tRole = tCltGame.tGameObjects[nObjectId]
-    if tRole == nil then
+    local tGameObject = tCltGame.tGameObjects[nObjectId]
+    if tGameObject == nil then
         return
     end
-    if tRole.nObjectType == Const.GameObjectType.Monster then
+    if tGameObject.nObjectType == Const.GameObjectType.Monster then
         procNodeGraphEvent(Const.EventType.MonsterDead, nObjectId)
     end
     
-    -- TODO 移到特定的ActionMod
-    local uAnimator = CltAnimatorMod.getAnimator(tRole)
-    if uAnimator ~= nil then
-        uAnimator:SetTrigger("Die")
-        TimerMod.delay(2, function()
-            local goInstance = tRole.goInstance
-            if goInstance ~= nil then
-                UE.GameObject.Destroy(goInstance)
-            end
-        end)
-    else
-        UE.GameObject.Destroy(goInstance)
-    end
+    CltAnimatorMod.roleDead(tGameObject, function()
+        local goInstance = tGameObject.goInstance
+        if goInstance ~= nil then
+            UE.GameObject.Destroy(goInstance)
+        end
+    end)
     tCltGame.tGameObjects[nObjectId] = nil
 end
 
