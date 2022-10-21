@@ -19,6 +19,7 @@ NodeType = {
     Random = 17,
     WaitAllNodeFinish = 18,
     SetPosition = 19,
+    CameraTrace = 20,
 }
 
 NodeGraphState = {

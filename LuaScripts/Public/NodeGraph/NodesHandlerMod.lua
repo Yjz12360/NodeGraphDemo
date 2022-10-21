@@ -177,4 +177,13 @@ tNodeHandlers[Const.NodeType.SetPosition] = {
     end,
 }
 
+tNodeHandlers[Const.NodeType.CameraTrace] = {
+    tCltHandler = function(tNodeGraph, tNodeData)
+        return CameraTraceNode.CltHandler(tNodeGraph, tNodeData)
+    end,
+    tSvrHandler = function(tNodeGraph, tNodeData)
+        return CameraTraceNode.SvrHandler(tNodeGraph, tNodeData)
+    end,
+}
+
 init()
