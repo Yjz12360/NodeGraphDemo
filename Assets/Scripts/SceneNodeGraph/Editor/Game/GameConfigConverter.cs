@@ -66,6 +66,31 @@ namespace Game
                         writer.WritePropertyName("z");
                         writer.WriteValue(child.position.z);
                         writer.WriteEndObject();
+
+                        Transform pathTrans = child.Find("Path");
+                        if (pathTrans != null)
+                        {
+                            writer.WritePropertyName("tPath");
+                            writer.WriteStartObject();
+                            List<Transform> pathChilds = new List<Transform>();
+                            for (int i = 0; i < pathTrans.childCount; ++i)
+                                pathChilds.Add(pathTrans.GetChild(i));
+                            pathChilds.Sort(CompareTrans);
+                            for (int i = 0; i < pathChilds.Count; ++i)
+                            {
+                                Transform pathChild = pathChilds[i];
+                                writer.WritePropertyName((i + 1).ToString());
+                                writer.WriteStartObject();
+                                writer.WritePropertyName("x");
+                                writer.WriteValue(pathChild.position.x);
+                                writer.WritePropertyName("y");
+                                writer.WriteValue(pathChild.position.y);
+                                writer.WritePropertyName("z");
+                                writer.WriteValue(pathChild.position.z);
+                                writer.WriteEndObject();
+                            }
+                            writer.WriteEndObject();
+                        }
                         writer.WriteEndObject();
                     }
                     
@@ -145,6 +170,33 @@ namespace Game
                                 position.z = posProp.Value.Value<float>();
                         }
                         child.transform.position = position;
+                    }
+
+                    JToken pathsToken = property.Value["tPath"];
+                    if(pathsToken != null)
+                    {
+                        GameObject pathObject = new GameObject("Path");
+                        pathObject.transform.parent = child.transform;
+                        List<Transform> pathChilds = new List<Transform>();
+                        foreach (JProperty pathsProp in pathsToken.Children())
+                        {
+                            Vector3 pathPos = Vector3.zero;
+                            foreach (JProperty pathProp in pathsProp.Value.Children())
+                            {
+                                if (pathProp.Name == "x")
+                                    pathPos.x = pathProp.Value.Value<float>();
+                                if (pathProp.Name == "y")
+                                    pathPos.y = pathProp.Value.Value<float>();
+                                if (pathProp.Name == "z")
+                                    pathPos.z = pathProp.Value.Value<float>();
+                            }
+                            GameObject pathChildObj = new GameObject(pathsProp.Name);
+                            pathChildObj.transform.position = pathPos;
+                            pathChilds.Add(pathChildObj.transform);
+                        }
+                        pathChilds.Sort(CompareTrans);
+                        foreach (Transform pathChild in pathChilds)
+                            pathChild.parent = pathObject.transform;
                     }
                 }
             }
