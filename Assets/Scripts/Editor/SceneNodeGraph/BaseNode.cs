@@ -10,30 +10,33 @@ namespace SceneNodeGraph
     {
         public string sNodeId;
 
-        private static Dictionary<Type, NodeType> typesMap = new Dictionary<Type, NodeType>();
+        private static Dictionary<Type, NodeType> typesEnumMap = new Dictionary<Type, NodeType>();
         public virtual NodeType GetNodeType()
         {
             Type currType = GetType();
-            if(!typesMap.ContainsKey(currType))
+            if(!typesEnumMap.ContainsKey(currType))
             {
                 foreach(NodeType nodeType in Enum.GetValues(typeof(NodeType)))
                 {
                     Type type = BaseNode.GetType(nodeType);
-                    typesMap[type] = nodeType;
+                    typesEnumMap[type] = nodeType;
                 }
             }
-            return typesMap[currType];
+            return typesEnumMap[currType];
         }
 
+        private static Dictionary<NodeType, Type> enumTypesMap = new Dictionary<NodeType, Type>();
         public static Type GetType(NodeType nodeType)
         {
-            string subTypeName = $"{nodeType}Node";
-            Type type = typeof(BaseNode);
-            foreach (Type subType in type.Assembly.GetTypes())
-                if (subType.IsSubclassOf(type) && subType.Name.Equals(subTypeName))
-                    return subType;
-
-            return null;
+            if (!enumTypesMap.ContainsKey(nodeType))
+            {
+                string subTypeName = $"{nodeType}Node";
+                Type type = typeof(BaseNode);
+                foreach (Type subType in type.Assembly.GetTypes())
+                    if (subType.IsSubclassOf(type) && subType.Name.Equals(subTypeName))
+                        enumTypesMap[nodeType] = subType;
+            }
+            return enumTypesMap[nodeType];
         }
     }
 
