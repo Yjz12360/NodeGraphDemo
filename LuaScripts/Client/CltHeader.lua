@@ -5,6 +5,7 @@ require "Client/CltNodeGraphMod"
 require "Client/CltAnimatorMod"
 require "Client/CltAIActionMod"
 require "Client/CltLocalPlayerMod"
+require "Client/CltCharacterControllerMod"
 
 require "Client/AIActionHandler/CltIdleAction"
 require "Client/AIActionHandler/CltMoveToAction"

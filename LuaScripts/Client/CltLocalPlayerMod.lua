@@ -53,13 +53,8 @@ local function applyMove(nDirX, nDirZ, nDeltaTime)
     end
     local nMoveX = nDirX * nMoveDistance
     local nMoveZ = nDirZ * nMoveDistance
-    local vecMove = UE.Vector3(nMoveX, 0, nMoveZ)
-    goInstance.transform.forward = vecMove.normalized -- TODO 去掉UE Vector3
-    uCharactorController:Move(vecMove)
-    if not uCharactorController.isGrounded then
-        local nDown = 9.8 * 5 * nDeltaTime
-        uCharactorController:Move(UE.Vector3(0, -nDown, 0))
-    end
+    CltCharacterControllerMod.move(tLocalPlayer, nMoveX, 0, nMoveZ)
+    goInstance.transform.forward = UE.Vector3(nDirX, 0, nDirZ)
     if not tLocalPlayer.bLastMoving then
         CltAnimatorMod.startMove(tLocalPlayer)
     end

@@ -34,3 +34,11 @@ function endMove(tGameObject)
     end
     uAnimator:SetTrigger("EndMove")
 end
+
+function doPreform(tGameObject)
+    local uAnimator = CltAnimatorMod.getAnimator(tGameObject)
+    if uAnimator == nil then
+        return
+    end
+    uAnimator:SetTrigger("Preform")
+end

@@ -1,6 +1,9 @@
 
 function startAction(tAI, tAction)
-    tAction.tActionData.nCurrTime = 0
+    local tActionArgs = tAction.tActionArgs
+    local tActionData = tAction.tActionData
+    tActionData.nCurrTime = 0
+    Messager.S2CAIIdle(tAI.nGameId, tAI.nObjectId, tActionArgs.nTime)
 end
 
 function updateAction(tAI, tAction, nDeltaTime)

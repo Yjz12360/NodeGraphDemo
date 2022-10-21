@@ -7,12 +7,6 @@ tActionHandler[Const.AIActionType.Idle] = {
     fStartAction = function(tGameObject, tAction)
         return CltIdleAction.startAction(tGameObject, tAction)
     end,
-    fUpdateAction = function(tGameObject, tAction, nDeltaTime)
-        return CltIdleAction.updateAction(tGameObject, tAction, nDeltaTime)
-    end,
-    fFinishAction = function(tGameObject, tAction)
-        return CltIdleAction.finishAction(tGameObject, tAction)
-    end
 }
 
 tActionHandler[Const.AIActionType.MoveTo] = {
@@ -67,6 +61,12 @@ local function onAddAction(nGameId, nActionType, nObjectId, tActionArgs)
     if fUpdateAction ~= nil then
         tRegUpdateFunc[nObjectId] = true
     end
+end
+
+function onAIIdle(nGameId, nObjectId, nTime)
+    onAddAction(nGameId, Const.AIActionType.Idle, nObjectId, {
+        nTime = nTime,
+    })
 end
 
 function onAIMoveTo(nGameId, nObjectId, nPosX, nPosY, nPosZ, nStopDistance)

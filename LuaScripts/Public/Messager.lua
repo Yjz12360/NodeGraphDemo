@@ -76,6 +76,10 @@ C2SSyncLocalPlayerPos = function(nGameId, nObjectId, nPosX, nPosY, nPosZ)
 end
 
 -- AI
+S2CAIIdle = function(nGameId, nObjectId, nTime)
+    addMessage(CltAIActionMod.onAIIdle, nGameId, nObjectId, nTime)
+end
+
 S2CAIMoveTo = function(nGameId, nObjectId, nPosX, nPosY, nPosZ, nStopDistance)
     addMessage(CltAIActionMod.onAIMoveTo, nGameId, nObjectId, nPosX, nPosY, nPosZ, nStopDistance)
 end

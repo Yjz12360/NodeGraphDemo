@@ -1,12 +1,9 @@
--- TODO 
+
 function startAction(tGameObject, tAction)
-
+    local tActionArgs = tAction.tActionArgs
+    TimerMod.add(tActionArgs.nTime, function()
+        CltAIActionMod.finishAction(tAction.nObjectId)
+    end)
+    CltAnimatorMod.doPreform(tGameObject)
 end
 
-function updateAction(tGameObject, tAction, nDeltaTime)
-
-end
-
-function finishAction(tGameObject, tAction)
-
-end

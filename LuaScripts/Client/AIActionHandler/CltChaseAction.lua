@@ -21,7 +21,6 @@ function updateAction(tGameObject, tAction, nDeltaTime)
         return
     end
 
-
     local goInstance = tGameObject.goInstance
     local vecPos = goInstance.transform.position
     local nCurrX, nCurrY, nCurrZ = vecPos.x, vecPos.y, vecPos.z
@@ -30,9 +29,9 @@ function updateAction(tGameObject, tAction, nDeltaTime)
     nDirX, nDirY, nDirZ = VectorUtil.normalize(nDirX, nDirY, nDirZ)
     local nMoveSpeed = tGameObject.tConfig.nMoveSpeed or 1
     local nMoveX, nMoveY, nMoveZ = VectorUtil.mul(nDirX, nDirY, nDirZ, nMoveSpeed * nDeltaTime)
-    local nNewX, nNewY, nNewZ = VectorUtil.add(nCurrX, nCurrY, nCurrZ, nMoveX, nMoveY, nMoveZ)
-    goInstance.transform.position = UE.Vector3(nNewX, nNewY, nNewZ)
+    CltCharacterControllerMod.move(tGameObject, nMoveX, nMoveY, nMoveZ)
     goInstance.transform.forward = UE.Vector3(nDirX, nDirY, nDirZ)
+    local nNewX, nNewY, nNewZ = VectorUtil.add(nCurrX, nCurrY, nCurrZ, nMoveX, nMoveY, nMoveZ)
     local nDiffX, nDiffY, nDiffZ = VectorUtil.sub(nTarX, nTarY, nTarZ, nNewX, nNewY, nNewZ)
     local nDistance = VectorUtil.magnitude(nDiffX, nDiffY, nDiffZ)
     if nDistance <= tActionArgs.nStopDistance then

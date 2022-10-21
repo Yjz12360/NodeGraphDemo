@@ -35,11 +35,7 @@ function Update(nDeltaTime)
 
     CltAIActionMod.update(nDeltaTime)
     CltLocalPlayerMod.update(nDeltaTime)
-
-    -- if CltGameMod.isLocalGame() then
-    --     SvrGameMod.update(nDeltaTime)
-    -- end
-    -- CltGameMod.update(nDeltaTime)
+    CltCharacterControllerMod.update(nDeltaTime)
 end
 
 function OnTriggerEnter(nTriggerId, uCollider)
