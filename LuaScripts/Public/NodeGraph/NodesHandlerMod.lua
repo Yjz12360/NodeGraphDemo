@@ -151,4 +151,10 @@ tNodeHandlers[Const.NodeType.RefreshMonsterGroup] = {
     end,
 }
 
+tNodeHandlers[Const.NodeType.Random] = {
+    tSvrHandler = function(tNodeGraph, tNodeData)
+        return RandomNode.SvrHandler(tNodeGraph, tNodeData)
+    end,
+}
+
 init()
