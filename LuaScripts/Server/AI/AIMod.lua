@@ -9,6 +9,18 @@ function addAI(nGameId, nObjectId)
     return tAI
 end
 
+function setPath(tAI, tPath)
+    if tAI == nil or tPath == nil then
+        return
+    end
+    tAI.tPath = {}
+    tAI.nPathIndex = 1
+    local tAIPath = tAI.tPath
+    for _, tPathNode in pairs(tPath) do
+        table.insert(tAIPath, tPathNode)
+    end
+end
+
 function getGame(tAI)
     return SvrGameMod.getGameById(tAI.nGameId)
 end
@@ -40,27 +52,40 @@ function update(tAI, nDeltaTime)
     end
     local tCurrAction = tAI.tCurrAction
     if tCurrAction == nil then
-        local tLastAction = tAI.tLastAction
-        if tLastAction == nil or tLastAction.nActionType == Const.AIActionType.MoveTo then
-            local nIdleTime = 0.5 + math.random() * 2
-            AIMod.addAction(tAI, Const.AIActionType.Idle, {nTime = nIdleTime})
-        else
-            local nRad = math.random() * 2 * math.pi
-            local nDirX, nDirY, nDirZ = VectorUtil.rad2Vec(nRad)
-            local nDistance = 2 + math.random() * 3
-            local nMoveX, nMoveY, nMoveZ = VectorUtil.mul(nDirX, nDirY, nDirZ, nDistance)
-            local tSvrGame = SvrGameMod.getGameById(tAI.nGameId)
-            local tGameObject = SvrGameMod.getObject(tSvrGame, tAI.nObjectId)
-            local nCurrX, nCurrY, nCurrZ = tGameObject.nPosX, tGameObject.nPosY, tGameObject.nPosZ
-            local nTarX, nTarY, nTarZ = VectorUtil.add(nCurrX, nCurrY, nCurrZ, nMoveX, nMoveY, nMoveZ)
-            AIMod.addAction(tAI, Const.AIActionType.MoveTo, {
-                nPosX = nTarX,
-                nPosY = nTarY,
-                nPosZ = nTarZ,
-                nStopDistance = 1,
-            })
+        local tPathMove
+        local nPathIndex = tAI.nPathIndex
+        if nPathIndex ~= nil then
+            tPathMove = tAI.tPath[nPathIndex]
         end
-        -- AIMod.addAction(tAI, Const.AIActionType.Idle, {nTime = 1.0})
+        if tPathMove ~= nil then
+            AIMod.addAction(tAI, Const.AIActionType.MoveTo, {
+                nPosX = tPathMove.x,
+                nPosY = tPathMove.y,
+                nPosZ = tPathMove.z,
+                nStopDistance = 0.5,
+            })
+        else
+            local tLastAction = tAI.tLastAction
+            if tLastAction == nil or tLastAction.nActionType == Const.AIActionType.MoveTo then
+                local nIdleTime = 2 + math.random() * 2
+                AIMod.addAction(tAI, Const.AIActionType.Idle, {nTime = nIdleTime})
+            else
+                local nRad = math.random() * 2 * math.pi
+                local nDirX, nDirY, nDirZ = VectorUtil.rad2Vec(nRad)
+                local nDistance = 2 + math.random() * 3
+                local nMoveX, nMoveY, nMoveZ = VectorUtil.mul(nDirX, nDirY, nDirZ, nDistance)
+                local tSvrGame = SvrGameMod.getGameById(tAI.nGameId)
+                local tGameObject = SvrGameMod.getObject(tSvrGame, tAI.nObjectId)
+                local nCurrX, nCurrY, nCurrZ = tGameObject.nPosX, tGameObject.nPosY, tGameObject.nPosZ
+                local nTarX, nTarY, nTarZ = VectorUtil.add(nCurrX, nCurrY, nCurrZ, nMoveX, nMoveY, nMoveZ)
+                AIMod.addAction(tAI, Const.AIActionType.MoveTo, {
+                    nPosX = nTarX,
+                    nPosY = nTarY,
+                    nPosZ = nTarZ,
+                    nStopDistance = 1,
+                })
+            end
+        end
     else
         local fUpdate = AIActionHandlerMod.getUpdateHandler(tCurrAction.nActionType)
         if fUpdate ~= nil then
@@ -72,6 +97,15 @@ end
 function finishAction(tAI)
     tAI.tLastAction = tAI.tCurrAction
     tAI.tCurrAction = nil
+
+    local nPathIndex = tAI.nPathIndex
+    if nPathIndex ~= nil then
+        nPathIndex = nPathIndex + 1
+        if nPathIndex > #tAI.tPath then
+            nPathIndex = nil
+        end
+        tAI.nPathIndex = nPathIndex
+    end
 end
 
 function setAIActive(tAI, bActive)

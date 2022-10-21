@@ -36,23 +36,3 @@ function getRefreshMonsterGroup(tGameSceneConfig, sRefreshId)
     return tRefreshMonsterGroups.tRefreshMonsters
 end
 
--- function getNodeConfig(tNodeGraphConfig, sNodeId)
---     if tNodeGraphConfig == nil or tNodeGraphConfig.tNodeMap == nil then
---         return
---     end
---     return tNodeGraphConfig.tNodeMap[sNodeId]
--- end
-
--- function getNodeCount(tNodeGraphConfig)
---     if tNodeGraphConfig == nil or tNodeGraphConfig.tNodeMap == nil then
---         return 0
---     end
---     return TableUtil.dictCount(tNodeGraphConfig.tNodeMap)
--- end
-
--- function getTransitions(tNodeGraphConfig)
---     if tNodeGraphConfig == nil then
---         return
---     end
---     return tNodeGraphConfig.tTransitions
--- end

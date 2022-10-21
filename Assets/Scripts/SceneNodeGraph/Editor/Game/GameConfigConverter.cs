@@ -156,6 +156,7 @@ namespace Game
                     int monsterCfgId = property.Value["nMonsterCfgId"].Value<int>();
                     ConfigId configId = child.AddComponent<ConfigId>();
                     configId.nConfigId = monsterCfgId;
+                    child.AddComponent<PathEditorData>();
                     JToken positionToken = property.Value["tPos"];
                     if(positionToken != null)
                     {
@@ -177,6 +178,7 @@ namespace Game
                     {
                         GameObject pathObject = new GameObject("Path");
                         pathObject.transform.parent = child.transform;
+                        pathObject.transform.localPosition = Vector3.zero;
                         List<Transform> pathChilds = new List<Transform>();
                         foreach (JProperty pathsProp in pathsToken.Children())
                         {

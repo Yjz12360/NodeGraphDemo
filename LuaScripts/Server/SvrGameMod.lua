@@ -161,6 +161,10 @@ function refreshMonster(tSvrGame, sRefreshId)
     local nMonsterCfgId = tRefreshConfig.nMonsterCfgId
     local tPos = tRefreshConfig.tPos
     local tMonster = SvrGameMod.addMonster(tSvrGame, nMonsterCfgId, tPos.x, tPos.y, tPos.z, sRefreshId)
+    local tPath = tRefreshConfig.tPath
+    if tPath ~= nil then
+        AIManagerMod.setPath(tSvrGame.tAIManager, tMonster.nObjectId, tPath)
+    end
     return tMonster
 end
 
