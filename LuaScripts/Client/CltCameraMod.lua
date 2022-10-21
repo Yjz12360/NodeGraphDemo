@@ -12,7 +12,7 @@ function init()
     if goCamera == nil then
         printError("init camera error: camera object not found.")
     end
-    goCamera.transform.localRotation = UE.Vector3(nAngle, 0, 0)
+    goCamera.transform.localRotation = UE.Quaternion.Euler(nAngle, 0, 0)
 end
 
 function setFollowObject(tGameObject)
