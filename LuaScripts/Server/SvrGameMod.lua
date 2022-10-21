@@ -10,7 +10,7 @@ local tSvrGames = {}
 local function addAIUpdateTimer(tSvrGame)
     local nLastTime = TimeMod.getTime()
     tSvrGame.nAIUpdateTimer = TimerMod.add(0.2, function()
-        local nCurrTime =TimeMod.getTime()
+        local nCurrTime = TimeMod.getTime()
         local nDeltaTime = nCurrTime - nLastTime
         AIManagerMod.updateAI(tSvrGame.tAIManager, nDeltaTime)
         nLastTime = nCurrTime
@@ -122,7 +122,6 @@ function addPlayer(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
 end
 
 function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ, sRefreshId)
-    printError("addMonster" .. nConfigId)
     if tSvrGame == nil then
         return
     end
