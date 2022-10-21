@@ -157,4 +157,24 @@ tNodeHandlers[Const.NodeType.Random] = {
     end,
 }
 
+tNodeHandlers[Const.NodeType.WaitAllNodeFinish] = {
+    tSvrHandler = function(tNodeGraph, tNodeData)
+        return WaitAllNodeFinishNode.SvrOnCheck(tNodeGraph, tNodeData)
+    end,
+    tSvrEventHandlers = {
+        [Const.EventType.FinishNode] = function(tNodeGraph, tNodeData, sNodeId)
+            return WaitAllNodeFinishNode.SvrOnCheck(tNodeGraph, tNodeData)
+        end
+    },
+}
+
+tNodeHandlers[Const.NodeType.SetPosition] = {
+    tCltHandler = function(tNodeGraph, tNodeData)
+        return SetPositionNode.CltHandler(tNodeGraph, tNodeData)
+    end,
+    tSvrHandler = function(tNodeGraph, tNodeData)
+        return SetPositionNode.SvrHandler(tNodeGraph, tNodeData)
+    end,
+}
+
 init()

@@ -17,6 +17,8 @@ NodeType = {
     WaitEnterTrigger = 15,
     RefreshMonsterGroup = 16,
     Random = 17,
+    WaitAllNodeFinish = 18,
+    SetPosition = 19,
 }
 
 NodeGraphState = {
@@ -35,6 +37,7 @@ EventType = {
     AddMonster = 2,
     MonsterDead = 3,
     BeforeMonsterDead = 4,
+    FinishNode = 5,
 }
 
 AIActionType = {

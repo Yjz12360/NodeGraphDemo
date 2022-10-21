@@ -108,6 +108,8 @@ function finishNode(tNodeGraph, sNodeId, nPath)
         end
     end
 
+    SvrNodeGraphMod.processEvent(tNodeGraph, Const.EventType.FinishNode, sNodeId)
+
     local tTransitions = NodeGraphCfgMod.getTransitions(tNodeGraph.tConfigData)
     for _, tTransition in pairs(tTransitions) do
         if tTransition.sFromNodeId == sNodeId and tTransition.nPath == nPath then

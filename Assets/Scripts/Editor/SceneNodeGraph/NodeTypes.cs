@@ -26,5 +26,7 @@ namespace SceneNodeGraph
         WaitEnterTrigger = 15,
         RefreshMonsterGroup = 16,
         Random = 17,
+        WaitAllNodeFinish = 18,
+        SetPosition = 19,
     }
 }

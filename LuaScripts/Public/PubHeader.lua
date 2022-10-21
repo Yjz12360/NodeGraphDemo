@@ -28,5 +28,7 @@ require "Public/NodeGraph/Nodes/ActiveAINode"
 require "Public/NodeGraph/Nodes/WaitEnterTriggerNode"
 require "Public/NodeGraph/Nodes/RefreshMonsterGroupNode"
 require "Public/NodeGraph/Nodes/RandomNode"
+require "Public/NodeGraph/Nodes/WaitAllNodeFinishNode"
+require "Public/NodeGraph/Nodes/SetPositionNode"
 
 
