@@ -31,7 +31,7 @@ function addNodeGraph(tCltGame, nNodeGraphId, nConfigId)
         return
     end
     local tNodeGraph = {}
-    tNodeGraph.tCltGame = tCltGame
+    tNodeGraph.nGameId = tCltGame.nGameId
     tNodeGraph.nNodeGraphId = nNodeGraphId
     tNodeGraph.tConfigData = NodeGraphCfgMod.getConfigByName(tConfig.sName)
     tNodeGraph.nState = Const.NodeGraphState.Pending

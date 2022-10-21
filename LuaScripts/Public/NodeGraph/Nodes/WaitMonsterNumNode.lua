@@ -6,13 +6,14 @@ local CompareType = {
 }
 
 function SvrOnCheck(tNodeGraph, tNodeData)
+    local tSvrGame = SvrGameMod.getGameById(tNodeGraph.nGameId)
     local nMonsterNum
     local sMonsterGroupId = tNodeData.sMonsterGroupId
     if sMonsterGroupId == "" then
-        local nMonsterNum = SvrGameMod.getMonsterNum(tNodeGraph.tSvrGame)        
+        local nMonsterNum = SvrGameMod.getMonsterNum(tSvrGame)        
     else
         nMonsterNum = 0
-        local tGameObjects = SvrGameMod.getObjects(tNodeGraph.tSvrGame)
+        local tGameObjects = SvrGameMod.getObjects(tSvrGame)
         for _, tGameObject in pairs(tGameObjects) do
             if tGameObject.nObjectType == Const.GameObjectType.Monster then
                 if tGameObject.sGroupId == sMonsterGroupId then

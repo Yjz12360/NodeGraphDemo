@@ -1,6 +1,6 @@
 
 function SvrHandler(tNodeGraph, tNodeData)
-    local tSvrGame = tNodeGraph.tSvrGame
+    local tSvrGame = SvrGameMod.getGameById(tNodeGraph.nGameId)
     if tSvrGame == nil then
         return
     end

@@ -32,7 +32,7 @@ function addNodeGraph(tSvrGame, nNodeGraphId, nConfigId)
         return
     end
     local tNodeGraph = {}
-    tNodeGraph.tSvrGame = tSvrGame
+    tNodeGraph.nGameId = tSvrGame.nGameId
     tNodeGraph.nNodeGraphId = nNodeGraphId
     tNodeGraph.tConfigData = NodeGraphCfgMod.getConfigByName(tConfig.sName)
     tNodeGraph.nState = Const.NodeGraphState.Pending
@@ -91,7 +91,7 @@ function finishNode(tNodeGraph, sNodeId, nPath)
 
     nPath = nPath or 1
 
-    local tSvrGame = tNodeGraph.tSvrGame
+    local tSvrGame = SvrGameMod.getGameById(tNodeGraph.nGameId)
     if tSvrGame ~= nil then
         local nGameId = tSvrGame.nGameId
         Messager.S2CFinishNode(nGameId, tNodeGraph.nNodeGraphId, sNodeId, nPath)
