@@ -31,6 +31,7 @@ function setLocalPlayer(tPlayer)
 
     if tLocalPlayer ~= nil then
         handleSyncPos()
+        CltCameraMod.setFollowObject(tLocalPlayer)
     end
 end
 
@@ -60,6 +61,7 @@ local function applyMove(nDirX, nDirZ, nDeltaTime)
     end
     tLocalPlayer.bLastMoving = true
     bLocalMove = true
+    CltCameraMod.updatePos()
 end
 
 local function idle()

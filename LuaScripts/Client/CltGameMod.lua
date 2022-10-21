@@ -86,10 +86,6 @@ function addPlayer(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, bLocalPla
     tPlayer.nObjectId = nObjectId
     tPlayer.nObjectType = Const.GameObjectType.Player
     tPlayer.tConfig = tConfig
-    if bLocalPlayer then
-        tPlayer.bLocalPlayer = true
-        CltLocalPlayerMod.setLocalPlayer(tPlayer)
-    end
     tCltGame.tGameObjects[nObjectId] = tPlayer
     local nModelId = tConfig.nModelId
     local tModelConfig = Config.Model[nModelId]
@@ -107,6 +103,10 @@ function addPlayer(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, bLocalPla
         if uGameObjectId ~= nil then
             uGameObjectId.ID = nObjectId
         end
+    end
+    if bLocalPlayer then
+        tPlayer.bLocalPlayer = true
+        CltLocalPlayerMod.setLocalPlayer(tPlayer)
     end
 end
 

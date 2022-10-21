@@ -26,6 +26,7 @@ function Init()
 
 
     CltGameMod.init()
+    CltCameraMod.init()
 end
 
 function Update(nDeltaTime)
