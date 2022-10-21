@@ -8,8 +8,6 @@ namespace SceneNodeGraph
 {
     public class ActiveSceneObjectNode : BaseNode
     {
-        public override NodeType GetNodeType() { return NodeType.ActiveSceneObject; }
-
         public string sSourcePath;
         public bool bActive;
     }

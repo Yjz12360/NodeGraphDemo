@@ -12,8 +12,6 @@ namespace SceneNodeGraph
     }
     public class WaitMonsterNumNode : BaseNode
     {
-        public override NodeType GetNodeType() { return NodeType.WaitMonsterNum; }
-
         public CompareType nCompareType = CompareType.LessThan;
         public int nNum = 0;
         public string sMonsterGroupId = "";

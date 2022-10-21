@@ -7,8 +7,6 @@ namespace SceneNodeGraph
 {
     public class DelayNode : BaseNode
     {
-        public override NodeType GetNodeType() { return NodeType.Delay; }
-
         public float nDelayTime;
     }
 

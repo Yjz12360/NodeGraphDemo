@@ -6,8 +6,6 @@ namespace SceneNodeGraph
 {
     public class WaitEnterTriggerNode : BaseNode
     {
-        public override NodeType GetNodeType() { return NodeType.WaitEnterTrigger; }
-
         public int nTriggerId;
     }
 

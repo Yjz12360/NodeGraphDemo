@@ -6,8 +6,6 @@ namespace SceneNodeGraph
 {
     public class RefreshMonsterGroupNode : BaseNode
     {
-        public override NodeType GetNodeType() { return NodeType.RefreshMonsterGroup; }
-
         public string sRefreshId;
     }
 

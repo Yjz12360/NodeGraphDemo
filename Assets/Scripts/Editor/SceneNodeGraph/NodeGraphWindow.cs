@@ -136,7 +136,7 @@ namespace SceneNodeGraph
                         BaseNode nodeData = nodeGraphData.GetNodeData(sSelectNode);
                         if (nodeData != null)
                         {
-                            Type type = nodeData.Type;
+                            Type type = nodeData.GetType();
                             if (type != null)
                             {
                                 FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public | BindingFlags.Instance);

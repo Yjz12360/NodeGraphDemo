@@ -6,6 +6,6 @@ namespace SceneNodeGraph
 {
     public class StartNode : BaseNode
     {
-        public override NodeType GetNodeType() { return NodeType.Start; }
+    
     }
 }

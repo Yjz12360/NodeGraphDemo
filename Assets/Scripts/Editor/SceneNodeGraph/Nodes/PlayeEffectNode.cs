@@ -6,8 +6,6 @@ namespace SceneNodeGraph
 {
     public class PlayEffectNode : BaseNode
     {
-        public override NodeType GetNodeType() { return NodeType.PlayEffect; }
-
         public int nEffectId;
         public float nPosX;
         public float nPosY;

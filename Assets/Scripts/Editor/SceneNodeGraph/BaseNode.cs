@@ -10,17 +10,19 @@ namespace SceneNodeGraph
     {
         public string sNodeId;
 
+        private static Dictionary<Type, NodeType> typesMap = new Dictionary<Type, NodeType>();
         public virtual NodeType GetNodeType()
         {
-            return 0;
-        }
-
-        public Type Type
-        {
-            get
+            Type currType = GetType();
+            if(!typesMap.ContainsKey(currType))
             {
-                return GetType(GetNodeType());
+                foreach(NodeType nodeType in Enum.GetValues(typeof(NodeType)))
+                {
+                    Type type = BaseNode.GetType(nodeType);
+                    typesMap[type] = nodeType;
+                }
             }
+            return typesMap[currType];
         }
 
         public static Type GetType(NodeType nodeType)

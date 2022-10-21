@@ -6,8 +6,6 @@ namespace SceneNodeGraph
 {
     public class AnimatorCtrlNode : BaseNode
     {
-        public override NodeType GetNodeType() { return NodeType.AnimatorCtrl; }
-
         public string sRefreshId;
         public string sSetTrigger;
     }

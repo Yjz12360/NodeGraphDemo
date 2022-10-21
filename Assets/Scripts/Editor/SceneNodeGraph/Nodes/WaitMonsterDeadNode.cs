@@ -6,8 +6,6 @@ namespace SceneNodeGraph
 {
     public class WaitMonsterDeadNode : BaseNode
     {
-        public override NodeType GetNodeType() { return NodeType.WaitMonsterDead; }
-
         public string sRefreshId;
     }
 }

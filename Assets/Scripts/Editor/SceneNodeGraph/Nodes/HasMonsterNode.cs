@@ -6,7 +6,7 @@ namespace SceneNodeGraph
 {
     public class HasMonsterNode : BaseNode
     {
-        public override NodeType GetNodeType() { return NodeType.HasMonster; }
+    
     }
 
 }

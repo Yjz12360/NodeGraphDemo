@@ -6,8 +6,6 @@ namespace SceneNodeGraph
 {
     public class ExplodeNode : BaseNode
     {
-        public override NodeType GetNodeType() { return NodeType.Explode; }
-
         public int nEffectId;
         public float nPosX;
         public float nPosY;
