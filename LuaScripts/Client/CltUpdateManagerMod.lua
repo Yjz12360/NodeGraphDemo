@@ -3,6 +3,7 @@ local nCurrId = 0
 local tHandlers = nil
 local tUnregister = nil
 local tRegMods = {}
+local bUpdate = false
 
 function register(fUpdate)
     tHandlers = tHandlers or {}
@@ -31,8 +32,15 @@ function registerMod(sMod)
 end
 
 function unregister(nUpdateId)
-    tUnregister = tUnregister or {}
-    tUnregister[nUpdateId] = true
+    if bUpdate then
+        tUnregister = tUnregister or {}
+        tUnregister[nUpdateId] = true
+    else
+        tHandlers[nUpdateId] = nil
+        if TableUtil.isEmpty(tHandlers) then
+            tHandlers = nil
+        end
+    end
 end
 
 function unregisterMod(sMod)
@@ -45,15 +53,21 @@ function unregisterMod(sMod)
     tRegMods[sMod] = nil
 end
 
+function checkRegisterMod(sMod)
+    return tRegMods[sMod] ~= nil
+end
+
 function update(nDeltaTime)
     if tHandlers == nil then
         return
     end
-    for _, fUpdate in pairs(tHandlers) do
+    bUpdate = true
+    for nUpdateId, fUpdate in pairs(tHandlers) do
         if fUpdate ~= nil then
             fUpdate(nDeltaTime)
         end
     end
+    bUpdate = false
     if tUnregister ~= nil then
         for nUpdateId, _ in pairs(tUnregister) do
             tHandlers[nUpdateId] = nil

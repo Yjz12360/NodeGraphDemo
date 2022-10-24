@@ -66,6 +66,9 @@ local function onAddAction(nGameId, nActionType, nObjectId, tActionArgs)
     local fUpdateAction = tHandlers.fUpdateAction
     if fUpdateAction ~= nil then
         tRegUpdateFunc[nObjectId] = true
+        if not CltUpdateManagerMod.checkRegisterMod("CltAIActionMod") then
+            CltUpdateManagerMod.registerMod("CltAIActionMod")
+        end
     end
 end
 
@@ -115,6 +118,9 @@ function update(nDeltaTime)
         for _, nObjectId in ipairs(tToDel) do
             tRegUpdateFunc[nObjectId] = nil
         end
+        if TableUtil.isEmpty(tRegUpdateFunc) then
+            CltUpdateManagerMod.unregisterMod("CltAIActionMod")
+        end
         tToDel = nil
     end
 end
@@ -134,7 +140,12 @@ function finishAction(nObjectId)
             end
         end
     end
-    tRegUpdateFunc[nObjectId] = nil
+    if tRegUpdateFunc[nObjectId] ~= nil then
+        tRegUpdateFunc[nObjectId] = nil
+        if TableUtil.isEmpty(tRegUpdateFunc) then
+            CltUpdateManagerMod.unregisterMod("CltAIActionMod")
+        end
+    end
     tActions[nObjectId] = nil
 end
 
