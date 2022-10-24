@@ -52,15 +52,15 @@ S2CCreateGameSucc = function(nGameId)
 end
 
 S2CAddPlayer = function(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
-    addMessage(CltGameMod.addPlayer, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, true)
+    addMessage(CltGameRoleMod.addPlayer, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, true)
 end
 
 S2CAddMonster = function(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, sRefreshId)
-    addMessage(CltGameMod.addMonster, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, sRefreshId)
+    addMessage(CltGameRoleMod.addMonster, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, sRefreshId)
 end
 
 S2CRoleDead = function(nGameId, nObjectId)
-    addMessage(CltGameMod.roleDead, nGameId, nObjectId)
+    addMessage(CltGameRoleMod.roleDead, nGameId, nObjectId)
 end
 
 C2SEnterTrigger = function(nGameId, nTriggerId)

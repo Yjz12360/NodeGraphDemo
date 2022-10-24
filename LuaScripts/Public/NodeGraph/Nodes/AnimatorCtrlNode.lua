@@ -3,7 +3,7 @@ function CltHandler(tNodeGraph, tNodeData)
     local sRefreshId = tNodeData.sRefreshId
     local sSetTrigger = tNodeData.sSetTrigger
 
-    local tGameObject = CltGameMod.getMonsterByRefreshId(sRefreshId)
+    local tGameObject = CltGameRoleMod.getMonsterByRefreshId(sRefreshId)
     if tGameObject ~= nil then
         local uAnimator = CltAnimatorMod.getAnimator(tGameObject)
         if uAnimator ~= nil then

@@ -28,7 +28,7 @@ function CltHandler(tNodeGraph, tNodeData)
         end
         CltCameraMod.updatePos()
     else
-        local tGameObject = CltGameMod.getMonsterByRefreshId(sRefreshId)
+        local tGameObject = CltGameRoleMod.getMonsterByRefreshId(sRefreshId)
         if tGameObject ~= nil then
             local goInstance = tGameObject.goInstance
             if goInstance ~= nil then

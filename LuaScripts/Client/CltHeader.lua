@@ -1,6 +1,7 @@
 rawRequire "Client/PrintMod"
 
 require "Client/CltGameMod"
+require "Client/CltGameRoleMod"
 require "Client/CltNodeGraphMod"
 require "Client/CltLocalPlayerMod"
 require "Client/CltUpdateManagerMod"
