@@ -57,8 +57,8 @@ namespace SceneNodeGraph
             XLua.LuaEnv luaEnv = new XLua.LuaEnv();
             luaEnv.AddLoader((ref string filename) =>
             {
-                string fixFileName = $"{luaPath}{filename}.lua";
-                string luaContent = File.ReadAllText(fixFileName);
+                string luaFileName = $"{luaPath}{filename}.lua";
+                string luaContent = File.ReadAllText(luaFileName);
                 byte[] result = System.Text.Encoding.UTF8.GetBytes(luaContent);
                 return result;
             });
@@ -84,8 +84,8 @@ namespace SceneNodeGraph
             XLua.LuaEnv luaEnv = new XLua.LuaEnv();
             luaEnv.AddLoader((ref string filename) =>
             {
-                string fixFileName = $"{luaPath}{filename}.lua";
-                string luaContent = File.ReadAllText(fixFileName);
+                string luaFileName = $"{luaPath}{filename}.lua";
+                string luaContent = File.ReadAllText(luaFileName);
                 byte[] result = System.Text.Encoding.UTF8.GetBytes(luaContent);
                 return result;
             });
