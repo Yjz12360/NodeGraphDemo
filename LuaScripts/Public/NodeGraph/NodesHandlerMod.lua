@@ -154,6 +154,12 @@ tNodeHandlers[Const.NodeType.ActiveAI] = {
     end,
 }
 
+tNodeHandlers[Const.NodeType.PlayEffect] = {
+    tCltHandler = function(tNodeGraph, tNodeData)
+        return PlayEffectNode.CltHandler(tNodeGraph, tNodeData)
+    end,
+}
+
 tNodeHandlers[Const.NodeType.RefreshMonsterGroup] = {
     tSvrHandler = function(tNodeGraph, tNodeData)
         return RefreshMonsterGroupNode.SvrHandler(tNodeGraph, tNodeData)

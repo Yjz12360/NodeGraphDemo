@@ -7,10 +7,7 @@ namespace SceneNodeGraph
     public class PlayEffectNode : BaseNode
     {
         public int nEffectId;
-        public float nPosX;
-        public float nPosY;
-        public float nPosZ;
-        public float nDisplayScale;
+        public string sPosId;
 
     }
 
