@@ -64,15 +64,15 @@ S2CRoleDead = function(nGameId, nObjectId)
 end
 
 C2SEnterTrigger = function(nGameId, nTriggerId)
-    addMessage(SvrGameMod.onEnterTrigger, nGameId, nTriggerId)
+    addMessage(SvrGameMsgMod.onEnterTrigger, nGameId, nTriggerId)
 end
 
 C2SAttackHit = function(nGameId, nAttackerId, nTargetId)
-    addMessage(SvrGameMod.onAttackHit, nGameId, nAttackerId, nTargetId)
+    addMessage(SvrGameMsgMod.onAttackHit, nGameId, nAttackerId, nTargetId)
 end
 
 C2SSyncLocalPlayerPos = function(nGameId, nObjectId, nPosX, nPosY, nPosZ)
-    addMessage(SvrGameMod.onSyncLocalPlayerPos, nGameId, nObjectId, nPosX, nPosY, nPosZ)
+    addMessage(SvrGameMsgMod.onSyncLocalPlayerPos, nGameId, nObjectId, nPosX, nPosY, nPosZ)
 end
 
 -- AI
