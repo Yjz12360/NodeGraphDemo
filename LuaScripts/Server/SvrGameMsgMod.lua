@@ -16,7 +16,7 @@ function onAttackHit(nGameId, nAttackerId, nTargetId)
     if tAttacker == nil then
         return
     end
-    local tTarget = SvrGameMod.getObject(tSvrGame, tTarget)
+    local tTarget = SvrGameMod.getObject(tSvrGame, nTargetId)
     if tTarget == nil then
         return 
     end
