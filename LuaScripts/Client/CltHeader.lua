@@ -10,6 +10,7 @@ require "Client/GameShow/CltAnimatorMod"
 require "Client/GameShow/CltAIActionMod"
 require "Client/GameShow/CltCharacterControllerMod"
 require "Client/GameShow/CltCameraMod"
+require "Client/GameShow/CltEffectMod"
 
 require "Client/GameShow/AIActionHandler/CltIdleAction"
 require "Client/GameShow/AIActionHandler/CltMoveToAction"

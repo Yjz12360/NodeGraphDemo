@@ -1,5 +1,5 @@
 Config = Config or {}
 Config.NodeGraph = {
     -- [1] = {nConfigId = 1, sName = "TestLua"},
-    [1] = {nConfigId = 1, sName = "Camera"},
+    [1] = {nConfigId = 1, sName = "Effect"},
 }
