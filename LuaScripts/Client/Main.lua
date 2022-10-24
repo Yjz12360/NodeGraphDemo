@@ -36,7 +36,6 @@ function Update(nDeltaTime)
 
     CltAIActionMod.update(nDeltaTime)
     CltLocalPlayerMod.update(nDeltaTime)
-    CltCharacterControllerMod.update(nDeltaTime)
     CltUpdateManagerMod.update(nDeltaTime)
 end
 

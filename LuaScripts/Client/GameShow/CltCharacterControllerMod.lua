@@ -1,6 +1,7 @@
 
 local tFallingController = nil
 local nFallSpeed = 9.8 * 5
+local nUpdateId
 
 local function getController(tGameObject)
     if tGameObject == nil then
@@ -25,6 +26,9 @@ function move(tGameObject, nMoveX, nMoveY, nMoveZ)
     if not uCharactorController.isGrounded then
         tFallingController = tFallingController or {}
         tFallingController[tGameObject.nObjectId] = uCharactorController
+        if nUpdateId == nil then
+            nUpdateId = CltUpdateManagerMod.registerMod("CltCharacterControllerMod")
+        end
     end
 end
 
@@ -46,6 +50,8 @@ function update(nDeltaTime)
             end
             if TableUtil.isEmpty(tFallingController) then
                 tFallingController = nil
+                CltUpdateManagerMod.unregisterMod("CltCharacterControllerMod")
+                nUpdateId = nil
             end
             tFalledControllers = nil
         end
