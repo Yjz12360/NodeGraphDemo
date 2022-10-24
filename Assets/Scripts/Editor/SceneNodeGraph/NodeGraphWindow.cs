@@ -63,7 +63,7 @@ namespace SceneNodeGraph
                         bIsNew = true;
                         sSearchPath = "";
                         NodeGraphData nodeGraphData = new NodeGraphData();
-                        BaseNode startNode = new BaseNode();
+                        StartNode startNode = new StartNode();
                         startNode.sNodeId = "1";
                         nodeGraphData.AddNode(startNode);
                         nodeGraphData.SetStartNode(startNode);

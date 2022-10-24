@@ -3,6 +3,10 @@ local tTimers = {}
 local nCurrId = 1
 
 function add(nTime, fHandler)
+    if type(nTime) ~= "number" or nTime <= 0 then
+        printError("TimerMod add error: nTime invalid: " .. tostring(nTime))
+        return
+    end
     local tTimer = {
         nCurrId = nCurrId,
         nTime = nTime,
@@ -16,6 +20,10 @@ function add(nTime, fHandler)
 end
 
 function delay(nTime, fHandler)
+    if type(nTime) ~= "number" or nTime <= 0 then
+        printError("TimerMod delay error: nTime invalid: " .. tostring(nTime))
+        return
+    end
     local tTimer = {
         nCurrId = nCurrId,
         nTime = nTime,

@@ -17,11 +17,18 @@ function createGame(nGameId, nGameConfigId)
         printError("createGame error: game config not exists. config id: " .. nGameConfigId)
         return
     end
+    local sSceneConfig = tGameConfig.sSceneConfig
+    local tGameSceneConfig = GameSceneCfgMod.getConfigByName(sSceneConfig)
+    if tGameSceneConfig == nil then
+        printError("GameSceneConfig not exist config: " .. sSceneConfig)
+        return
+    end
 
     tCltGame = {}
     tCltGame.nGameId = nGameId
     tCltGame.tGameObjects = {}
     tCltGame.tGameConfig = tGameConfig
+    tCltGame.tGameSceneConfig = tGameSceneConfig
     tCltGame.tMainNodeGraph = nil
 
     local sSceneConfig = tGameConfig.sSceneConfig
@@ -171,6 +178,13 @@ function getObject(nObjectId)
         return
     end
     return tCltGame.tGameObjects[nObjectId]
+end
+
+function getObjects()
+    if tCltGame == nil then
+        return
+    end
+    return tCltGame.tGameObjects
 end
 
 function getMonsterByRefreshId(sRefreshId)

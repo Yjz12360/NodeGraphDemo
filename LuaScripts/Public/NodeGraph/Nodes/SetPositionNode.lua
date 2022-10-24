@@ -1,39 +1,79 @@
 
 function CltHandler(tNodeGraph, tNodeData)
-    local nObjectId = tNodeData.nObjectId
+    local bSetPlayer = tNodeData.bSetPlayer
+    local sRefreshId = tNodeData.sRefreshId
+
     local tCltGame = CltGameMod.getGame()
-    local tGameObject = CltGameMod.getObject(nObjectId)
-    if tGameObject ~= nil then
-        local goInstance = tGameObject.goInstance
-        if goInstance ~= nil then
-            local nPosX, nPosY, nPosZ
-            local sPosId = tNodeData.sPosId
-            if sPosId ~= nil and sPosId ~= "" then
-                nPosX, nPosY, nPosZ = 0, 0, 0 -- TODO
-            else
-                nPosX, nPosY, nPosZ = tNodeData.nPosX, tNodeData.nPosY, tNodeData.nPosZ
+    local nPosX, nPosY, nPosZ = 0, 0, 0
+    local sPosId = tNodeData.sPosId
+    if sPosId ~= nil and sPosId ~= "" then
+        local tPos = GameSceneCfgMod.getPosition(tCltGame.tGameSceneConfig, sPosId)
+        if tPos ~= nil then
+            nPosX, nPosY, nPosZ = tPos.x, tPos.y, tPos.z
+        end
+    else
+        nPosX, nPosY, nPosZ = tNodeData.nPosX, tNodeData.nPosY, tNodeData.nPosZ
+    end
+
+    local tGameObject
+    if bSetPlayer then
+        local tGameObjects = CltGameMod.getObjects()
+        for _, tGameObject in pairs(tGameObjects) do
+            if tGameObject.nObjectType == Const.GameObjectType.Player then
+                local goInstance = tGameObject.goInstance
+                if goInstance ~= nil then
+                    goInstance.transform.position = UE.Vector3(nPosX, nPosY, nPosZ)
+                end
             end
-            goInstance.transform.position = UE.Vector3(nPosX, nPosY, nPosZ)
+        end
+        CltCameraMod.updatePos()
+    else
+        local tGameObject = CltGameMod.getMonsterByRefreshId(sRefreshId)
+        if tGameObject ~= nil then
+            local goInstance = tGameObject.goInstance
+            if goInstance ~= nil then
+                goInstance.transform.position = UE.Vector3(nPosX, nPosY, nPosZ)
+            end
         end
     end
+
     CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
 end
 
 function SvrHandler(tNodeGraph, tNodeData)
-    local nObjectId = tNodeData.nObjectId
+    local bSetPlayer = tNodeData.bSetPlayer
+    local sRefreshId = tNodeData.sRefreshId
+
     local tSvrGame = SvrGameMod.getGameById(tNodeGraph.nGameId)
-    local tGameObject = SvrGameMod.tSvrGame(nObjectId)
-    if tGameObject ~= nil then
-        local nPosX, nPosY, nPosZ
-        local sPosId = tNodeData.sPosId
-        if sPosId ~= nil and sPosId ~= "" then
-            nPosX, nPosY, nPosZ = 0, 0, 0 -- TODO
-        else
-            nPosX, nPosY, nPosZ = tNodeData.nPosX, tNodeData.nPosY, tNodeData.nPosZ
+    local nPosX, nPosY, nPosZ = 0, 0, 0
+    local sPosId = tNodeData.sPosId
+    if sPosId ~= nil and sPosId ~= "" then
+        local tPos = GameSceneCfgMod.getPosition(tSvrGame.tGameSceneConfig, sPosId)
+        if tPos ~= nil then
+            nPosX, nPosY, nPosZ = tPos.x, tPos.y, tPos.z
         end
-        tGameObject.nPosX = nPosX
-        tGameObject.nPosY = nPosY
-        tGameObject.nPosZ = nPosZ
+    else
+        nPosX, nPosY, nPosZ = tNodeData.nPosX, tNodeData.nPosY, tNodeData.nPosZ
     end
+
+    local tGameObject
+    if bSetPlayer then
+        local tGameObjects = SvrGameMod.getObjects(tSvrGame)
+        for _, tGameObject in pairs(tGameObjects) do
+            if tGameObject.nObjectType == Const.GameObjectType.Player then
+                tGameObject.nPosX = nPosX
+                tGameObject.nPosY = nPosY
+                tGameObject.nPosZ = nPosZ
+            end
+        end
+    else
+        local tGameObject = SvrGameMod.getMonsterByRefreshId(tSvrGame, sRefreshId)
+        if tGameObject ~= nil then
+            tGameObject.nPosX = nPosX
+            tGameObject.nPosY = nPosY
+            tGameObject.nPosZ = nPosZ
+        end
+    end
+
     SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
 end

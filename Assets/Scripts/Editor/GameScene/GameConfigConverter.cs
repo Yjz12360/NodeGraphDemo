@@ -132,6 +132,32 @@ namespace Game
                 }
                 writer.WriteEndObject();
             }
+
+            Transform positionTrans = configObject.transform.Find("Position");
+            if(positionTrans != null)
+            {
+                List<Transform> positionChilds = new List<Transform>();
+                for (int i = 0; i < positionTrans.childCount; ++i)
+                    positionChilds.Add(positionTrans.GetChild(i));
+                positionChilds.Sort(CompareTrans);
+                writer.WritePropertyName("tPositions");
+                writer.WriteStartObject();
+                for (int i = 0; i < positionChilds.Count; ++i)
+                {
+                    Transform positionChild = positionChilds[i];
+                    writer.WritePropertyName((i + 1).ToString());
+                    writer.WriteStartObject();
+                    writer.WritePropertyName("x");
+                    writer.WriteValue(positionChild.position.x);
+                    writer.WritePropertyName("y");
+                    writer.WriteValue(positionChild.position.y);
+                    writer.WritePropertyName("z");
+                    writer.WriteValue(positionChild.position.z);
+                    writer.WriteEndObject();
+                }
+                writer.WriteEndObject();
+            }    
+
             writer.WriteEndObject();
         }
 
@@ -233,6 +259,35 @@ namespace Game
             monsterGroupChilds.Sort(CompareTrans);
             foreach (Transform child in monsterGroupChilds)
                 child.parent = monsterGroupRoot.transform;
+
+
+            GameObject positionRoot = new GameObject("Position");
+            positionRoot.transform.SetParent(configObject.transform);
+            List<Transform> positionChilds = new List<Transform>();
+            if (jsonObject.TryGetValue("tPositions", out JToken positionsToken))
+            {
+                foreach (JProperty property in positionsToken.Children())
+                {
+                    string positionId = property.Name;
+                    GameObject child = new GameObject(positionId);
+                    Vector3 position = Vector3.zero;
+                    foreach (JProperty posProp in property.Value.Children())
+                    {
+                        if (posProp.Name == "x")
+                            position.x = posProp.Value.Value<float>();
+                        if (posProp.Name == "y")
+                            position.y = posProp.Value.Value<float>();
+                        if (posProp.Name == "z")
+                            position.z = posProp.Value.Value<float>();
+                    }
+                    child.transform.position = position;
+                    positionChilds.Add(child.transform);
+                }
+            }
+            positionChilds.Sort(CompareTrans);
+            foreach (Transform child in positionChilds)
+                child.parent = positionRoot.transform;
+
 
             return configObject;
         }

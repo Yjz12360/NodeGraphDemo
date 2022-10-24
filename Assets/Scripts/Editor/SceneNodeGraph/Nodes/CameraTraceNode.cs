@@ -6,8 +6,8 @@ namespace SceneNodeGraph
 {
     public class CameraTraceNode : BaseNode
     {
-        public string sStartPos;
-        public string sEndPos;
+        public string sStartPosId;
+        public string sEndPosId;
         public float nMoveTime;
     }
 }

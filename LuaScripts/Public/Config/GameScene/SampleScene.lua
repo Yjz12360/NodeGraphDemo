@@ -2,33 +2,37 @@ Config = Config or {}
 Config.GameScene = Config.GameScene or {}
 Config.GameScene.SampleScene = {
     tRefreshMonsters = {
-        ["4"] = {
-            nMonsterCfgId = 2,
-            tPos = {x = -2.99, y = 0.0, z = -3.54},
-            sRefreshId = "4",
+        ["2"] = {
+            nMonsterCfgId = 1,
+            sRefreshId = "2",
+            tPath = {},
+            tPos = {z = 4.1, y = 0.0, x = -1.76},
         },
         ["1"] = {
             nMonsterCfgId = 1,
-            tPath = {},
-            tPos = {x = -3.4, y = 0.0, z = 4.12},
             sRefreshId = "1",
-        },
-        ["2"] = {
-            nMonsterCfgId = 1,
             tPath = {},
-            tPos = {x = -1.76, y = 0.0, z = 4.1},
-            sRefreshId = "2",
+            tPos = {z = 4.12, y = 0.0, x = -3.4},
+        },
+        ["4"] = {
+            nMonsterCfgId = 2,
+            sRefreshId = "4",
+            tPos = {z = -3.54, y = 0.0, x = -2.99},
         },
         ["3"] = {
             nMonsterCfgId = 2,
-            tPos = {x = -4.45, y = 0.0, z = -1.87},
             sRefreshId = "3",
+            tPos = {z = -1.87, y = 0.0, x = -4.45},
         },
+    },
+    tPositions = {
+        ["2"] = {z = -15.5, y = 10.41, x = 0.0},
+        ["1"] = {z = -18.92, y = 12.33, x = -0.14},
     },
     tRefreshMonsterGroups = {
         ["1"] = {
-            tRefreshMonsters = {"1", "2", "3", "4"},
             sGroupId = "1",
+            tRefreshMonsters = {"1", "2", "3", "4"},
         },
     },
 }

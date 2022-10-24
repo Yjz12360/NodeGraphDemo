@@ -36,3 +36,13 @@ function getRefreshMonsterGroup(tGameSceneConfig, sRefreshId)
     return tRefreshMonsterGroups.tRefreshMonsters
 end
 
+function getPosition(tGameSceneConfig, sPosId)
+    if tGameSceneConfig == nil then
+        return
+    end
+    local tPositions = tGameSceneConfig.tPositions
+    if tPositions == nil then
+        return
+    end
+    return tPositions[sPosId]
+end
