@@ -70,7 +70,7 @@ function addNodeGraph(nGameId, nNodeGraphId, nConfigId)
     CltNodeGraphMod.startNodeGraph(tNodeGraph)
 end
 
-function procNodeGraphEvent(nEventType, ...)
+function processEvent(nEventType, ...)
     if tCltGame == nil then
         return
     end
@@ -102,7 +102,7 @@ function onTriggerEnter(nTriggerId, uCollider)
     end
 
     if tCltGame ~= nil then
-        CltGameMod.procNodeGraphEvent(Const.EventType.EnterTrigger, nTriggerId)
+        CltGameMod.processEvent(Const.EventType.EnterTrigger, nTriggerId)
         Messager.C2SEnterTrigger(tCltGame.nGameId, nTriggerId)
     end
 end

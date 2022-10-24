@@ -47,3 +47,9 @@ AIActionType = {
     MoveTo = 2,
     Chase = 3,
 }
+
+CameraMode = {
+    None = 0,
+    Follow = 1,
+    Trace = 2,
+}

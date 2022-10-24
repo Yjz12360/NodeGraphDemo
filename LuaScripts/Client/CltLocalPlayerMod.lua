@@ -61,7 +61,7 @@ local function applyMove(nDirX, nDirZ, nDeltaTime)
     end
     tLocalPlayer.bLastMoving = true
     bLocalMove = true
-    CltCameraMod.updatePos()
+    CltCameraMod.update()
 end
 
 local function idle()

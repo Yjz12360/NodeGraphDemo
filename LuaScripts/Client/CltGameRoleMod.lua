@@ -70,7 +70,7 @@ function addMonster(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, sRefresh
             uGameObjectId.ID = nObjectId
         end
     end
-    CltGameMod.procNodeGraphEvent(Const.EventType.AddMonster)
+    CltGameMod.processEvent(Const.EventType.AddMonster)
 end
 
 function roleDead(nGameId, nObjectId)
@@ -83,7 +83,7 @@ function roleDead(nGameId, nObjectId)
         return
     end
     if tGameObject.nObjectType == Const.GameObjectType.Monster then
-        CltGameMod.procNodeGraphEvent(Const.EventType.MonsterDead, nObjectId)
+        CltGameMod.processEvent(Const.EventType.MonsterDead, nObjectId)
     end
     
     CltAnimatorMod.roleDead(tGameObject, function()
