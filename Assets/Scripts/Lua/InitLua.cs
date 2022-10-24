@@ -12,6 +12,8 @@ public class InitLua : MonoBehaviour
 
     public delegate byte[] CustomLoader(ref string filepath);
 
+    Action<double> updateFunc;
+
     // Use this for initialization
     void Start()
     {
@@ -30,6 +32,7 @@ public class InitLua : MonoBehaviour
             return bytes;
         });
         luaenv.DoString("require 'Client/Main'");
+        updateFunc = luaenv.Global.Get<Action<double>>("Update");
     }
 
     // Update is called once per frame
@@ -39,7 +42,6 @@ public class InitLua : MonoBehaviour
         {
             luaenv.Tick();
 
-            Action<double> updateFunc = luaenv.Global.Get<Action<double>>("Update");
             if (updateFunc != null)
                 updateFunc(Time.deltaTime);
         }
@@ -47,6 +49,7 @@ public class InitLua : MonoBehaviour
 
     void OnDestroy()
     {
+        updateFunc = null;
         luaenv.Dispose();
     }
 }
