@@ -8,6 +8,7 @@ namespace SceneNodeGraph
     {
         public string sRefreshId;
         public int nConfigId;
+        public string sPosId;
         public float nPosX;
         public float nPosY;
         public float nPosZ;

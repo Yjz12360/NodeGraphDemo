@@ -20,6 +20,14 @@ function CltHandler(tNodeGraph, tNodeData)
                     local goEffect = UE.GameObject.Instantiate(goPrefab)
                     local tCltGame = CltGameMod.getGame()
                     goEffect.transform.position = UE.Vector3(tPos.x, tPos.y, tPos.z)
+                    local nDuration = tEffectConfig.nDuration
+                    if nDuration ~= nil and nDuration > 0 then
+                        TimerMod.delay(nDuration, function()
+                            if goEffect ~= nil then
+                                UE.GameObject.Destroy(goEffect)
+                            end
+                        end)
+                    end
                 end
             end
         end
