@@ -6,13 +6,8 @@ namespace SceneNodeGraph
 {
     public class ExplodeNode : BaseNode
     {
-        public int nEffectId;
-        public float nPosX;
-        public float nPosY;
-        public float nPosZ;
-        public float nAffectRadius;
-        public float nDisplayScale;
-        public int nDamage;
+        public int nExplosionId;
+        public string sPosId;
     }
 
 }

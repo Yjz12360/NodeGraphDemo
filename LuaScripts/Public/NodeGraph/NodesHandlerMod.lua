@@ -133,6 +133,15 @@ tNodeHandlers[Const.NodeType.WaitMonsterDead] = {
     },
 }
 
+tNodeHandlers[Const.NodeType.Explode] = {
+    tCltHandler = function(tNodeGraph, tNodeData)
+        return ExplodeNode.CltHandler(tNodeGraph, tNodeData)
+    end,
+    tSvrHandler = function(tNodeGraph, tNodeData)
+        return ExplodeNode.SvrHandler(tNodeGraph, tNodeData)
+    end,
+}
+
 tNodeHandlers[Const.NodeType.AnimatorCtrl] = {
     tCltHandler = function(tNodeGraph, tNodeData)
         return AnimatorCtrlNode.CltHandler(tNodeGraph, tNodeData)
