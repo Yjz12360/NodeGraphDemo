@@ -10,7 +10,7 @@ function SvrOnCheck(tNodeGraph, tNodeData)
     local nMonsterNum
     local sMonsterGroupId = tNodeData.sMonsterGroupId
     if sMonsterGroupId == "" then
-        local nMonsterNum = SvrGameMod.getMonsterNum(tSvrGame)        
+        local nMonsterNum = SvrGameRoleMod.getMonsterNum(tSvrGame)        
     else
         nMonsterNum = 0
         local tGameObjects = SvrGameMod.getObjects(tSvrGame)

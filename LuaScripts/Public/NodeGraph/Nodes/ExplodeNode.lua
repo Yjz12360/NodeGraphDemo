@@ -61,7 +61,7 @@ function SvrHandler(tNodeGraph, tNodeData)
                     tGameObject.nCurrHP = tGameObject.nCurrHP - nDamage
                     if tGameObject.nCurrHP <= 0 then
                         tGameObject.nCurrHP = 0
-                        SvrGameMod.roleDead(tSvrGame, tGameObject.nObjectId)
+                        SvrGameRoleMod.roleDead(tSvrGame, tGameObject.nObjectId)
                     end
                 end
             end

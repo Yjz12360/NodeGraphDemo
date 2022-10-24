@@ -67,7 +67,7 @@ function SvrHandler(tNodeGraph, tNodeData)
             end
         end
     else
-        local tGameObject = SvrGameMod.getMonsterByRefreshId(tSvrGame, sRefreshId)
+        local tGameObject = SvrGameRoleMod.getMonsterByRefreshId(tSvrGame, sRefreshId)
         if tGameObject ~= nil then
             tGameObject.nPosX = nPosX
             tGameObject.nPosY = nPosY

@@ -9,7 +9,7 @@ function SvrHandler(tNodeGraph, tNodeData)
     local sGroupId = tNodeData.sGroupId
     local bActive = tNodeData.bActive
     if sRefreshId and sRefreshId ~= "" then
-        local tGameObject = SvrGameMod.getMonsterByRefreshId(tSvrGame, sRefreshId)
+        local tGameObject = SvrGameRoleMod.getMonsterByRefreshId(tSvrGame, sRefreshId)
         if tGameObject ~= nil then
             AIManagerMod.setAIActive(tAIManager, tGameObject.nObjectId, bActive)
         end

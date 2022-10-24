@@ -3,7 +3,7 @@ function SvrHandler(tNodeGraph, tNodeData)
     local tSvrGame = SvrGameMod.getGameById(tNodeGraph.nGameId)
     local sRefreshId = tNodeData.sRefreshId
     if sRefreshId and sRefreshId ~= "" then
-        SvrGameMod.refreshMonster(tSvrGame, sRefreshId)
+        SvrGameRoleMod.refreshMonster(tSvrGame, sRefreshId)
     else
         local nConfigId = tNodeData.nConfigId
         local nPosX, nPosY, nPosZ = 0, 0, 0
@@ -16,7 +16,7 @@ function SvrHandler(tNodeGraph, tNodeData)
         else
             nPosX, nPosY, nPosZ = tNodeData.nPosX, tNodeData.nPosY, tNodeData.nPosZ
         end
-        SvrGameMod.addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
+        SvrGameRoleMod.addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
     end
 
     SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)

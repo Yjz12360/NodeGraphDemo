@@ -4,7 +4,7 @@ function onEnterTrigger(nGameId, nTriggerId)
     if tSvrGame == nil then
         return
     end
-    procNodeGraphEvent(tSvrGame, Const.EventType.EnterTrigger, nTriggerId)
+    SvrGameMod.processEvent(tSvrGame, Const.EventType.EnterTrigger, nTriggerId)
 end
 
 function onAttackHit(nGameId, nAttackerId, nTargetId)
@@ -12,11 +12,11 @@ function onAttackHit(nGameId, nAttackerId, nTargetId)
     if tSvrGame == nil then
         return
     end
-    local tAttacker = tSvrGame.tGameObjects[nAttackerId]
+    local tAttacker = SvrGameMod.getObject(tSvrGame, nAttackerId)
     if tAttacker == nil then
         return
     end
-    local tTarget = tSvrGame.tGameObjects[nTargetId]
+    local tTarget = SvrGameMod.getObject(tSvrGame, tTarget)
     if tTarget == nil then
         return 
     end
@@ -24,7 +24,7 @@ function onAttackHit(nGameId, nAttackerId, nTargetId)
     tTarget.nCurrHP = tTarget.nCurrHP - nAtk
     if tTarget.nCurrHP <= 0 then
         tTarget.nCurrHP = 0
-        SvrGameMod.roleDead(tSvrGame, nTargetId)
+        SvrGameRoleMod.roleDead(tSvrGame, nTargetId)
     end
 end
 
@@ -33,7 +33,7 @@ function onSyncLocalPlayerPos(nGameId, nObjectId, nPosX, nPosY, nPosZ)
     if tSvrGame == nil then
         return
     end
-    local tPlayer = tSvrGame.tGameObjects[nObjectId]
+    local tPlayer = SvrGameMod.getObject(tSvrGame, nObjectId)
     if tPlayer == nil or tPlayer.nObjectType ~= Const.GameObjectType.Player then
         return
     end

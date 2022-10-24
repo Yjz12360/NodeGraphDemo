@@ -1,6 +1,7 @@
 
 require "Server/SvrGameMod"
 require "Server/SvrGameMsgMod"
+require "Server/SvrGameRoleMod"
 require "Server/SvrNodeGraphMod"
 
 require "Server/AI/AIMod"

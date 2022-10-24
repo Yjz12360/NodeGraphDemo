@@ -3,7 +3,7 @@
 function SvrHandler(tNodeGraph, tNodeData)
     local tSvrGame = SvrGameMod.getGameById(tNodeGraph.nGameId)
     local sRefreshId = tNodeData.sRefreshId
-    local tMonster = SvrGameMod.getMonsterByRefreshId(tSvrGame, sRefreshId)
+    local tMonster = SvrGameRoleMod.getMonsterByRefreshId(tSvrGame, sRefreshId)
     if tMonster == nil then
         SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
     end
