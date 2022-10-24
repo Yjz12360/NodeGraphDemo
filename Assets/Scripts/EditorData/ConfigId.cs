@@ -7,7 +7,7 @@ namespace Game
 {
     public class ConfigId : MonoBehaviour
     {
-        public int nConfigId;
+        public int ID;
     }
 }
 

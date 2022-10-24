@@ -10,20 +10,20 @@ namespace SceneNodeGraph
 {
     class NodeGraphEditor
     {
-        private static float nDrawOffsetX = 200;
-        private static float nDrawOffsetY = 40;
-        private static float nPadding = 20;
-        private static float nNodeWidth = 160;
-        private static float nNodeHeight = 40;
-        private static float nPathTextWidth = 16;
-        private static float nPathTextHeight = 20;
+        private static readonly float drawOffsetX = 200;
+        private static readonly float drawOffsetY = 40;
+        private static readonly float padding = 20;
+        private static readonly float nodeWidth = 160;
+        private static readonly float nodeHeight = 40;
+        private static readonly float pathTextWidth = 16;
+        private static readonly float pathTextHeight = 20;
 
         private static Texture2D backgroundTexture = null;
 
         private NodeGraphWindow window;
         private NodeGraphData nodeGraphData;
 
-        private Dictionary<string, Vector2Int> tNodeCoords = new Dictionary<string, Vector2Int>();
+        private Dictionary<string, Vector2Int> nodeCoords = new Dictionary<string, Vector2Int>();
         public NodeGraphEditor(NodeGraphData nodeGraphData, NodeGraphWindow window)
         {
             this.nodeGraphData = nodeGraphData;
@@ -38,60 +38,60 @@ namespace SceneNodeGraph
 
         public void RefreshNodes()
         {
-            tNodeCoords.Clear();
-            tNodeCoords[nodeGraphData.sStartNodeId] = new Vector2Int(0, 0);
+            nodeCoords.Clear();
+            nodeCoords[nodeGraphData.sStartNodeId] = new Vector2Int(0, 0);
             RecursiveCalCoord(nodeGraphData.sStartNodeId);
         }
 
-        private int RecursiveCalCoord(string sRootNodeId)
+        private int RecursiveCalCoord(string rootNodeId)
         {
-            int nCoordOffsetY = 0;
-            Vector2Int coord = tNodeCoords[sRootNodeId];
-            bool bFirst = true;
+            int coordOffsetY = 0;
+            Vector2Int coord = nodeCoords[rootNodeId];
+            bool first = true;
             foreach (NodeTransitionData transition in nodeGraphData.tTransitions)
             {
-                if (transition.sFromNodeId == sRootNodeId)
+                if (transition.sFromNodeId == rootNodeId)
                 {
-                    string sToNodeId = transition.sToNodeId;
-                    if (tNodeCoords.ContainsKey(sToNodeId))
+                    string toNodeId = transition.sToNodeId;
+                    if (nodeCoords.ContainsKey(toNodeId))
                         continue;
-                    if (!bFirst)
-                        nCoordOffsetY++;
-                    bFirst = false;
-                    tNodeCoords[sToNodeId] = new Vector2Int(coord.x + 1, coord.y + nCoordOffsetY);
-                    int nOffsetY = RecursiveCalCoord(sToNodeId);
-                    nCoordOffsetY += nOffsetY;
+                    if (!first)
+                        coordOffsetY++;
+                    first = false;
+                    nodeCoords[toNodeId] = new Vector2Int(coord.x + 1, coord.y + coordOffsetY);
+                    int offsetY = RecursiveCalCoord(toNodeId);
+                    coordOffsetY += offsetY;
                 }
             }
-            return nCoordOffsetY;
+            return coordOffsetY;
         }
 
-        public void AddNode(string sFromNodeId, NodeType nNodeType, int nPath)
+        public void AddNode(string fromNodeId, NodeType nodeType, int path)
         {
-            if (string.IsNullOrEmpty(sFromNodeId))
+            if (string.IsNullOrEmpty(fromNodeId))
                 return;
-            string sNewNodeId = "";
+            string newNodeId = "";
             for (int i = 1; i < 100; ++i)
             {
                 if (!nodeGraphData.tNodeMap.ContainsKey(i.ToString()))
                 {
-                    sNewNodeId = i.ToString();
+                    newNodeId = i.ToString();
                     break;
                 }
             }
-            Type type = BaseNode.GetType(nNodeType);
+            Type type = BaseNode.GetType(nodeType);
             if (type == null)
                 type = typeof(BaseNode);
             BaseNode nodeData = (BaseNode)Activator.CreateInstance(type);
-            nodeData.sNodeId = sNewNodeId;
+            nodeData.sNodeId = newNodeId;
             nodeGraphData.AddNode(nodeData);
-            nodeGraphData.AddTransition(sFromNodeId, sNewNodeId, nPath);
+            nodeGraphData.AddTransition(fromNodeId, newNodeId, path);
             RefreshNodes();
         }
 
-        public void RemoveNode(string sNodeId)
+        public void RemoveNode(string nodeId)
         {
-            nodeGraphData.RemoveNode(sNodeId);
+            nodeGraphData.RemoveNode(nodeId);
             RefreshNodes();
         }
 
@@ -103,8 +103,8 @@ namespace SceneNodeGraph
         }
         private Vector2 GetDrawPos(Vector2Int coord)
         {
-            float x = nDrawOffsetX + nNodeWidth * (coord.x * 1.5f + 0.5f);
-            float y = nDrawOffsetY + nNodeHeight * (coord.y * 1.5f + 0.5f);
+            float x = drawOffsetX + nodeWidth * (coord.x * 1.5f + 0.5f);
+            float y = drawOffsetY + nodeHeight * (coord.y * 1.5f + 0.5f);
             return new Vector2(x, y);
         }
 
@@ -118,45 +118,45 @@ namespace SceneNodeGraph
                         backgroundTexture.SetPixel(i, j, Color.gray);
                 backgroundTexture.Apply();
             }
-            GUI.DrawTexture(new Rect(nDrawOffsetX + nPadding, nPadding, 2000, 1000), backgroundTexture);
+            GUI.DrawTexture(new Rect(drawOffsetX + padding, padding, 2000, 1000), backgroundTexture);
         }
 
         private void DrawNodes()
         {
-            foreach (var pair in tNodeCoords)
+            foreach (var pair in nodeCoords)
             {
-                string sNodeId = pair.Key;
-                string sContext;
-                if (sNodeId == nodeGraphData.sStartNodeId)
-                    sContext = "开始节点";
+                string nodeId = pair.Key;
+                string context;
+                if (nodeId == nodeGraphData.sStartNodeId)
+                    context = "开始节点";
                 else
                 {
-                    string sNodeType = nodeGraphData.tNodeMap[sNodeId].GetNodeType().ToString();
-                    sContext = $"{sNodeId}\n{sNodeType}";
+                    string nodeType = nodeGraphData.tNodeMap[nodeId].GetNodeType().ToString();
+                    context = $"{nodeId}\n{nodeType}";
                 }
                 Vector2 drawPos = GetDrawPos(pair.Value);
-                if (GUI.Button(new Rect(drawPos.x, drawPos.y, nNodeWidth, nNodeHeight), sContext))
-                    window.OnNodeSelect(sNodeId);
+                if (GUI.Button(new Rect(drawPos.x, drawPos.y, nodeWidth, nodeHeight), context))
+                    window.OnNodeSelect(nodeId);
             }
         }
         private void DrawTransitions()
         {
             foreach (NodeTransitionData transition in nodeGraphData.tTransitions)
             {
-                string sFromNodeId = transition.sFromNodeId;
-                string sToNodeId = transition.sToNodeId;
-                Vector2 fromPos = GetDrawPos(tNodeCoords[sFromNodeId]);
-                fromPos.x += nNodeWidth;
-                fromPos.y += nNodeHeight / 2;
-                Vector2 toPos = GetDrawPos(tNodeCoords[sToNodeId]);
-                toPos.y += nNodeHeight / 2;
+                string fromNodeId = transition.sFromNodeId;
+                string toNodeId = transition.sToNodeId;
+                Vector2 fromPos = GetDrawPos(nodeCoords[fromNodeId]);
+                fromPos.x += nodeWidth;
+                fromPos.y += nodeHeight / 2;
+                Vector2 toPos = GetDrawPos(nodeCoords[toNodeId]);
+                toPos.y += nodeHeight / 2;
                 Handles.DrawLine(fromPos, toPos);
                 Vector2 pathTextPos = (fromPos + toPos) / 2;
-                pathTextPos.x -= nPathTextWidth / 2;
-                pathTextPos.y -= nPathTextHeight / 2;
-                string sPath = transition.nPath.ToString();
+                pathTextPos.x -= pathTextWidth / 2;
+                pathTextPos.y -= pathTextHeight / 2;
+                string path = transition.nPath.ToString();
                 using (new EditorGUI.DisabledScope())
-                    GUI.TextField(new Rect(pathTextPos.x, pathTextPos.y, nPathTextWidth, nPathTextHeight), sPath);
+                    GUI.TextField(new Rect(pathTextPos.x, pathTextPos.y, pathTextWidth, pathTextHeight), path);
             }
         }
     }

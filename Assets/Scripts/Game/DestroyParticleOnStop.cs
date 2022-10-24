@@ -6,19 +6,19 @@ namespace Game
 {
     public class DestroyParticleOnStop : MonoBehaviour
     {
-        private float nDuration;
+        private float duration;
 
         private void Start()
         {
             ParticleSystem ps = GetComponent<ParticleSystem>();
             if (ps == null) return;
-            nDuration = ps.main.duration;
+            duration = ps.main.duration;
             StartCoroutine("WaitDestroy");
         }
 
         IEnumerator WaitDestroy()
         {
-            yield return new WaitForSeconds(nDuration);
+            yield return new WaitForSeconds(duration);
             Destroy(gameObject);
         }
 

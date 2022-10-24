@@ -55,7 +55,7 @@ namespace Game
                         writer.WriteValue(refreshId);
 
                         writer.WritePropertyName("nMonsterCfgId");
-                        writer.WriteValue(configId.nConfigId);
+                        writer.WriteValue(configId.ID);
                         
                         writer.WritePropertyName("tPos");
                         writer.WriteStartObject();
@@ -181,7 +181,7 @@ namespace Game
                     monsterChilds.Add(child.transform);
                     int monsterCfgId = property.Value["nMonsterCfgId"].Value<int>();
                     ConfigId configId = child.AddComponent<ConfigId>();
-                    configId.nConfigId = monsterCfgId;
+                    configId.ID = monsterCfgId;
                     child.AddComponent<PathEditorData>();
                     JToken positionToken = property.Value["tPos"];
                     if(positionToken != null)

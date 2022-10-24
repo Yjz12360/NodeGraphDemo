@@ -12,16 +12,16 @@ namespace SceneNodeGraph
 {
     class NodeGraphWindow : EditorWindow
     {
-        private string sSearchPath = "";
-        private bool bIsNew = false;
+        private string searchPath = "";
+        private bool isNew = false;
 
         NodeGraphEditor nodeGraphEditor = null;
 
-        private string sSelectNode = "";
-        private NodeType nAddNodeType = NodeType.Print;
-        private int nAddNodePath = 1;
+        private string selectNode = "";
+        private NodeType addNodeType = NodeType.Print;
+        private int addNodePath = 1;
 
-        private string sLuaFolder;
+        private string luaFolder;
 
         [MenuItem("编辑工具/关卡流程图")]
         static void Init()
@@ -32,7 +32,7 @@ namespace SceneNodeGraph
 
         private void OnEnable()
         {
-            sLuaFolder = Application.dataPath + "/../LuaScripts/Public/Config/NodeGraphData/";
+            luaFolder = Application.dataPath + "/../LuaScripts/Public/Config/NodeGraphData/";
         }
 
         private void OnGUI()
@@ -41,27 +41,27 @@ namespace SceneNodeGraph
             {
                 using (new EditorGUILayout.VerticalScope(GUILayout.Width(200)))
                 {
-                    string sFile;
-                    if (!string.IsNullOrEmpty(sSearchPath))
+                    string file;
+                    if (!string.IsNullOrEmpty(searchPath))
                     {
-                        int nFolderIndex = sSearchPath.LastIndexOf("/");
-                        if (nFolderIndex != -1)
-                            sFile = sSearchPath.Substring(nFolderIndex + 1);
+                        int folderIndex = searchPath.LastIndexOf("/");
+                        if (folderIndex != -1)
+                            file = searchPath.Substring(folderIndex + 1);
                         else
-                            sFile = sSearchPath;
+                            file = searchPath;
                     }
-                    else if (bIsNew)
-                        sFile = "新建配置";
+                    else if (isNew)
+                        file = "新建配置";
                     else
-                        sFile = "无";
-                    EditorGUILayout.LabelField($"当前配置文件：{sFile}");
+                        file = "无";
+                    EditorGUILayout.LabelField($"当前配置文件：{file}");
 
 
 
                     if (GUILayout.Button("新建配置文件"))
                     {
-                        bIsNew = true;
-                        sSearchPath = "";
+                        isNew = true;
+                        searchPath = "";
                         NodeGraphData nodeGraphData = new NodeGraphData();
                         StartNode startNode = new StartNode();
                         startNode.sNodeId = "1";
@@ -71,29 +71,29 @@ namespace SceneNodeGraph
                     }
                     if (GUILayout.Button("打开配置文件"))
                     {
-                        sSearchPath = EditorUtility.OpenFilePanel("打开配置文件", sLuaFolder, "lua");
-                        if (!string.IsNullOrEmpty(sSearchPath))
+                        searchPath = EditorUtility.OpenFilePanel("打开配置文件", luaFolder, "lua");
+                        if (!string.IsNullOrEmpty(searchPath))
                         {
-                            NodeGraphData nodeGraphData = SceneNodeGraphSerializer.LoadLua(sSearchPath);
+                            NodeGraphData nodeGraphData = SceneNodeGraphSerializer.LoadLua(searchPath);
                             nodeGraphEditor = new NodeGraphEditor(nodeGraphData, this);
-                            bIsNew = false;
+                            isNew = false;
                         }
                     }
                     if (GUILayout.Button("保存配置文件"))
                     {
                         if (nodeGraphEditor != null)
                         {
-                            if (string.IsNullOrEmpty(sSearchPath))
+                            if (string.IsNullOrEmpty(searchPath))
                             {
-                                sSearchPath = EditorUtility.SaveFilePanel("选择保存文件", sLuaFolder, "New Graph", "lua");
+                                searchPath = EditorUtility.SaveFilePanel("选择保存文件", luaFolder, "New Graph", "lua");
                             }
                             NodeGraphData nodeGraphData = nodeGraphEditor.GetNodeGraphData();
-                            bool bConfirm = true;
-                            if (File.Exists(sSearchPath))
+                            bool confirm = true;
+                            if (File.Exists(searchPath))
                                 if (!EditorUtility.DisplayDialog("提示", "将覆盖原有文件", "保存", "取消"))
-                                    bConfirm = false;
-                            if (bConfirm)
-                                SceneNodeGraphSerializer.SaveLua(nodeGraphData, sSearchPath);
+                                    confirm = false;
+                            if (confirm)
+                                SceneNodeGraphSerializer.SaveLua(nodeGraphData, searchPath);
                         }
                         else
                             EditorUtility.DisplayDialog("提示", "没有配置文件", "确定");
@@ -102,9 +102,9 @@ namespace SceneNodeGraph
                     {
                         if (nodeGraphEditor != null)
                         {
-                            sSearchPath = EditorUtility.SaveFilePanel("选择保存文件", sLuaFolder, "", "lua");
+                            searchPath = EditorUtility.SaveFilePanel("选择保存文件", luaFolder, "", "lua");
                             NodeGraphData nodeGraphData = nodeGraphEditor.GetNodeGraphData();
-                            SceneNodeGraphSerializer.SaveLua(nodeGraphData, sSearchPath);
+                            SceneNodeGraphSerializer.SaveLua(nodeGraphData, searchPath);
                         }
                         else
                             EditorUtility.DisplayDialog("提示", "没有配置文件", "确定");
@@ -113,27 +113,27 @@ namespace SceneNodeGraph
                     if (nodeGraphEditor != null)
                     {
                         EditorGUILayout.LabelField("");
-                        EditorGUILayout.LabelField($"当前选中节点： {sSelectNode}");
-                        nAddNodeType = (NodeType)EditorGUILayout.EnumPopup("选择添加节点类型", nAddNodeType);
-                        nAddNodePath = EditorGUILayout.IntField("路径编号", nAddNodePath);
+                        EditorGUILayout.LabelField($"当前选中节点： {selectNode}");
+                        addNodeType = (NodeType)EditorGUILayout.EnumPopup("选择添加节点类型", addNodeType);
+                        addNodePath = EditorGUILayout.IntField("路径编号", addNodePath);
                         if (GUILayout.Button("添加子节点"))
                         {
-                            if (!string.IsNullOrEmpty(sSelectNode))
-                                nodeGraphEditor.AddNode(sSelectNode, nAddNodeType, nAddNodePath);
+                            if (!string.IsNullOrEmpty(selectNode))
+                                nodeGraphEditor.AddNode(selectNode, addNodeType, addNodePath);
                             else
                                 EditorUtility.DisplayDialog("提示", "没有选中节点", "确定");
                         }
                         if (GUILayout.Button("删除节点"))
                         {
-                            if (!string.IsNullOrEmpty(sSelectNode))
-                                nodeGraphEditor.RemoveNode(sSelectNode);
+                            if (!string.IsNullOrEmpty(selectNode))
+                                nodeGraphEditor.RemoveNode(selectNode);
                             else
                                 EditorUtility.DisplayDialog("提示", "没有选中节点", "确定");
                         }
                         EditorGUILayout.LabelField("");
                         EditorGUILayout.LabelField("节点属性配置");
                         NodeGraphData nodeGraphData = nodeGraphEditor.GetNodeGraphData();
-                        BaseNode nodeData = nodeGraphData.GetNodeData(sSelectNode);
+                        BaseNode nodeData = nodeGraphData.GetNodeData(selectNode);
                         if (nodeData != null)
                         {
                             Type type = nodeData.GetType();
@@ -191,9 +191,9 @@ namespace SceneNodeGraph
             }
         }
 
-        public void OnNodeSelect(string sNodeId)
+        public void OnNodeSelect(string nodeId)
         {
-            sSelectNode = sNodeId;
+            selectNode = nodeId;
         }
     }
 }
