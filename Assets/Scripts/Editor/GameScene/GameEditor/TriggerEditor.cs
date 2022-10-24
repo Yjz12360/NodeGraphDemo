@@ -29,7 +29,9 @@ namespace Game
                         luaOnTrigger.triggerId = genId;
                     newObject.transform.SetParent(containerTrans);
                     newObject.transform.position = Vector3.zero;
-                    BoxCollider collider = newObject.AddComponent<BoxCollider>();
+                    BoxCollider collider = newObject.GetComponent<BoxCollider>();
+                    if(collider == null)
+                        collider = newObject.AddComponent<BoxCollider>();
                     collider.isTrigger = true;
                     collider.center = Vector3.zero;
                     EditorGUIUtility.PingObject(newObject);

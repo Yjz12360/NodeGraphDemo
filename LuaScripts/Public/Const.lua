@@ -20,6 +20,7 @@ NodeType = {
     WaitAllNodeFinish = 18,
     SetPosition = 19,
     CameraTrace = 20,
+    ActiveTransparentWall = 21,
 }
 
 NodeGraphState = {

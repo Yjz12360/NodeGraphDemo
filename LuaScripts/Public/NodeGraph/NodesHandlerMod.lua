@@ -186,4 +186,10 @@ tNodeHandlers[Const.NodeType.CameraTrace] = {
     end,
 }
 
+tNodeHandlers[Const.NodeType.ActiveTransparentWall] = {
+    tCltHandler = function(tNodeGraph, tNodeData)
+        return ActiveTransparentWallNode.CltHandler(tNodeGraph, tNodeData)
+    end,
+}
+
 init()
