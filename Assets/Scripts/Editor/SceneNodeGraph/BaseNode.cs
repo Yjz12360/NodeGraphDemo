@@ -8,7 +8,7 @@ namespace SceneNodeGraph
 {
     public class BaseNode
     {
-        public string sNodeId;
+        public int nNodeId;
 
         private static Dictionary<Type, NodeType> typesEnumMap = new Dictionary<Type, NodeType>();
         public virtual NodeType GetNodeType()

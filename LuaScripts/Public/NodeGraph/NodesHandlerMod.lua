@@ -177,7 +177,7 @@ tNodeHandlers[Const.NodeType.WaitAllNodeFinish] = {
         return WaitAllNodeFinishNode.SvrOnCheck(tNodeGraph, tNodeData)
     end,
     tSvrEventHandlers = {
-        [Const.EventType.FinishNode] = function(tNodeGraph, tNodeData, sNodeId)
+        [Const.EventType.FinishNode] = function(tNodeGraph, tNodeData, nNodeId)
             return WaitAllNodeFinishNode.SvrOnCheck(tNodeGraph, tNodeData)
         end
     },

@@ -29,9 +29,9 @@ namespace SceneNodeGraph
 
             writer.WritePropertyName("tNodeMap");
             writer.WriteStartObject();
-            foreach (KeyValuePair<string, BaseNode> pair in nodeGraphData.tNodeMap)
+            foreach (KeyValuePair<int, BaseNode> pair in nodeGraphData.nodeMap)
             {
-                writer.WritePropertyName(pair.Key);
+                writer.WritePropertyName(pair.Key.ToString());
                 Type type = pair.Value.GetType();
                 PropertyInfo[] props = type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
                 writer.WriteStartObject();
@@ -58,28 +58,30 @@ namespace SceneNodeGraph
             writer.WriteEndObject();
 
             writer.WritePropertyName("tTransitions");
+            JsonConvert.SerializeObject(nodeGraphData.transitions);
             writer.WriteStartObject();
-            foreach(var pair in nodeGraphData.tTransitions)
+            foreach (var pair in nodeGraphData.transitions)
             {
-                string fromNodeId = pair.Key;
-                writer.WritePropertyName(fromNodeId);
-                writer.WriteStartArray();
-                List<NodeTransitionData> transitions = pair.Value;
-                foreach(NodeTransitionData transition in transitions)
+                int fromNodeId = pair.Key;
+                writer.WritePropertyName(fromNodeId.ToString());
+                writer.WriteStartObject();
+                foreach(var nodeTransitions in pair.Value)
                 {
-                    writer.WriteStartObject();
-                    writer.WritePropertyName("sToNodeId");
-                    writer.WriteValue(transition.sToNodeId);
-                    writer.WritePropertyName("nPath");
-                    writer.WriteValue(transition.nPath);
-                    writer.WriteEndObject();
+                    int path = nodeTransitions.Key;
+                    writer.WritePropertyName(path.ToString());
+                    writer.WriteStartArray();
+                    foreach (int toNodeId in nodeTransitions.Value)
+                    {
+                        writer.WriteValue(toNodeId);
+                    }
+                    writer.WriteEndArray();
                 }
-                writer.WriteEndArray();
+                writer.WriteEndObject();
             }
             writer.WriteEndObject();
 
-            writer.WritePropertyName("sStartNodeId");
-            writer.WriteValue(nodeGraphData.sStartNodeId);
+            writer.WritePropertyName("nStartNodeId");
+            writer.WriteValue(nodeGraphData.startNodeId);
 
             writer.WriteEndObject();
         }
@@ -110,7 +112,7 @@ namespace SceneNodeGraph
                             fieldInfo.SetValue(nodeData, property.Value[fieldInfo.Name].ToObject(fieldInfo.FieldType));
                         }
                     }
-                    nodeGraphData.tNodeMap[nodeData.sNodeId] = nodeData;
+                    nodeGraphData.nodeMap[nodeData.nNodeId] = nodeData;
                 }
             }
 
@@ -118,22 +120,35 @@ namespace SceneNodeGraph
             {
                 foreach (JProperty property in transitionToken.Children())
                 {
-                    string fromNodeId = property.Name;
-                    if (!nodeGraphData.tTransitions.ContainsKey(fromNodeId))
-                        nodeGraphData.tTransitions[fromNodeId] = new List<NodeTransitionData>();
-                    JArray nodeTransitionsToken = property.Value as JArray;
-                    foreach(JToken nodeTransitionToken in nodeTransitionsToken.Children())
+                    //string fromNodeId = property.Name;
+                    int.TryParse(property.Name, out int fromNodeId);
+                    var transitions = nodeGraphData.transitions;
+                    if (!transitions.ContainsKey(fromNodeId))
+                        transitions[fromNodeId] = new Dictionary<int, List<int>>();
+                    foreach (JProperty pathProp in property.Value.Children())
                     {
-                        NodeTransitionData transition = new NodeTransitionData();
-                        transition.sToNodeId = nodeTransitionToken["sToNodeId"].Value<string>();
-                        transition.nPath = nodeTransitionToken["nPath"].Value<int>();
-                        nodeGraphData.tTransitions[fromNodeId].Add(transition);
+                        int path;
+                        int.TryParse(pathProp.Name, out path);
+                        var nodeTransitions = transitions[fromNodeId];
+                        if (!nodeTransitions.ContainsKey(path))
+                            nodeTransitions[path] = new List<int>();
+                        foreach(JProperty pathTransitionProp in pathProp.Value.Children())
+                        {
+                            int toNodeId = pathTransitionProp.Value.Value<int>();
+                            nodeTransitions[path].Add(toNodeId);
+                        }
+                        //JArray pathTransitionsToken = pathProp.Value as JArray;
+                        //foreach (JToken pathTransitionToken in pathTransitionsToken.Children())
+                        //{
+                        //    string toNodeId = pathTransitionToken.Value<string>();
+                        //    nodeTransitions[path].Add(toNodeId);
+                        //}
                     }
                 }
             }
 
-            if (jsonObject.TryGetValue("sStartNodeId", out _))
-                nodeGraphData.sStartNodeId = jsonObject["sStartNodeId"].Value<string>();
+            if (jsonObject.TryGetValue("nStartNodeId", out _))
+                nodeGraphData.startNodeId = jsonObject["nStartNodeId"].Value<int>();
 
             return nodeGraphData;
         }

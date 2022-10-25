@@ -37,7 +37,7 @@ function CltHandler(tNodeGraph, tNodeData)
         end
     end
 
-    CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
+    CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
 end
 
 function SvrHandler(tNodeGraph, tNodeData)
@@ -75,5 +75,5 @@ function SvrHandler(tNodeGraph, tNodeData)
         end
     end
 
-    SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
+    SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
 end

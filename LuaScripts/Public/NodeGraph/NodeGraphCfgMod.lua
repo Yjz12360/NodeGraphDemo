@@ -18,11 +18,11 @@ function getConfigByName(configName)
     return Config.NodeGraphData[configName]
 end
 
-function getNodeConfig(tNodeGraphConfig, sNodeId)
+function getNodeConfig(tNodeGraphConfig, nNodeId)
     if tNodeGraphConfig == nil or tNodeGraphConfig.tNodeMap == nil then
         return
     end
-    return tNodeGraphConfig.tNodeMap[sNodeId]
+    return tNodeGraphConfig.tNodeMap[nNodeId]
 end
 
 function getNodeCount(tNodeGraphConfig)
@@ -32,7 +32,7 @@ function getNodeCount(tNodeGraphConfig)
     return TableUtil.dictCount(tNodeGraphConfig.tNodeMap)
 end
 
-function getTransitions(tNodeGraphConfig, sNodeId)
+function getTransitionNodes(tNodeGraphConfig, nNodeId, nPath)
     if tNodeGraphConfig == nil then
         return
     end
@@ -40,5 +40,9 @@ function getTransitions(tNodeGraphConfig, sNodeId)
     if tTransitions == nil then
         return
     end
-    return tTransitions[sNodeId]
+    local tNodeTransitions = tTransitions[nNodeId]
+    if tNodeTransitions == nil then
+        return
+    end
+    return tNodeTransitions[nPath]
 end

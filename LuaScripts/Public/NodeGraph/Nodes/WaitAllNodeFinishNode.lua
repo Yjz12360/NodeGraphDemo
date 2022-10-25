@@ -21,7 +21,7 @@ function SvrOnCheck(tNodeGraph, tNodeData)
     end
 
     if bCheckFlag then
-        SvrNodeGraphMod.finishNode(tNodeGraph, tNodeGraph.sNodeId)
+        SvrNodeGraphMod.finishNode(tNodeGraph, tNodeGraph.nNodeId)
     end
 end
 

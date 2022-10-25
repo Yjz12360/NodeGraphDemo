@@ -17,13 +17,13 @@ function CltHandler(tNodeGraph, tNodeData)
     local goOriFollow = CltCameraMod.getFollowObject()
     CltCameraMod.setTrace(nStartX, nStartY, nStartZ, nEndX, nEndY, nEndZ, nMoveTime, function()
         CltCameraMod.setFollowObject(goOriFollow)
-        CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
+        CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
     end)
 end
 
 function SvrHandler(tNodeGraph, tNodeData)
     local nMoveTime = tNodeData.nMoveTime or 1
     TimerMod.delay(nMoveTime, function()
-        SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
+        SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
     end)
 end

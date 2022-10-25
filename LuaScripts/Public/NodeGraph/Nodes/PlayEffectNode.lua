@@ -7,6 +7,6 @@ function CltHandler(tNodeGraph, tNodeData)
     if tPos ~= nil then
         CltEffectMod.playEffect(nEffectId, tPos.x, tPos.y, tPos.z)
     end
-    CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
+    CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
 end
 

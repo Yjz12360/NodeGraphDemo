@@ -5,16 +5,16 @@ using UnityEngine;
 namespace SceneNodeGraph
 {
 
-    public class NodeTransitionData
-    {
-        public string sToNodeId;
-        public int nPath = 1;
-    }
+    //public class NodeTransitionData
+    //{
+    //    public string sToNodeId;
+    //    public int nPath = 1;
+    //}
     public class NodeGraphData
     {
-        public Dictionary<string, BaseNode> tNodeMap = new Dictionary<string, BaseNode>();
-        public Dictionary<string, List<NodeTransitionData>> tTransitions = new Dictionary<string, List<NodeTransitionData>>();
-        public string sStartNodeId;
+        public Dictionary<int, BaseNode> nodeMap = new Dictionary<int, BaseNode>();
+        public Dictionary<int, Dictionary<int, List<int>>> transitions = new Dictionary<int, Dictionary<int, List<int>>>();
+        public int startNodeId;
 
         public void AddNode(BaseNode node)
         {
@@ -23,81 +23,90 @@ namespace SceneNodeGraph
                 Debug.LogError($"AddNode Error: node is null.");
                 return;
             }
-            if (tNodeMap.ContainsKey(node.sNodeId))
+            if (nodeMap.ContainsKey(node.nNodeId))
             {
-                Debug.LogError($"AddNode Error: node's id {node.sNodeId} already exists in graph.");
+                Debug.LogError($"AddNode Error: node's id {node.nNodeId} already exists in graph.");
                 return;
             }
-            tNodeMap[node.sNodeId] = node;
+            nodeMap[node.nNodeId] = node;
         }
 
-        public void RemoveNode(string sNodeId)
+        public void RemoveNode(int nodeId)
         {
-            HashSet<string> tValidNodes = new HashSet<string>();
-            Queue<string> tNodeQueue = new Queue<string>();
-            tNodeQueue.Enqueue(sStartNodeId);
-            while(tNodeQueue.Count > 0)
+            HashSet<int> validNodes = new HashSet<int>();
+            Queue<int> nodeQueue = new Queue<int>();
+            nodeQueue.Enqueue(startNodeId);
+            while(nodeQueue.Count > 0)
             {
-                string sCurrNode = tNodeQueue.Dequeue();
-                if (sCurrNode == sNodeId) continue;
-                tValidNodes.Add(sCurrNode);
-                if (tTransitions.ContainsKey(sCurrNode))
+                int currNode = nodeQueue.Dequeue();
+                if (currNode == nodeId) continue;
+                validNodes.Add(currNode);
+                if (transitions.ContainsKey(currNode))
                 {
-                    foreach(NodeTransitionData transition in tTransitions[sCurrNode])
+                    foreach(var nodeTransitions in transitions[currNode])
                     {
-                        tNodeQueue.Enqueue(transition.sToNodeId);
+                        foreach (int toNodeId in nodeTransitions.Value)
+                        {
+                            nodeQueue.Enqueue(toNodeId);
+                        }
                     }
+                    //foreach(NodeTransitionData transition in tTransitions[sCurrNode])
+                    //{
+                    //    tNodeQueue.Enqueue(transition.sToNodeId);
+                    //}
                 }
             }
-            HashSet<string> tRemoveNodes = new HashSet<string>();
-            foreach (var pair in tNodeMap)
-                if (!tValidNodes.Contains(pair.Key))
-                    tRemoveNodes.Add(pair.Key);
-            foreach (string sRemoveNode in tRemoveNodes)
+            HashSet<int> removeNodes = new HashSet<int>();
+            foreach (var pair in nodeMap)
+                if (!validNodes.Contains(pair.Key))
+                    removeNodes.Add(pair.Key);
+            foreach (int removeNode in removeNodes)
             {
-                tNodeMap.Remove(sRemoveNode);
-                if(tTransitions.ContainsKey(sRemoveNode))
+                nodeMap.Remove(removeNode);
+                if(transitions.ContainsKey(removeNode))
                 {
-                    tTransitions.Remove(sRemoveNode);
+                    transitions.Remove(removeNode);
                 }
             }
         }
 
         public void SetStartNode(BaseNode node)
         {
-            if (!tNodeMap.ContainsKey(node.sNodeId))
+            if (!nodeMap.ContainsKey(node.nNodeId))
             {
-                Debug.LogError($"SetStartNode Error: sNodeId {node.sNodeId} not exist.");
+                Debug.LogError($"SetStartNode Error: sNodeId {node.nNodeId} not exist.");
                 return;
             }
-            sStartNodeId = node.sNodeId;
+            startNodeId = node.nNodeId;
         }
 
-        public BaseNode GetNodeData(string sNodeId)
+        public BaseNode GetNodeData(int nodeId)
         {
-            if (!tNodeMap.ContainsKey(sNodeId))
+            if (!nodeMap.ContainsKey(nodeId))
                 return null;
-            return tNodeMap[sNodeId];
+            return nodeMap[nodeId];
         }
 
-        public void AddTransition(string sFromNodeId, string sToNodeId, int nPath = 1)
+        public void AddTransition(int fromNodeId, int toNodeId, int path = 1)
         {
-            if (!tNodeMap.ContainsKey(sFromNodeId))
+            if (!nodeMap.ContainsKey(fromNodeId))
             {
-                Debug.LogError($"AddTransition Error: sFromNodeId {sFromNodeId} not exist.");
+                Debug.LogError($"AddTransition Error: sFromNodeId {fromNodeId} not exist.");
                 return;
             }
-            if (!tNodeMap.ContainsKey(sToNodeId))
+            if (!nodeMap.ContainsKey(toNodeId))
             {
-                Debug.LogError($"AddTransition Error: sToNodeId {sToNodeId} not exist.");
+                Debug.LogError($"AddTransition Error: sToNodeId {toNodeId} not exist.");
                 return;
             }
-            NodeTransitionData nodeTransition = new NodeTransitionData();
-            nodeTransition.sToNodeId = sToNodeId;
-            nodeTransition.nPath = nPath;
-            if (!tTransitions.ContainsKey(sFromNodeId))
-                tTransitions[sFromNodeId] = new List<NodeTransitionData>();
-            tTransitions[sFromNodeId].Add(nodeTransition);
+            //NodeTransitionData nodeTransition = new NodeTransitionData();
+            //nodeTransition.sToNodeId = sToNodeId;
+            //nodeTransition.nPath = nPath;
+            if (!transitions.ContainsKey(fromNodeId))
+                transitions[fromNodeId] = new Dictionary<int, List<int>>();
+            if (!transitions[fromNodeId].ContainsKey(path))
+                transitions[fromNodeId][path] = new List<int>();
+            transitions[fromNodeId][path].Add(toNodeId);
         }
 
     }

@@ -17,7 +17,7 @@ namespace SceneNodeGraph
 
         NodeGraphEditor nodeGraphEditor = null;
 
-        private string selectNode = "";
+        private int selectNode = -1;
         private NodeType addNodeType = NodeType.Print;
         private int addNodePath = 1;
 
@@ -64,7 +64,7 @@ namespace SceneNodeGraph
                         searchPath = "";
                         NodeGraphData nodeGraphData = new NodeGraphData();
                         StartNode startNode = new StartNode();
-                        startNode.sNodeId = "1";
+                        startNode.nNodeId = 1;
                         nodeGraphData.AddNode(startNode);
                         nodeGraphData.SetStartNode(startNode);
                         nodeGraphEditor = new NodeGraphEditor(nodeGraphData, this);
@@ -118,14 +118,14 @@ namespace SceneNodeGraph
                         addNodePath = EditorGUILayout.IntField("路径编号", addNodePath);
                         if (GUILayout.Button("添加子节点"))
                         {
-                            if (!string.IsNullOrEmpty(selectNode))
+                            if (selectNode > 0)
                                 nodeGraphEditor.AddNode(selectNode, addNodeType, addNodePath);
                             else
                                 EditorUtility.DisplayDialog("提示", "没有选中节点", "确定");
                         }
                         if (GUILayout.Button("删除节点"))
                         {
-                            if (!string.IsNullOrEmpty(selectNode))
+                            if (selectNode > 0)
                                 nodeGraphEditor.RemoveNode(selectNode);
                             else
                                 EditorUtility.DisplayDialog("提示", "没有选中节点", "确定");
@@ -142,7 +142,7 @@ namespace SceneNodeGraph
                                 FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
                                 foreach (FieldInfo fieldInfo in fieldInfos)
                                 {
-                                    if (fieldInfo.Name == "sNodeId") continue;
+                                    if (fieldInfo.Name == "nNodeId") continue;
                                     Type fieldType = fieldInfo.FieldType;
                                     if (fieldType == typeof(int))
                                     {
@@ -191,7 +191,7 @@ namespace SceneNodeGraph
             }
         }
 
-        public void OnNodeSelect(string nodeId)
+        public void OnNodeSelect(int nodeId)
         {
             selectNode = nodeId;
         }

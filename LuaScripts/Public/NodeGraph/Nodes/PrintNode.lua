@@ -6,5 +6,5 @@ function CltHandler(tNodeGraph, tNodeData)
     else
         print(sContext)
     end
-    CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
+    CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
 end

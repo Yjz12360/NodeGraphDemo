@@ -10,5 +10,5 @@ function CltHandler(tNodeGraph, tNodeData)
             uAnimator:SetTrigger(sSetTrigger)
         end
     end
-    CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
+    CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
 end

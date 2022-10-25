@@ -6,5 +6,5 @@ function SvrHandler(tNodeGraph, tNodeData)
     else
         nPath = 2
     end
-    CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId, nPath)
+    CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId, nPath)
 end

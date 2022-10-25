@@ -35,7 +35,7 @@ function SvrOnCheck(tNodeGraph, tNodeData)
         bTrigger = false
     end
     if bTrigger then
-        SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
+        SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
     end
 end
 

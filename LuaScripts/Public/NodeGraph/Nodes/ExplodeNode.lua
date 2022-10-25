@@ -11,7 +11,7 @@ function CltHandler(tNodeGraph, tNodeData)
             CltEffectMod.playEffect(nEffectId, tPos.x, tPos.y, tPos.z)
         end
     end
-    CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
+    CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
 end
 
 function SvrHandler(tNodeGraph, tNodeData)
@@ -20,7 +20,7 @@ function SvrHandler(tNodeGraph, tNodeData)
     local tSvrGame = SvrGameMod.getGameById(tNodeGraph.nGameId)
     local tPos = GameSceneCfgMod.getPosition(tSvrGame.tGameSceneConfig, sPosId)
     if tPos == nil then
-        SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
+        SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
         return
     end
     local tExplosionConfig = Config.Explosion[nExplosionId]
@@ -46,5 +46,5 @@ function SvrHandler(tNodeGraph, tNodeData)
             end
         end
     end
-    SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
+    SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
 end

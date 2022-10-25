@@ -9,7 +9,7 @@ local function addEventListener(tNodeGraph, tNodeData, nEventType)
         tListeners = {}
         tEventListeners[nEventType] = tListeners
     end
-    tListeners[tNodeData.sNodeId] = true
+    tListeners[tNodeData.nNodeId] = true
 end
 
 local function delEventListener(tNodeGraph, tNodeData, nEventType)
@@ -21,7 +21,7 @@ local function delEventListener(tNodeGraph, tNodeData, nEventType)
     if tListeners == nil then
         return
     end
-    tListeners[tNodeData.sNodeId] = nil
+    tListeners[tNodeData.nNodeId] = nil
 end
 
 function addNodeGraph(tCltGame, nNodeGraphId, nConfigId)
@@ -47,15 +47,15 @@ function startNodeGraph(tNodeGraph)
     TableUtil.clear(tNodeGraph.tFinishedNodes)
 
     tNodeGraph.nState = Const.NodeGraphState.Running
-    local sStartNodeId = tNodeGraph.tConfigData.sStartNodeId
-    CltNodeGraphMod.finishNode(tNodeGraph, sStartNodeId)
+    local nStartNodeId = tNodeGraph.tConfigData.nStartNodeId
+    CltNodeGraphMod.finishNode(tNodeGraph, nStartNodeId)
 end
 
-function triggerNode(tNodeGraph, sNodeId)
+function triggerNode(tNodeGraph, nNodeId)
     if tNodeGraph == nil then
         return
     end
-    local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, sNodeId)
+    local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, nNodeId)
     if tNodeData == nil then
         return
     end
@@ -72,20 +72,20 @@ function triggerNode(tNodeGraph, sNodeId)
     end
 end
 
-function finishNode(tNodeGraph, sNodeId, nPath)
+function finishNode(tNodeGraph, nNodeId, nPath)
     if tNodeGraph == nil then
         return
     end
     if tNodeGraph.nState ~= Const.NodeGraphState.Running then
         return
     end
-    if tNodeGraph.tFinishedNodes[sNodeId] then
+    if tNodeGraph.tFinishedNodes[nNodeId] then
         return
     end
     
-    local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, sNodeId)
+    local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, nNodeId)
     if tNodeData ~= nil then
-        local tCltEvents = NodesHandlerMod.getSvrEvents(tNodeData.nNodeType)
+        local tCltEvents = NodesHandlerMod.getCltEvents(tNodeData.nNodeType)
         if tCltEvents ~= nil then
             for nEventType, _ in pairs(tCltEvents) do
                 delEventListener(tNodeGraph, tNodeData, nEventType)
@@ -94,21 +94,19 @@ function finishNode(tNodeGraph, sNodeId, nPath)
     end
 
     nPath = nPath or 1
-    local tTransitions = NodeGraphCfgMod.getTransitions(tNodeGraph.tConfigData, sNodeId)
-    if tTransitions ~= nil then
-        for _, tTransition in ipairs(tTransitions) do
-            if tTransition.nPath == nPath then
-                CltNodeGraphMod.triggerNode(tNodeGraph, tTransition.sToNodeId)
-            end
+    local tTransitionNodes = NodeGraphCfgMod.getTransitionNodes(tNodeGraph.tConfigData, nNodeId, nPath)
+    if tTransitionNodes ~= nil then
+        for _, sToNodeId in ipairs(tTransitionNodes) do
+            CltNodeGraphMod.triggerNode(tNodeGraph, sToNodeId)
         end
     end
 
-    tNodeGraph.tFinishedNodes[sNodeId] = true
+    tNodeGraph.tFinishedNodes[nNodeId] = true
 
     local bAllFinish = true
     local tNodeMap = tNodeGraph.tConfigData.tNodeMap
-    for sNodeId, _ in pairs(tNodeMap) do
-        if not tNodeGraph.tFinishedNodes[sNodeId] then
+    for nNodeId, _ in pairs(tNodeMap) do
+        if not tNodeGraph.tFinishedNodes[nNodeId] then
             bAllFinish = false
             break
         end
@@ -134,8 +132,8 @@ function processEvent(tNodeGraph, nEventType, ...)
     if tListeners == nil then
         return
     end
-    for sNodeId, _ in pairs(tListeners) do
-        local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, sNodeId)
+    for nNodeId, _ in pairs(tListeners) do
+        local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, nNodeId)
         local nNodeType = tNodeData.nNodeType
         local fEventHandler = NodesHandlerMod.getCltEventHandler(nNodeType, nEventType)
         if fEventHandler ~= nil then
@@ -144,7 +142,7 @@ function processEvent(tNodeGraph, nEventType, ...)
     end
 end
 
-function recvFinishNode(nGameId, nNodeGraphId, sNodeId, nPath)
+function recvFinishNode(nGameId, nNodeGraphId, nNodeId, nPath)
     local tCltGame = CltGameMod.getGame()
     if tCltGame == nil then
         return
@@ -156,7 +154,7 @@ function recvFinishNode(nGameId, nNodeGraphId, sNodeId, nPath)
     if tMainNodeGraph == nil or tMainNodeGraph.nNodeGraphId ~= nNodeGraphId then
         return
     end
-    CltNodeGraphMod.finishNode(tMainNodeGraph, sNodeId, nPath)
+    CltNodeGraphMod.finishNode(tMainNodeGraph, nNodeId, nPath)
 end
 
 function recvFinishNodeGraph(nGameId, nNodeGraphId)

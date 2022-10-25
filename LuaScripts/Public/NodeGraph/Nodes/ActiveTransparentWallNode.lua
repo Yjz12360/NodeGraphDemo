@@ -17,5 +17,5 @@ function CltHandler(tNodeGraph, tNodeData)
             end
         end
     end
-    CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.sNodeId)
+    CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
 end
