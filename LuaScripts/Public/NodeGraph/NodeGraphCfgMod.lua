@@ -32,9 +32,13 @@ function getNodeCount(tNodeGraphConfig)
     return TableUtil.dictCount(tNodeGraphConfig.tNodeMap)
 end
 
-function getTransitions(tNodeGraphConfig)
+function getTransitions(tNodeGraphConfig, sNodeId)
     if tNodeGraphConfig == nil then
         return
     end
-    return tNodeGraphConfig.tTransitions
+    local tTransitions = tNodeGraphConfig.tTransitions
+    if tTransitions == nil then
+        return
+    end
+    return tTransitions[sNodeId]
 end

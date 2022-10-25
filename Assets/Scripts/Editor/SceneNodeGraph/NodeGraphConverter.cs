@@ -59,18 +59,22 @@ namespace SceneNodeGraph
 
             writer.WritePropertyName("tTransitions");
             writer.WriteStartObject();
-            for(int i = 0; i < nodeGraphData.tTransitions.Count; ++i)
+            foreach(var pair in nodeGraphData.tTransitions)
             {
-                NodeTransitionData transition = nodeGraphData.tTransitions[i];
-                writer.WritePropertyName(i.ToString());
-                writer.WriteStartObject();
-                writer.WritePropertyName("sFromNodeId");
-                writer.WriteValue(transition.sFromNodeId);
-                writer.WritePropertyName("sToNodeId");
-                writer.WriteValue(transition.sToNodeId);
-                writer.WritePropertyName("nPath");
-                writer.WriteValue(transition.nPath);
-                writer.WriteEndObject();
+                string fromNodeId = pair.Key;
+                writer.WritePropertyName(fromNodeId);
+                writer.WriteStartArray();
+                List<NodeTransitionData> transitions = pair.Value;
+                foreach(NodeTransitionData transition in transitions)
+                {
+                    writer.WriteStartObject();
+                    writer.WritePropertyName("sToNodeId");
+                    writer.WriteValue(transition.sToNodeId);
+                    writer.WritePropertyName("nPath");
+                    writer.WriteValue(transition.nPath);
+                    writer.WriteEndObject();
+                }
+                writer.WriteEndArray();
             }
             writer.WriteEndObject();
 
@@ -114,11 +118,17 @@ namespace SceneNodeGraph
             {
                 foreach (JProperty property in transitionToken.Children())
                 {
-                    NodeTransitionData transition = new NodeTransitionData();
-                    transition.sFromNodeId = property.Value["sFromNodeId"].Value<string>();
-                    transition.sToNodeId = property.Value["sToNodeId"].Value<string>();
-                    transition.nPath = property.Value["nPath"].Value<int>();
-                    nodeGraphData.tTransitions.Add(transition);
+                    string fromNodeId = property.Name;
+                    if (!nodeGraphData.tTransitions.ContainsKey(fromNodeId))
+                        nodeGraphData.tTransitions[fromNodeId] = new List<NodeTransitionData>();
+                    JArray nodeTransitionsToken = property.Value as JArray;
+                    foreach(JToken nodeTransitionToken in nodeTransitionsToken.Children())
+                    {
+                        NodeTransitionData transition = new NodeTransitionData();
+                        transition.sToNodeId = nodeTransitionToken["sToNodeId"].Value<string>();
+                        transition.nPath = nodeTransitionToken["nPath"].Value<int>();
+                        nodeGraphData.tTransitions[fromNodeId].Add(transition);
+                    }
                 }
             }
 

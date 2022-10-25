@@ -7,14 +7,13 @@ namespace SceneNodeGraph
 
     public class NodeTransitionData
     {
-        public string sFromNodeId;
         public string sToNodeId;
         public int nPath = 1;
     }
     public class NodeGraphData
     {
         public Dictionary<string, BaseNode> tNodeMap = new Dictionary<string, BaseNode>();
-        public List<NodeTransitionData> tTransitions = new List<NodeTransitionData>();
+        public Dictionary<string, List<NodeTransitionData>> tTransitions = new Dictionary<string, List<NodeTransitionData>>();
         public string sStartNodeId;
 
         public void AddNode(BaseNode node)
@@ -42,9 +41,9 @@ namespace SceneNodeGraph
                 string sCurrNode = tNodeQueue.Dequeue();
                 if (sCurrNode == sNodeId) continue;
                 tValidNodes.Add(sCurrNode);
-                foreach(NodeTransitionData transition in tTransitions)
+                if (tTransitions.ContainsKey(sCurrNode))
                 {
-                    if(transition.sFromNodeId == sCurrNode)
+                    foreach(NodeTransitionData transition in tTransitions[sCurrNode])
                     {
                         tNodeQueue.Enqueue(transition.sToNodeId);
                     }
@@ -55,12 +54,12 @@ namespace SceneNodeGraph
                 if (!tValidNodes.Contains(pair.Key))
                     tRemoveNodes.Add(pair.Key);
             foreach (string sRemoveNode in tRemoveNodes)
-                tNodeMap.Remove(sRemoveNode);
-            for(int i = tTransitions.Count - 1; i >= 0; --i)
             {
-                NodeTransitionData transition = tTransitions[i];
-                if (tRemoveNodes.Contains(transition.sFromNodeId) || tRemoveNodes.Contains(transition.sToNodeId))
-                    tTransitions.RemoveAt(i);
+                tNodeMap.Remove(sRemoveNode);
+                if(tTransitions.ContainsKey(sRemoveNode))
+                {
+                    tTransitions.Remove(sRemoveNode);
+                }
             }
         }
 
@@ -94,10 +93,11 @@ namespace SceneNodeGraph
                 return;
             }
             NodeTransitionData nodeTransition = new NodeTransitionData();
-            nodeTransition.sFromNodeId = sFromNodeId;
             nodeTransition.sToNodeId = sToNodeId;
             nodeTransition.nPath = nPath;
-            tTransitions.Add(nodeTransition);
+            if (!tTransitions.ContainsKey(sFromNodeId))
+                tTransitions[sFromNodeId] = new List<NodeTransitionData>();
+            tTransitions[sFromNodeId].Add(nodeTransition);
         }
 
     }

@@ -110,10 +110,12 @@ function finishNode(tNodeGraph, sNodeId, nPath)
 
     SvrNodeGraphMod.processEvent(tNodeGraph, Const.EventType.FinishNode, sNodeId)
 
-    local tTransitions = NodeGraphCfgMod.getTransitions(tNodeGraph.tConfigData)
-    for _, tTransition in pairs(tTransitions) do
-        if tTransition.sFromNodeId == sNodeId and tTransition.nPath == nPath then
-            SvrNodeGraphMod.triggerNode(tNodeGraph, tTransition.sToNodeId)
+    local tTransitions = NodeGraphCfgMod.getTransitions(tNodeGraph.tConfigData, sNodeId)
+    if tTransitions ~= nil then
+        for _, tTransition in ipairs(tTransitions) do
+            if tTransition.nPath == nPath then
+                SvrNodeGraphMod.triggerNode(tNodeGraph, tTransition.sToNodeId)
+            end
         end
     end
 

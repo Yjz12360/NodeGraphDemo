@@ -46,11 +46,11 @@ namespace SceneNodeGraph
         private int RecursiveCalCoord(string rootNodeId)
         {
             int coordOffsetY = 0;
-            Vector2Int coord = nodeCoords[rootNodeId];
-            bool first = true;
-            foreach (NodeTransitionData transition in nodeGraphData.tTransitions)
+            if(nodeGraphData.tTransitions.ContainsKey(rootNodeId))
             {
-                if (transition.sFromNodeId == rootNodeId)
+                Vector2Int coord = nodeCoords[rootNodeId];
+                bool first = true;
+                foreach (NodeTransitionData transition in nodeGraphData.tTransitions[rootNodeId])
                 {
                     string toNodeId = transition.sToNodeId;
                     if (nodeCoords.ContainsKey(toNodeId))
@@ -141,22 +141,27 @@ namespace SceneNodeGraph
         }
         private void DrawTransitions()
         {
-            foreach (NodeTransitionData transition in nodeGraphData.tTransitions)
+            foreach(var pair in nodeGraphData.tTransitions)
             {
-                string fromNodeId = transition.sFromNodeId;
-                string toNodeId = transition.sToNodeId;
-                Vector2 fromPos = GetDrawPos(nodeCoords[fromNodeId]);
-                fromPos.x += nodeWidth;
-                fromPos.y += nodeHeight / 2;
-                Vector2 toPos = GetDrawPos(nodeCoords[toNodeId]);
-                toPos.y += nodeHeight / 2;
-                Handles.DrawLine(fromPos, toPos);
-                Vector2 pathTextPos = (fromPos + toPos) / 2;
-                pathTextPos.x -= pathTextWidth / 2;
-                pathTextPos.y -= pathTextHeight / 2;
-                string path = transition.nPath.ToString();
-                using (new EditorGUI.DisabledScope())
-                    GUI.TextField(new Rect(pathTextPos.x, pathTextPos.y, pathTextWidth, pathTextHeight), path);
+                string fromNodeId = pair.Key;
+                List<NodeTransitionData> transitions = pair.Value;
+                foreach(NodeTransitionData transition in transitions)
+                {
+                    string toNodeId = transition.sToNodeId;
+                    Vector2 fromPos = GetDrawPos(nodeCoords[fromNodeId]);
+                    fromPos.x += nodeWidth;
+                    fromPos.y += nodeHeight / 2;
+                    Vector2 toPos = GetDrawPos(nodeCoords[toNodeId]);
+                    toPos.y += nodeHeight / 2;
+                    Handles.DrawLine(fromPos, toPos);
+                    Vector2 pathTextPos = (fromPos + toPos) / 2;
+                    pathTextPos.x -= pathTextWidth / 2;
+                    pathTextPos.y -= pathTextHeight / 2;
+                    string path = transition.nPath.ToString();
+                    using (new EditorGUI.DisabledScope())
+                        GUI.TextField(new Rect(pathTextPos.x, pathTextPos.y, pathTextWidth, pathTextHeight), path);
+
+                }
             }
         }
     }
