@@ -6,8 +6,8 @@ namespace SceneNodeGraph
 {
     public class ActiveAINode : BaseNode
     {
-        public string sRefreshId;
-        public string sGroupId;
+        public int nRefreshId;
+        public int nGroupId;
         public bool bActive;
     }
 

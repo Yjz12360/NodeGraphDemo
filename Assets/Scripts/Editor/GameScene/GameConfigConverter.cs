@@ -45,13 +45,13 @@ namespace Game
                 monsterChilds.Sort(CompareTrans);
                 foreach (Transform child in monsterChilds)
                 {
-                    string refreshId = child.name;
+                    int.TryParse(child.name, out int refreshId);
                     ConfigId configId = child.GetComponent<ConfigId>();
                     if (configId != null)
                     {
-                        writer.WritePropertyName(refreshId);
+                        writer.WritePropertyName(refreshId.ToString());
                         writer.WriteStartObject();
-                        writer.WritePropertyName("sRefreshId");
+                        writer.WritePropertyName("nRefreshId");
                         writer.WriteValue(refreshId);
 
                         writer.WritePropertyName("nMonsterCfgId");
@@ -109,13 +109,13 @@ namespace Game
                 writer.WriteStartObject();
                 foreach(Transform child in monsterGroupChilds)
                 {
-                    string groupId = child.name;
+                    int.TryParse(child.name, out int groupId);
                     MonsterGroupConfig monsterGroupConfig = child.GetComponent<MonsterGroupConfig>();
                     if(monsterGroupConfig != null)
                     {
-                        writer.WritePropertyName(groupId);
+                        writer.WritePropertyName(groupId.ToString());
                         writer.WriteStartObject();
-                        writer.WritePropertyName("sGroupId");
+                        writer.WritePropertyName("nGroupId");
                         writer.WriteValue(groupId);
 
                         writer.WritePropertyName("tRefreshMonsters");
@@ -176,8 +176,8 @@ namespace Game
             {
                 foreach (JProperty property in refreshMonsterToken.Children())
                 {
-                    string refreshId = property.Value["sRefreshId"].Value<string>();
-                    GameObject child = new GameObject(refreshId);
+                    int refreshId = property.Value["nRefreshId"].Value<int>();
+                    GameObject child = new GameObject(refreshId.ToString());
                     monsterChilds.Add(child.transform);
                     int monsterCfgId = property.Value["nMonsterCfgId"].Value<int>();
                     ConfigId configId = child.AddComponent<ConfigId>();
@@ -239,16 +239,16 @@ namespace Game
             {
                 foreach (JProperty property in refreshMonsterGroupToken.Children())
                 {
-                    string groupId = property.Value["sGroupId"].Value<string>();
-                    GameObject child = new GameObject(groupId);
+                    int groupId = property.Value["nGroupId"].Value<int>();
+                    GameObject child = new GameObject(groupId.ToString());
                     monsterGroupChilds.Add(child.transform);
                     MonsterGroupConfig monsterGroupConfig = child.AddComponent<MonsterGroupConfig>();
 
                     JToken monstersToken = property.Value["tRefreshMonsters"];
-                    foreach (JToken monsterToken in monstersToken.Children())
+                    foreach (JProperty monsterToken in monstersToken.Children())
                     {
-                        string refreshId = monsterToken.Value<string>();
-                        Transform monsterTrans = monsterRoot.transform.Find(refreshId);
+                        int refreshId = monsterToken.Value.Value<int>();
+                        Transform monsterTrans = monsterRoot.transform.Find(refreshId.ToString());
                         if(monsterTrans != null)
                         {
                             monsterGroupConfig.monsters.Add(monsterTrans.gameObject);

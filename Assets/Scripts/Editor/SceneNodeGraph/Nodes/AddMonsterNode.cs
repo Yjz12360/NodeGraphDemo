@@ -6,9 +6,9 @@ namespace SceneNodeGraph
 {
     public class AddMonsterNode : BaseNode
     {
-        public string sRefreshId;
+        public int nRefreshId;
         public int nConfigId;
-        public string sPosId;
+        public int nPosId;
         public float nPosX;
         public float nPosY;
         public float nPosZ;

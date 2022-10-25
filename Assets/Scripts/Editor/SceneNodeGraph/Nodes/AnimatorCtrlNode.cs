@@ -6,7 +6,7 @@ namespace SceneNodeGraph
 {
     public class AnimatorCtrlNode : BaseNode
     {
-        public string sRefreshId;
+        public int nRefreshId;
         public string sSetTrigger;
     }
 

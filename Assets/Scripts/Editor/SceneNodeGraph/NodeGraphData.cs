@@ -5,11 +5,6 @@ using UnityEngine;
 namespace SceneNodeGraph
 {
 
-    //public class NodeTransitionData
-    //{
-    //    public string sToNodeId;
-    //    public int nPath = 1;
-    //}
     public class NodeGraphData
     {
         public Dictionary<int, BaseNode> nodeMap = new Dictionary<int, BaseNode>();
@@ -50,10 +45,6 @@ namespace SceneNodeGraph
                             nodeQueue.Enqueue(toNodeId);
                         }
                     }
-                    //foreach(NodeTransitionData transition in tTransitions[sCurrNode])
-                    //{
-                    //    tNodeQueue.Enqueue(transition.sToNodeId);
-                    //}
                 }
             }
             HashSet<int> removeNodes = new HashSet<int>();
@@ -68,13 +59,28 @@ namespace SceneNodeGraph
                     transitions.Remove(removeNode);
                 }
             }
+            foreach (int validNode in validNodes)
+            {
+                if (transitions.ContainsKey(validNode))
+                {
+                    var transition = transitions[validNode];
+                    foreach(List<int> toNodeList in transition.Values)
+                    {
+                        if (toNodeList.Contains(nodeId))
+                        {
+                            toNodeList.Remove(nodeId);
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         public void SetStartNode(BaseNode node)
         {
             if (!nodeMap.ContainsKey(node.nNodeId))
             {
-                Debug.LogError($"SetStartNode Error: sNodeId {node.nNodeId} not exist.");
+                Debug.LogError($"SetStartNode Error: nodeId {node.nNodeId} not exist.");
                 return;
             }
             startNodeId = node.nNodeId;
@@ -91,17 +97,14 @@ namespace SceneNodeGraph
         {
             if (!nodeMap.ContainsKey(fromNodeId))
             {
-                Debug.LogError($"AddTransition Error: sFromNodeId {fromNodeId} not exist.");
+                Debug.LogError($"AddTransition Error: fromNodeId {fromNodeId} not exist.");
                 return;
             }
             if (!nodeMap.ContainsKey(toNodeId))
             {
-                Debug.LogError($"AddTransition Error: sToNodeId {toNodeId} not exist.");
+                Debug.LogError($"AddTransition Error: toNodeId {toNodeId} not exist.");
                 return;
             }
-            //NodeTransitionData nodeTransition = new NodeTransitionData();
-            //nodeTransition.sToNodeId = sToNodeId;
-            //nodeTransition.nPath = nPath;
             if (!transitions.ContainsKey(fromNodeId))
                 transitions[fromNodeId] = new Dictionary<int, List<int>>();
             if (!transitions[fromNodeId].ContainsKey(path))

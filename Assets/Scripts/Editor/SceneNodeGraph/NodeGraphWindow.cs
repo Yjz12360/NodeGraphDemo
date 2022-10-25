@@ -126,7 +126,10 @@ namespace SceneNodeGraph
                         if (GUILayout.Button("删除节点"))
                         {
                             if (selectNode > 0)
+                            {
                                 nodeGraphEditor.RemoveNode(selectNode);
+                                selectNode = -1;
+                            }
                             else
                                 EditorUtility.DisplayDialog("提示", "没有选中节点", "确定");
                         }

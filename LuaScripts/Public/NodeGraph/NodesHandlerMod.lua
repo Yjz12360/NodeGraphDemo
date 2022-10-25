@@ -96,11 +96,9 @@ tNodeHandlers[Const.NodeType.HasMonster] = {
 }
 
 tNodeHandlers[Const.NodeType.WaitEnterTrigger] = {
-    tCltEventHandlers = {
-        [Const.EventType.EnterTrigger] = function(tNodeGraph, tNodeData, nTriggerId)
-            return WaitEnterTriggerNode.CltOnTriggerEnter(tNodeGraph, tNodeData, nTriggerId)
-        end
-    },
+    tSvrHandler = function(tNodeGraph, tNodeData)
+        return WaitEnterTriggerNode.SvrHandler(tNodeGraph, tNodeData)
+    end,
     tSvrEventHandlers = {
         [Const.EventType.EnterTrigger] = function(tNodeGraph, tNodeData, nTriggerId)
             return WaitEnterTriggerNode.SvrOnTriggerEnter(tNodeGraph, tNodeData, nTriggerId)
@@ -110,14 +108,14 @@ tNodeHandlers[Const.NodeType.WaitEnterTrigger] = {
 
 tNodeHandlers[Const.NodeType.WaitMonsterNum] = {
     tSvrHandler = function(tNodeGraph, tNodeData)
-        return WaitMonsterNumNode.SvrOnCheck(tNodeGraph, tNodeData)
+        return WaitMonsterNumNode.SvrHandler(tNodeGraph, tNodeData)
     end,
     tSvrEventHandlers = {
         [Const.EventType.AddMonster] = function(tNodeGraph, tNodeData)
-            return WaitMonsterNumNode.SvrOnCheck(tNodeGraph, tNodeData)
+            return WaitMonsterNumNode.SvrOnMonsterNumChange(tNodeGraph, tNodeData)
         end,
         [Const.EventType.MonsterDead] = function(tNodeGraph, tNodeData)
-            return WaitMonsterNumNode.SvrOnCheck(tNodeGraph, tNodeData)
+            return WaitMonsterNumNode.SvrOnMonsterNumChange(tNodeGraph, tNodeData)
         end
     },
 }
@@ -127,8 +125,8 @@ tNodeHandlers[Const.NodeType.WaitMonsterDead] = {
         return WaitMonsterDeadNode.SvrHandler(tNodeGraph, tNodeData)
     end,
     tSvrEventHandlers = {
-        [Const.EventType.BeforeMonsterDead] = function(tNodeGraph, tNodeData, nObjectId)
-            return WaitMonsterDeadNode.SvrBeforeMonsterDead(tNodeGraph, tNodeData, nObjectId)
+        [Const.EventType.BeforeMonsterDead] = function(tNodeGraph, tNodeData)
+            return WaitMonsterDeadNode.SvrBeforeMonsterDead(tNodeGraph, tNodeData)
         end
     },
 }

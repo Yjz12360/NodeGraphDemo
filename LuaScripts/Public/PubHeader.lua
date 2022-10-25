@@ -17,6 +17,7 @@ require "Public/Messager"
 
 require "Public/NodeGraph/NodeGraphCfgMod"
 require "Public/NodeGraph/NodesHandlerMod"
+require "Public/NodeGraph/NodeGraphEventMod"
 
 require "Public/NodeGraph/Nodes/PrintNode"
 require "Public/NodeGraph/Nodes/DelayNode"

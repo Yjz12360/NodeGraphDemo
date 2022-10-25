@@ -1,7 +1,7 @@
 
 function CltHandler(tNodeGraph, tNodeData)
     local bSetPlayer = tNodeData.bSetPlayer
-    local sRefreshId = tNodeData.sRefreshId
+    local nRefreshId = tNodeData.nRefreshId
 
     local tCltGame = CltGameMod.getGame()
     local nPosX, nPosY, nPosZ = 0, 0, 0
@@ -28,7 +28,7 @@ function CltHandler(tNodeGraph, tNodeData)
         end
         CltCameraMod.update()
     else
-        local tGameObject = CltGameRoleMod.getMonsterByRefreshId(sRefreshId)
+        local tGameObject = CltGameRoleMod.getMonsterByRefreshId(nRefreshId)
         if tGameObject ~= nil then
             local goInstance = tGameObject.goInstance
             if goInstance ~= nil then
@@ -42,7 +42,7 @@ end
 
 function SvrHandler(tNodeGraph, tNodeData)
     local bSetPlayer = tNodeData.bSetPlayer
-    local sRefreshId = tNodeData.sRefreshId
+    local nRefreshId = tNodeData.nRefreshId
 
     local tSvrGame = SvrGameMod.getGameById(tNodeGraph.nGameId)
     local nPosX, nPosY, nPosZ = 0, 0, 0
@@ -67,7 +67,7 @@ function SvrHandler(tNodeGraph, tNodeData)
             end
         end
     else
-        local tGameObject = SvrGameRoleMod.getMonsterByRefreshId(tSvrGame, sRefreshId)
+        local tGameObject = SvrGameRoleMod.getMonsterByRefreshId(tSvrGame, nRefreshId)
         if tGameObject ~= nil then
             tGameObject.nPosX = nPosX
             tGameObject.nPosY = nPosY

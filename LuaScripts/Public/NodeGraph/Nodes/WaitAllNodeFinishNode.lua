@@ -1,26 +1,64 @@
 
-function SvrOnCheck(tNodeGraph, tNodeData)
+local function doCheck(tNodeGraph, tNodeData)
     local bCheckFlag = true
-    local sWaitNode1 = tNodeData.sWaitNode1
-    if sWaitNode1 ~= nil and sWaitNode1 ~= "" then
-        if not tNodeGraph.tFinishedNodes[sWaitNode1] then
+    local nWaitNode1 = tNodeData.nWaitNode1
+    if nWaitNode1 > 0 then
+        if not tNodeGraph.tFinishedNodes[nWaitNode1] then
             bCheckFlag = false
         end
     end
-    local sWaitNode2 = tNodeData.sWaitNode2
-    if sWaitNode2 ~= nil and sWaitNode2 ~= "" then
-        if not tNodeGraph.tFinishedNodes[sWaitNode2] then
+    local nWaitNode2 = tNodeData.nWaitNode2
+    if nWaitNode2 > 0 then
+        if not tNodeGraph.tFinishedNodes[nWaitNode2] then
             bCheckFlag = false
         end
     end
-    local sWaitNode3 = tNodeData.sWaitNode3
-    if sWaitNode3 ~= nil and sWaitNode3 ~= "" then
-        if not tNodeGraph.tFinishedNodes[sWaitNode3] then
+    local nWaitNode3 = tNodeData.nWaitNode3
+    if nWaitNode3 > 0 then
+        if not tNodeGraph.tFinishedNodes[nWaitNode3] then
             bCheckFlag = false
         end
     end
+    return bCheckFlag
+end
 
+function SvrHandler(tNodeGraph, tNodeData)
+    local bCheckFlag = doCheck(tNodeGraph, tNodeData)
     if bCheckFlag then
+        SvrNodeGraphMod.finishNode(tNodeGraph, tNodeGraph.nNodeId)
+        return
+    end
+    local nWaitNode1 = tNodeData.nWaitNode1
+    if nWaitNode1 > 0 then
+        NodeGraphEventMod.registerNode(tNodeGraph, tNodeGraph.nNodeId, Const.EventType.FinishNode, nWaitNode1)
+    end
+    local nWaitNode2 = tNodeData.nWaitNode2
+    if nWaitNode2 > 0 then
+        NodeGraphEventMod.registerNode(tNodeGraph, tNodeGraph.nNodeId, Const.EventType.FinishNode, nWaitNode2)
+    end
+    local nWaitNode3 = tNodeData.nWaitNode3
+    if nWaitNode3 > 0 then
+        NodeGraphEventMod.registerNode(tNodeGraph, tNodeGraph.nNodeId, Const.EventType.FinishNode, nWaitNode3)
+    end
+end
+
+function SvrOnCheck(tNodeGraph, tNodeData)
+    local bCheckFlag = doCheck(tNodeGraph, tNodeData)
+    if bCheckFlag then
+        
+        local nWaitNode1 = tNodeData.nWaitNode1
+        if nWaitNode1 > 0 then
+            NodeGraphEventMod.unregisterNode(tNodeGraph, tNodeGraph.nNodeId, Const.EventType.FinishNode, nWaitNode1)
+        end
+        local nWaitNode2 = tNodeData.nWaitNode2
+        if nWaitNode2 > 0 then
+            NodeGraphEventMod.unregisterNode(tNodeGraph, tNodeGraph.nNodeId, Const.EventType.FinishNode, nWaitNode2)
+        end
+        local nWaitNode3 = tNodeData.nWaitNode3
+        if nWaitNode3 > 0 then
+            NodeGraphEventMod.unregisterNode(tNodeGraph, tNodeGraph.nNodeId, Const.EventType.FinishNode, nWaitNode3)
+        end
+
         SvrNodeGraphMod.finishNode(tNodeGraph, tNodeGraph.nNodeId)
     end
 end

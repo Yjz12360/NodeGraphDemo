@@ -7,8 +7,8 @@ namespace SceneNodeGraph
     public class SetPositionNode : BaseNode
     {
         public bool bSetPlayer;
-        public string sRefreshId;
-        public string sPosId;
+        public int nRefreshId;
+        public int nPosId;
         public float nPosX;
         public float nPosY;
         public float nPosZ;

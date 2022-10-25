@@ -5,20 +5,20 @@ function SvrHandler(tNodeGraph, tNodeData)
         return
     end
     local tAIManager = tSvrGame.tAIManager
-    local sRefreshId = tNodeData.sRefreshId
-    local sGroupId = tNodeData.sGroupId
+    local nRefreshId = tNodeData.nRefreshId
+    local nGroupId = tNodeData.nGroupId
     local bActive = tNodeData.bActive
-    if sRefreshId and sRefreshId ~= "" then
-        local tGameObject = SvrGameRoleMod.getMonsterByRefreshId(tSvrGame, sRefreshId)
+    if nRefreshId and nRefreshId ~= "" then
+        local tGameObject = SvrGameRoleMod.getMonsterByRefreshId(tSvrGame, nRefreshId)
         if tGameObject ~= nil then
             AIManagerMod.setAIActive(tAIManager, tGameObject.nObjectId, bActive)
         end
     end
-    if sGroupId and sGroupId ~= nil then
+    if nGroupId and nGroupId ~= nil then
         local tGameObjects = SvrGameMod.getObjects(tSvrGame)
         for _, tGameObject in pairs(tGameObjects) do
             if tGameObject.nObjectType == Const.GameObjectType.Monster then
-                if tGameObject.sGroupId == sGroupId then
+                if tGameObject.nGroupId == nGroupId then
                     AIManagerMod.setAIActive(tAIManager, tGameObject.nObjectType, bActive)
                 end
             end

@@ -6,6 +6,6 @@ namespace SceneNodeGraph
 {
     public class WaitMonsterDeadNode : BaseNode
     {
-        public string sRefreshId;
+        public int nRefreshId;
     }
 }

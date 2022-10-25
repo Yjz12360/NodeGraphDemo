@@ -83,13 +83,13 @@ function startNodeGraph(tSvrGame, nConfigId)
     SvrNodeGraphMod.startNodeGraph(tNodeGraph)
 end
 
-function processEvent(tSvrGame, nEventType, ...)
+function processEvent(tSvrGame, nEventType, nEventLocalId, ...)
     if tSvrGame == nil then
         return
     end
-    local tMainNodeGraph = tSvrGame.tMainNodeGraph
-    if tMainNodeGraph ~= nil then
-        SvrNodeGraphMod.processEvent(tMainNodeGraph, nEventType, ...)
+    local tNodeGraph = tSvrGame.tMainNodeGraph
+    if tNodeGraph ~= nil then
+        NodeGraphEventMod.processEvent(tNodeGraph, nEventType, nEventLocalId, ...)
     end
 end
 

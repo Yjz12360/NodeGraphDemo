@@ -76,7 +76,7 @@ function processEvent(nEventType, ...)
     end
     local tNodeGraph = tCltGame.tMainNodeGraph
     if tNodeGraph ~= nil then
-        CltNodeGraphMod.processEvent(tNodeGraph, nEventType, ...)
+        NodeGraphEventMod.processEvent(tNodeGraph, nEventType, nEventLocalId, ...)
     end
 end
 

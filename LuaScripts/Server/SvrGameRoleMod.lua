@@ -21,7 +21,7 @@ function addPlayer(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
     Messager.S2CAddPlayer(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
 end
 
-function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ, sRefreshId)
+function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ, nRefreshId)
     if tSvrGame == nil then
         return
     end
@@ -39,27 +39,27 @@ function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ, sRefreshId)
     tMonster.nPosY = nPosY
     tMonster.nPosZ = nPosZ
     tMonster.nCurrHP = tConfig.nHP
-    tMonster.sRefreshId = sRefreshId
+    tMonster.nRefreshId = nRefreshId
     tSvrGame.tGameObjects[nObjectId] = tMonster
     AIManagerMod.addAI(tSvrGame.tAIManager, nObjectId)
-    Messager.S2CAddMonster(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, sRefreshId)
-    SvrGameMod.processEvent(tSvrGame, Const.EventType.AddMonster)
+    Messager.S2CAddMonster(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, nRefreshId)
+    SvrGameMod.processEvent(tSvrGame, Const.EventType.AddMonster, nRefreshId)
     return tMonster
 end
 
-function refreshMonster(tSvrGame, sRefreshId)
+function refreshMonster(tSvrGame, nRefreshId)
     if tSvrGame == nil then
         return
     end
     local tGameSceneConfig = tSvrGame.tGameSceneConfig
-    local tRefreshConfig = GameSceneCfgMod.getRefreshMonsterConfig(tGameSceneConfig, sRefreshId)
+    local tRefreshConfig = GameSceneCfgMod.getRefreshMonsterConfig(tGameSceneConfig, nRefreshId)
     if tRefreshConfig == nil then
-        printError("refreshMonster error: tRefreshConfig not exist. sRefreshId: " .. sRefreshId)
+        printError("refreshMonster error: tRefreshConfig not exist. nRefreshId: " .. nRefreshId)
         return
     end
     local nMonsterCfgId = tRefreshConfig.nMonsterCfgId
     local tPos = tRefreshConfig.tPos
-    local tMonster = SvrGameRoleMod.addMonster(tSvrGame, nMonsterCfgId, tPos.x, tPos.y, tPos.z, sRefreshId)
+    local tMonster = SvrGameRoleMod.addMonster(tSvrGame, nMonsterCfgId, tPos.x, tPos.y, tPos.z, nRefreshId)
     local tPath = tRefreshConfig.tPath
     if tPath ~= nil then
         AIManagerMod.setPath(tSvrGame.tAIManager, tMonster.nObjectId, tPath)
@@ -67,18 +67,18 @@ function refreshMonster(tSvrGame, sRefreshId)
     return tMonster
 end
 
-function refreshMonsterGroup(tSvrGame, sGroupId)
+function refreshMonsterGroup(tSvrGame, nGroupId)
     if tSvrGame == nil then
         return
     end
     local tGameSceneConfig = tSvrGame.tGameSceneConfig
-    local tRefreshMonsterGroups = GameSceneCfgMod.getRefreshMonsterGroup(tGameSceneConfig, sGroupId)
+    local tRefreshMonsterGroups = GameSceneCfgMod.getRefreshMonsterGroup(tGameSceneConfig, nGroupId)
     if tRefreshMonsterGroups == nil then
-        printError("refreshMonsterGroup error: config not exist. sGroupId: " .. sGroupId)
+        printError("refreshMonsterGroup error: config not exist. nGroupId: " .. nGroupId)
         return
     end
-    for _, sRefreshId in ipairs(tRefreshMonsterGroups) do
-        SvrGameRoleMod.refreshMonster(tSvrGame, sRefreshId)
+    for _, nRefreshId in ipairs(tRefreshMonsterGroups) do
+        SvrGameRoleMod.refreshMonster(tSvrGame, nRefreshId)
     end
 end
 
@@ -86,14 +86,14 @@ function roleDead(tSvrGame, nObjectId)
     if tSvrGame == nil then
         return
     end
-    local tRole = tSvrGame.tGameObjects[nObjectId]
-    if tRole == nil then
+    local tGameObject = tSvrGame.tGameObjects[nObjectId]
+    if tGameObject == nil then
         return
     end
 
-    local tGameObject = tSvrGame.tGameObjects[nObjectId]
     if tGameObject.nObjectType == Const.GameObjectType.Monster then
-        SvrGameMod.processEvent(tSvrGame, Const.EventType.BeforeMonsterDead, nObjectId)
+        local nRefreshId = tGameObject.nRefreshId
+        SvrGameMod.processEvent(tSvrGame, Const.EventType.BeforeMonsterDead, nRefreshId)
     end
 
     tSvrGame.tGameObjects[nObjectId] = nil
@@ -101,7 +101,8 @@ function roleDead(tSvrGame, nObjectId)
 
     if tGameObject.nObjectType == Const.GameObjectType.Monster then
         AIManagerMod.delAI(tSvrGame.tAIManager, nObjectId)
-        SvrGameMod.processEvent(tSvrGame, Const.EventType.MonsterDead, nObjectId)
+        local nRefreshId = tGameObject.nRefreshId
+        SvrGameMod.processEvent(tSvrGame, Const.EventType.MonsterDead, nRefreshId)
     end
 end
 
@@ -130,13 +131,13 @@ function getMonsterNum(tSvrGame)
     return nCount
 end
 
-function getMonsterByRefreshId(tSvrGame, sRefreshId)
+function getMonsterByRefreshId(tSvrGame, nRefreshId)
     if tSvrGame == nil then
         return
     end
     for _, tGameObject in pairs(tSvrGame.tGameObjects) do
         if tGameObject.nObjectType == Const.GameObjectType.Monster then
-            if tGameObject.sRefreshId == sRefreshId then
+            if tGameObject.nRefreshId == nRefreshId then
                 return tGameObject
             end
         end

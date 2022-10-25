@@ -55,8 +55,8 @@ S2CAddPlayer = function(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
     addMessage(CltGameRoleMod.addPlayer, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, true)
 end
 
-S2CAddMonster = function(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, sRefreshId)
-    addMessage(CltGameRoleMod.addMonster, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, sRefreshId)
+S2CAddMonster = function(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, nRefreshId)
+    addMessage(CltGameRoleMod.addMonster, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, nRefreshId)
 end
 
 S2CRoleDead = function(nGameId, nObjectId)

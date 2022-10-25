@@ -6,9 +6,9 @@ namespace SceneNodeGraph
 {
     public class WaitAllNodeFinishNode : BaseNode
     {
-        public string sWaitNodeId1;
-        public string sWaitNodeId2;
-        public string sWaitNodeId3;
+        public int nWaitNodeId1;
+        public int nWaitNodeId2;
+        public int nWaitNodeId3;
     }
 }
 

@@ -1,9 +1,9 @@
 
 function SvrHandler(tNodeGraph, tNodeData)
     local tSvrGame = SvrGameMod.getGameById(tNodeGraph.nGameId)
-    local sRefreshId = tNodeData.sRefreshId
-    if sRefreshId and sRefreshId ~= "" then
-        SvrGameRoleMod.refreshMonster(tSvrGame, sRefreshId)
+    local nRefreshId = tNodeData.nRefreshId
+    if nRefreshId and nRefreshId ~= "" then
+        SvrGameRoleMod.refreshMonster(tSvrGame, nRefreshId)
     else
         local nConfigId = tNodeData.nConfigId
         local nPosX, nPosY, nPosZ = 0, 0, 0

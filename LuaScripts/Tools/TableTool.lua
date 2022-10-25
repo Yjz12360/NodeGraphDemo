@@ -3,6 +3,7 @@ local function isArrayTable(tab)
         return false
     end
     local n = #tab
+    local count = 0
     for i, v in pairs(tab) do
         if type(i) ~= "number" then
             return false
@@ -10,6 +11,10 @@ local function isArrayTable(tab)
         if i > n then
             return false
         end
+        count = count + 1
+    end
+    if n ~= count then
+        return false
     end
     return true
 end

@@ -1,7 +1,7 @@
 
 function SvrHandler(tNodeGraph, tNodeData)
     local tSvrGame = SvrGameMod.getGameById(tNodeGraph.nGameId)
-    local sRefreshId = tNodeData.sRefreshId
-    SvrGameRoleMod.refreshMonsterGroup(tSvrGame, sRefreshId)
+    local nRefreshId = tNodeData.nRefreshId
+    SvrGameRoleMod.refreshMonsterGroup(tSvrGame, nRefreshId)
     SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
 end

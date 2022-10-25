@@ -37,7 +37,7 @@ function addPlayer(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, bLocalPla
     end
 end
 
-function addMonster(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, sRefreshId)
+function addMonster(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, nRefreshId)
     if not CltGameMod.checkGameId(nGameId) then
         return
     end
@@ -50,7 +50,7 @@ function addMonster(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, sRefresh
     tMonster.nObjectId = nObjectId
     tMonster.nObjectType = Const.GameObjectType.Monster
     tMonster.tConfig = tConfig
-    tMonster.sRefreshId = sRefreshId
+    tMonster.nRefreshId = nRefreshId
     local tCltGame = CltGameMod.getGame()
     tCltGame.tGameObjects[nObjectId] = tMonster
     local nModelId = tConfig.nModelId
@@ -70,7 +70,7 @@ function addMonster(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, sRefresh
             uGameObjectId.ID = nObjectId
         end
     end
-    CltGameMod.processEvent(Const.EventType.AddMonster)
+    CltGameMod.processEvent(Const.EventType.AddMonster, nRefreshId)
 end
 
 function roleDead(nGameId, nObjectId)
@@ -83,7 +83,8 @@ function roleDead(nGameId, nObjectId)
         return
     end
     if tGameObject.nObjectType == Const.GameObjectType.Monster then
-        CltGameMod.processEvent(Const.EventType.MonsterDead, nObjectId)
+        local nRefreshId = tGameObject.nRefreshId
+        CltGameMod.processEvent(Const.EventType.MonsterDead, nRefreshId)
     end
     
     CltAnimatorMod.roleDead(tGameObject, function()
@@ -95,14 +96,14 @@ function roleDead(nGameId, nObjectId)
     tCltGame.tGameObjects[nObjectId] = nil
 end
 
-function getMonsterByRefreshId(sRefreshId)
+function getMonsterByRefreshId(nRefreshId)
     local tCltGame = CltGameMod.getGame()
     if tCltGame == nil then
         return
     end
     for _, tGameObject in pairs(tCltGame.tGameObjects) do
         if tGameObject.nObjectType == Const.GameObjectType.Monster then
-            if tGameObject.sRefreshId == sRefreshId then
+            if tGameObject.nRefreshId == nRefreshId then
                 return tGameObject
             end
         end

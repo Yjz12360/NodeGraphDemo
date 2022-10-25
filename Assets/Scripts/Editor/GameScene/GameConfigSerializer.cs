@@ -31,10 +31,9 @@ namespace Game
                 byte[] result = System.Text.Encoding.UTF8.GetBytes(luaContent);
                 return result;
             });
-            luaEnv.DoString("json = require 'Tools/json'");
-            luaEnv.DoString("require 'Public/TableUtil'");
 
-            object[] resultArray = luaEnv.DoString($"return table2str(json.decode('{context}'))");
+            luaEnv.DoString("require 'Tools/SerializeTool'");
+            object[] resultArray = luaEnv.DoString($"return json2LuaTable('{context}')");
             string luaText = "Config = Config or {}\nConfig.GameScene = Config.GameScene or {}\n";
             luaText += $"Config.GameScene.{configName} = {(string)resultArray[0]}";
             luaEnv.Dispose();
@@ -62,8 +61,8 @@ namespace Game
             });
 
             luaEnv.DoString(luaContext);
-            luaEnv.DoString("json = require 'Tools/json'");
-            luaEnv.DoString($"sJson = json.encode(Config.GameScene.{configName})");
+            luaEnv.DoString("require 'Tools/SerializeTool'");
+            luaEnv.DoString($"sJson = luaTable2Json(Config.GameScene.{configName})");
             string json = luaEnv.Global.Get<string>("sJson");
             GameObject configObject = JsonConvert.DeserializeObject<GameObject>(json, GameConfigConverter.converter);
             return configObject;
