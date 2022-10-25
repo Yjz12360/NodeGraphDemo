@@ -16,6 +16,7 @@ namespace Game
         private string configName;
         private GameObject editorObject;
         private GameObject sceneDataObject;
+        private GameObject editorDataObject;
 
         [MenuItem("编辑工具/游戏物体配置")]
         static void Init()
@@ -54,6 +55,14 @@ namespace Game
                     {
                         GameConfigSerializer.SaveLua(configTrans.gameObject, configName);
                     }
+
+                    Transform editorDataTrans = editorObject.transform.Find("EditorData");
+                    if (editorDataTrans != null)
+                    {
+                        string prefabPath = $"Assets/Resources/SceneEditorData/{configName}.prefab";
+                        PrefabUtility.SaveAsPrefabAsset(editorDataTrans.gameObject, prefabPath);
+                    }
+
                     DestroyImmediate(editorObject);
 
                     EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
@@ -90,7 +99,19 @@ namespace Game
                 sceneDataPrefab = Resources.Load<GameObject>("SceneData/Empty");
 
             sceneDataObject = Instantiate(sceneDataPrefab);
-            sceneDataObject.transform.parent = editorObject.transform.Find("SceneData"); 
+            sceneDataObject.transform.parent = editorObject.transform.Find("SceneData");
+
+            if (File.Exists($"{Application.dataPath}/Resources/SceneEditorData/{configName}.prefab"))
+            {
+                GameObject editorDataPrefab = Resources.Load<GameObject>($"SceneEditorData/{configName}");
+                editorDataObject = Instantiate(editorDataPrefab);
+                editorDataObject.name = "EditorData";
+            }
+            else
+            {
+                editorDataObject = new GameObject("EditorData");
+            }
+            editorDataObject.transform.parent = editorObject.transform;
         }
 
     }

@@ -64,18 +64,6 @@ namespace SceneNodeGraph
                         coordOffsetY += offsetY;
                     }
                 }
-                //foreach (NodeTransitionData transition in nodeGraphData.tTransitions[rootNodeId])
-                //{
-                //    string toNodeId = transition.sToNodeId;
-                //    if (nodeCoords.ContainsKey(toNodeId))
-                //        continue;
-                //    if (!first)
-                //        coordOffsetY++;
-                //    first = false;
-                //    nodeCoords[toNodeId] = new Vector2Int(coord.x + 1, coord.y + coordOffsetY);
-                //    int offsetY = RecursiveCalCoord(toNodeId);
-                //    coordOffsetY += offsetY;
-                //}
             }
             return coordOffsetY;
         }
@@ -176,24 +164,6 @@ namespace SceneNodeGraph
                             GUI.TextField(new Rect(pathTextPos.x, pathTextPos.y, pathTextWidth, pathTextHeight), path.ToString());
                     }
                 }
-                //List<NodeTransitionData> transitions = pair.Value;
-                //foreach(NodeTransitionData transition in transitions)
-                //{
-                //    string toNodeId = transition.sToNodeId;
-                //    Vector2 fromPos = GetDrawPos(nodeCoords[fromNodeId]);
-                //    fromPos.x += nodeWidth;
-                //    fromPos.y += nodeHeight / 2;
-                //    Vector2 toPos = GetDrawPos(nodeCoords[toNodeId]);
-                //    toPos.y += nodeHeight / 2;
-                //    Handles.DrawLine(fromPos, toPos);
-                //    Vector2 pathTextPos = (fromPos + toPos) / 2;
-                //    pathTextPos.x -= pathTextWidth / 2;
-                //    pathTextPos.y -= pathTextHeight / 2;
-                //    string path = transition.nPath.ToString();
-                //    using (new EditorGUI.DisabledScope())
-                //        GUI.TextField(new Rect(pathTextPos.x, pathTextPos.y, pathTextWidth, pathTextHeight), path);
-
-                //}
             }
         }
     }

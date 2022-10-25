@@ -6,20 +6,38 @@ namespace Game
     [CustomEditor(typeof(PositionEditorData))]
     public class PositionEditor : Editor
     {
+        private Transform editorTrans;
+        private Transform rootConfigTrans;
+        private Transform configTrans;
+        private Transform rootEditorDataTrans;
+        private Transform editorDataTrans;
+
+        private void InitTrans()
+        {
+            MonsterEditorData data = target as MonsterEditorData;
+            editorTrans = data.transform;
+            rootConfigTrans = editorTrans.parent.Find("Config");
+            configTrans = GameEditorHelper.GetOrAddChild(rootConfigTrans, "Position");
+            rootEditorDataTrans = editorTrans.parent.Find("EditorData");
+            editorDataTrans = GameEditorHelper.GetOrAddChild(rootEditorDataTrans, "Position");
+        }
+
         public override void OnInspectorGUI()
         {
-            PositionEditorData data = target as PositionEditorData;
-            Transform configRoot = data.transform.parent.Find("Config");
-            if (configRoot == null)
-                return;
-            Transform configTrans = configRoot.Find("Position");
+            if (editorTrans == null)
+                InitTrans();
+
             if (configTrans != null && configTrans.childCount > 0)
             {
-                EditorGUILayout.LabelField("当前位置配置：");
-                for (int i = 0; i < configTrans.childCount; ++i)
+                using (new EditorGUILayout.HorizontalScope())
                 {
-                    DisplayPositionConfig(configTrans, i);
+                    EditorGUILayout.LabelField("当前位置配置：");
+                    if (GUILayout.Button("排序"))
+                        GameEditorHelper.ReorderChildById(configTrans);
                 }
+                for (int i = 0; i < configTrans.childCount; ++i)
+                    DisplayPositionConfig(configTrans.GetChild(i));
+                
             }
             else
             {
@@ -28,46 +46,49 @@ namespace Game
 
             if (GUILayout.Button("添加位置配置"))
             {
-                if (configTrans == null)
-                {
-                    GameObject newObject = new GameObject("Position");
-                    newObject.transform.parent = configRoot;
-                    configTrans = newObject.transform;
-                }
-
-                int genId = GenId(configTrans);
-                GameObject configObject = new GameObject(genId.ToString());
-
-                configObject.transform.SetParent(configTrans);
-                configObject.transform.position = Vector3.zero;
+                GameObject configObject = GameEditorHelper.AddConfig(configTrans);
                 EditorGUIUtility.PingObject(configObject);
+            }
+
+            if (editorDataTrans != null)
+            {
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    EditorGUILayout.LabelField("当前暂存配置：");
+                    if (GUILayout.Button("排序"))
+                        GameEditorHelper.ReorderChildById(editorDataTrans);
+                }
+                for (int i = 0; i < editorDataTrans.childCount; ++i)
+                    DisplayEditorConfig(editorDataTrans.GetChild(i));
             }
         }
 
-        private void DisplayPositionConfig(Transform configTrans, int childIndex)
+        private void DisplayPositionConfig(Transform child)
         {
             using (new EditorGUILayout.HorizontalScope())
             {
-                Transform child = configTrans.GetChild(childIndex);
                 EditorGUILayout.ObjectField(child.gameObject, typeof(GameObject), true);
+                if (GUILayout.Button("暂存"))
+                {
+                    GameEditorHelper.TransferTo(child, editorDataTrans);
+                }
                 if (GUILayout.Button("删除"))
                 {
                     DestroyImmediate(child.gameObject);
                 }
             }
         }
-
-        private int GenId(Transform containerTrans)
+        private void DisplayEditorConfig(Transform child)
         {
-            for (int i = 1; i < 10000; ++i)
+            if (child == null) return;
+            using (new EditorGUILayout.HorizontalScope())
             {
-                Transform child = containerTrans.Find(i.ToString());
-                if (child == null)
+                EditorGUILayout.ObjectField(child.gameObject, typeof(GameObject), true);
+                if (GUILayout.Button("启用"))
                 {
-                    return i;
+                    GameEditorHelper.TransferTo(child, configTrans);
                 }
             }
-            return -1;
         }
     }
 }

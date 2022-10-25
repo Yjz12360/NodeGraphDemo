@@ -7,36 +7,43 @@ namespace Game
     [CustomEditor(typeof(TransparentWallEditorData))]
     public class TransparentWallEditor : Editor
     {
+        private Transform editorTrans;
+        private Transform rootSceneDataTrans;
+        private Transform sceneDataTrans;
+        private Transform containerTrans;
+        private Transform rootEditorDataTrans;
+        private Transform editorDataTrans;
+
+        private void InitTrans()
+        {
+            TransparentWallEditorData data = target as TransparentWallEditorData;
+            editorTrans = data.transform;
+            rootSceneDataTrans = editorTrans.parent.Find("SceneData");
+            sceneDataTrans = rootSceneDataTrans.GetChild(0);
+            containerTrans = GameEditorHelper.GetOrAddChild(sceneDataTrans, "TransparentWall");
+            rootEditorDataTrans = editorTrans.parent.Find("EditorData");
+            editorDataTrans = GameEditorHelper.GetOrAddChild(rootEditorDataTrans, "TransparentWall");
+        }
+
         public override void OnInspectorGUI()
         {
-            GameObject sceneData = GameObject.Find("Editor/SceneData");
-            if (sceneData == null)
-                return;
-            Transform configTrans = sceneData.transform.GetChild(0);
-            if (configTrans == null)
-                return;
-            Transform containerTrans = configTrans.Find("TransparentWall");
+            if (editorTrans == null)
+                InitTrans();
+
             if (containerTrans != null)
             {
-                EditorGUILayout.LabelField("当前空气墙：");
-                for (int i = 0; i < containerTrans.childCount; ++i)
+                using (new EditorGUILayout.HorizontalScope())
                 {
-                    DisplayTrigger(containerTrans, i);
+                    EditorGUILayout.LabelField("当前空气墙配置：");
+                    if (GUILayout.Button("排序"))
+                        GameEditorHelper.ReorderChildById(containerTrans);
                 }
+                for (int i = 0; i < containerTrans.childCount; ++i)
+                    DisplayTrigger(containerTrans.GetChild(i));
             }
             if (GUILayout.Button("添加空气墙"))
             {
-                if(containerTrans == null)
-                {
-                    GameObject containerObject = new GameObject("TransparentWall");
-                    containerTrans = containerObject.transform;
-                    containerTrans.transform.parent = configTrans;
-                }
-                int genId = GenTriggerId();
-                GameObject newObject = new GameObject(genId.ToString());
-                newObject.name = genId.ToString();
-                newObject.transform.SetParent(containerTrans);
-                newObject.transform.position = Vector3.zero;
+                GameObject newObject = GameEditorHelper.AddConfig(containerTrans);
                 BoxCollider collider = newObject.GetComponent<BoxCollider>();
                 if (collider == null)
                     collider = newObject.AddComponent<BoxCollider>();
@@ -44,14 +51,29 @@ namespace Game
                 collider.center = Vector3.zero;
                 EditorGUIUtility.PingObject(newObject);
             }
+
+            if (editorDataTrans != null)
+            {
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    EditorGUILayout.LabelField("当前暂存配置：");
+                    if (GUILayout.Button("排序"))
+                        GameEditorHelper.ReorderChildById(editorDataTrans);
+                }
+                for (int i = 0; i < editorDataTrans.childCount; ++i)
+                    DisplayEditorConfig(editorDataTrans.GetChild(i));
+            }
         }
 
-        private void DisplayTrigger(Transform containerTrans, int childIndex)
+        private void DisplayTrigger(Transform child)
         {
             using (new EditorGUILayout.HorizontalScope())
             {
-                Transform child = containerTrans.GetChild(childIndex);
                 EditorGUILayout.ObjectField(child.gameObject, typeof(GameObject), true);
+                if (GUILayout.Button("暂存"))
+                {
+                    GameEditorHelper.TransferTo(child, editorDataTrans);
+                }
                 if (GUILayout.Button("删除"))
                 {
                     DestroyImmediate(child.gameObject);
@@ -59,37 +81,17 @@ namespace Game
             }
         }
 
-        private int GenTriggerId()
+        private void DisplayEditorConfig(Transform child)
         {
-            GameObject sceneData = GameObject.Find("Editor/SceneData");
-            if (sceneData == null)
-                return 0;
-            Transform configTrans = sceneData.transform.GetChild(0);
-            if (configTrans == null)
-                return 0;
-            Transform containerTrans = configTrans.Find("TransparentWall");
-            if (containerTrans == null)
-                return 0;
-            for (int i = 1; i < 10000; ++i)
+            if (child == null) return;
+            using (new EditorGUILayout.HorizontalScope())
             {
-                Transform child = containerTrans.Find(i.ToString());
-                if(child == null)
+                EditorGUILayout.ObjectField(child.gameObject, typeof(GameObject), true);
+                if (GUILayout.Button("启用"))
                 {
-                    return i;
+                    GameEditorHelper.TransferTo(child, containerTrans);
                 }
             }
-            return -1;
         }
-
-        //private Transform GetWallContainer()
-        //{
-        //    GameObject sceneData = GameObject.Find("Editor/SceneData");
-        //    if (sceneData == null)
-        //        return null;
-        //    Transform configTrans = sceneData.transform.GetChild(0);
-        //    if (configTrans == null)
-        //        return null;
-        //    return configTrans.Find("TransparentWall");
-        //}
     }
 }

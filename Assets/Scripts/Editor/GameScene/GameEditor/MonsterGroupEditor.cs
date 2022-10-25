@@ -6,21 +6,37 @@ namespace Game
     [CustomEditor(typeof(MonsterGroupEditorData))]
     public class MonsterGroupEditor : Editor
     {
-        public override void OnInspectorGUI()
+        private Transform editorTrans;
+        private Transform rootConfigTrans;
+        private Transform configTrans;
+        private Transform rootEditorDataTrans;
+        private Transform editorDataTrans;
+
+        private void InitTrans()
         {
             MonsterGroupEditorData data = target as MonsterGroupEditorData;
-            Transform configRoot = data.transform.parent.Find("Config");
-            if (configRoot == null)
-                return;
-            Transform configTrans = configRoot.Find("MonsterGroup");
+            editorTrans = data.transform;
+            rootConfigTrans = editorTrans.parent.Find("Config");
+            configTrans = GameEditorHelper.GetOrAddChild(rootConfigTrans, "MonsterGroup");
+            rootEditorDataTrans = editorTrans.parent.Find("EditorData");
+            editorDataTrans = GameEditorHelper.GetOrAddChild(rootEditorDataTrans, "MonsterGroup");
+        }
+
+        public override void OnInspectorGUI()
+        {
+            if (editorTrans == null)
+                InitTrans();
 
             if(configTrans != null && configTrans.childCount > 0)
             {
-                EditorGUILayout.LabelField("当前怪物组配置：");
-                for (int i = 0; i < configTrans.childCount; ++i)
+                using (new EditorGUILayout.HorizontalScope())
                 {
-                    DisplayMonsterGroupConfig(configTrans, i);
+                    EditorGUILayout.LabelField("当前怪物组配置：");
+                    if (GUILayout.Button("排序"))
+                        GameEditorHelper.ReorderChildById(configTrans);
                 }
+                for (int i = 0; i < configTrans.childCount; ++i)
+                    DisplayMonsterGroupConfig(configTrans.GetChild(i));
             }
             else
             {
@@ -29,29 +45,33 @@ namespace Game
 
             if (GUILayout.Button("添加怪物组配置"))
             {
-                if(configTrans == null)
-                {
-                    GameObject newObject = new GameObject("MonsterGroup");
-                    newObject.transform.parent = configRoot;
-                    configTrans = newObject.transform;
-                }
-
-                int genId = GenId(configTrans);
-                GameObject configObject = new GameObject(genId.ToString());
-
-                configObject.transform.SetParent(configTrans);
-                configObject.transform.position = Vector3.zero;
+                GameObject configObject = GameEditorHelper.AddConfig(configTrans);
                 configObject.AddComponent<MonsterGroupConfig>();
                 EditorGUIUtility.PingObject(configObject);
             }
+
+            if (editorDataTrans != null)
+            {
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    EditorGUILayout.LabelField("当前暂存配置：");
+                    if (GUILayout.Button("排序"))
+                        GameEditorHelper.ReorderChildById(editorDataTrans);
+                }
+                for (int i = 0; i < editorDataTrans.childCount; ++i)
+                    DisplayEditorConfig(editorDataTrans.GetChild(i));
+            }
         }
 
-        private void DisplayMonsterGroupConfig(Transform configTrans, int childIndex)
+        private void DisplayMonsterGroupConfig(Transform child)
         {
             using (new EditorGUILayout.HorizontalScope())
             {
-                Transform child = configTrans.GetChild(childIndex);
                 EditorGUILayout.ObjectField(child.gameObject, typeof(GameObject), true);
+                if (GUILayout.Button("暂存"))
+                {
+                    GameEditorHelper.TransferTo(child, editorDataTrans);
+                }
                 if (GUILayout.Button("删除"))
                 {
                     DestroyImmediate(child.gameObject);
@@ -59,17 +79,17 @@ namespace Game
             }
         }
 
-        private int GenId(Transform containerTrans)
+        private void DisplayEditorConfig(Transform child)
         {
-            for (int i = 1; i < 10000; ++i)
+            if (child == null) return;
+            using (new EditorGUILayout.HorizontalScope())
             {
-                Transform child = containerTrans.Find(i.ToString());
-                if (child == null)
+                EditorGUILayout.ObjectField(child.gameObject, typeof(GameObject), true);
+                if (GUILayout.Button("启用"))
                 {
-                    return i;
+                    GameEditorHelper.TransferTo(child, configTrans);
                 }
             }
-            return -1;
         }
     }
 }
