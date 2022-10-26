@@ -23,12 +23,6 @@ NodeType = {
     ActiveTransparentWall = 21,
 }
 
-NodeGraphState = {
-    Pending = 1,
-    Running = 2,
-    Finish = 3,
-}
-
 GameObjectType = {
     Player = 1,
     Monster = 2,

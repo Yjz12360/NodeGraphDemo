@@ -9,7 +9,6 @@ function addNodeGraph(tSvrGame, nNodeGraphId, nConfigId)
     tNodeGraph.nGameId = tSvrGame.nGameId
     tNodeGraph.nNodeGraphId = nNodeGraphId
     tNodeGraph.tConfigData = NodeGraphCfgMod.getConfigByName(tConfig.sName)
-    tNodeGraph.nState = Const.NodeGraphState.Pending
     tNodeGraph.tEventListeners = {}
     tNodeGraph.tFinishedNodes = {}
     tNodeGraph.bServer = true
@@ -22,7 +21,6 @@ function startNodeGraph(tNodeGraph)
         return
     end
 
-    tNodeGraph.nState = Const.NodeGraphState.Running
     local nStartNodeId = tNodeGraph.tConfigData.nStartNodeId
     SvrNodeGraphMod.finishNode(tNodeGraph, nStartNodeId)
 end
@@ -51,9 +49,6 @@ function finishNode(tNodeGraph, nNodeId, nPath)
     if tNodeGraph == nil then
         return
     end
-    if tNodeGraph.nState ~= Const.NodeGraphState.Running then
-        return
-    end
     if tNodeGraph.tFinishedNodes[nNodeId] then
         return
     end
@@ -75,24 +70,6 @@ function finishNode(tNodeGraph, nNodeId, nPath)
             SvrNodeGraphMod.triggerNode(tNodeGraph, sToNodeId)
         end
     end
-
-    local bAllFinish = true
-    local tNodeMap = tNodeGraph.tConfigData.tNodeMap
-    for nNodeId, _ in pairs(tNodeMap) do
-        if not tNodeGraph.tFinishedNodes[nNodeId] then
-            bAllFinish = false
-            break
-        end
-    end
-    if bAllFinish then
-        tNodeGraph.nState = Const.NodeGraphState.Finish
-        if tSvrGame ~= nil then
-            Messager.S2CFinishNodeGraph(tSvrGame.nGameId, tNodeGraph.nNodeGraphId)
-        end
-    end
 end
 
-function isFinish(tNodeGraph)
-    return tNodeGraph.nState == Const.NodeGraphState.Finish
-end
 

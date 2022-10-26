@@ -122,7 +122,7 @@ namespace Game
                         writer.WriteStartArray();
                         foreach (GameObject refreshObject in monsterGroupConfig.monsters)
                         {
-                            string refreshId = refreshObject.name;
+                            int.TryParse(refreshObject.name, out int refreshId);
                             writer.WriteValue(refreshId);
                         }
                         writer.WriteEndArray();

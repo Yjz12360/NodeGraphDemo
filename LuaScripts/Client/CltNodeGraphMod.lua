@@ -9,7 +9,6 @@ function addNodeGraph(tCltGame, nNodeGraphId, nConfigId)
     tNodeGraph.nGameId = tCltGame.nGameId
     tNodeGraph.nNodeGraphId = nNodeGraphId
     tNodeGraph.tConfigData = NodeGraphCfgMod.getConfigByName(tConfig.sName)
-    tNodeGraph.nState = Const.NodeGraphState.Pending
     tNodeGraph.tEventListeners = {}
     tNodeGraph.tFinishedNodes = {}
     NodeGraphEventMod.init(tNodeGraph)
@@ -22,7 +21,6 @@ function startNodeGraph(tNodeGraph)
     end
     TableUtil.clear(tNodeGraph.tFinishedNodes)
 
-    tNodeGraph.nState = Const.NodeGraphState.Running
     local nStartNodeId = tNodeGraph.tConfigData.nStartNodeId
     CltNodeGraphMod.finishNode(tNodeGraph, nStartNodeId)
 end
@@ -46,9 +44,6 @@ function finishNode(tNodeGraph, nNodeId, nPath)
     if tNodeGraph == nil then
         return
     end
-    if tNodeGraph.nState ~= Const.NodeGraphState.Running then
-        return
-    end
     if tNodeGraph.tFinishedNodes[nNodeId] then
         return
     end
@@ -62,25 +57,6 @@ function finishNode(tNodeGraph, nNodeId, nPath)
     end
 
     tNodeGraph.tFinishedNodes[nNodeId] = true
-
-    local bAllFinish = true
-    local tNodeMap = tNodeGraph.tConfigData.tNodeMap
-    for nNodeId, _ in pairs(tNodeMap) do
-        if not tNodeGraph.tFinishedNodes[nNodeId] then
-            bAllFinish = false
-            break
-        end
-    end
-    if bAllFinish then
-        tNodeGraph.nState = Const.NodeGraphState.Finish
-    end
-end
-
-function isFinish(tNodeGraph)
-    if tNodeGraph == nil then
-        return false
-    end
-    return tNodeGraph.nState == Const.NodeGraphState.Finish
 end
 
 function recvFinishNode(nGameId, nNodeGraphId, nNodeId, nPath)
@@ -96,19 +72,4 @@ function recvFinishNode(nGameId, nNodeGraphId, nNodeId, nPath)
         return
     end
     CltNodeGraphMod.finishNode(tMainNodeGraph, nNodeId, nPath)
-end
-
-function recvFinishNodeGraph(nGameId, nNodeGraphId)
-    local tCltGame = CltGameMod.getGame()
-    if tCltGame == nil then
-        return
-    end
-    if not CltGameMod.checkGameId(nGameId) then
-        return
-    end
-    local tNodeGraph = tCltGame.tMainNodeGraph
-    if tNodeGraph == nil or tNodeGraph.nNodeGraphId ~= nNodeGraphId then
-        return
-    end
-    tNodeGraph.nState = Const.NodeGraphState.Finish
 end

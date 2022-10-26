@@ -6,7 +6,7 @@ namespace SceneNodeGraph
 {
     public class RefreshMonsterGroupNode : BaseNode
     {
-        public string nRefreshId;
+        public int nRefreshId;
     }
 
 }

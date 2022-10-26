@@ -37,11 +37,6 @@ S2CFinishNode = function(nGameId, nNodeGraphId, nNodeId, nPath)
     addMessage(CltNodeGraphMod.recvFinishNode, nGameId, nNodeGraphId, nNodeId, nPath)
 end
 
-S2CFinishNodeGraph = function(nGameId, nNodeGraphId)
-    addMessage(CltNodeGraphMod.recvFinishNodeGraph, nGameId, nNodeGraphId)
-end
-
-
 -- Game
 C2SCreateGame = function(nGameConfigId)
     addMessage(SvrGameMod.addGame, nGameConfigId)
