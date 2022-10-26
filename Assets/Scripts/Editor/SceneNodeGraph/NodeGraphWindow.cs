@@ -41,22 +41,20 @@ namespace SceneNodeGraph
             {
                 using (new EditorGUILayout.VerticalScope(GUILayout.Width(200)))
                 {
-                    string file;
+                    string fileText;
                     if (!string.IsNullOrEmpty(searchPath))
                     {
                         int folderIndex = searchPath.LastIndexOf("/");
                         if (folderIndex != -1)
-                            file = searchPath.Substring(folderIndex + 1);
+                            fileText = searchPath.Substring(folderIndex + 1);
                         else
-                            file = searchPath;
+                            fileText = searchPath;
                     }
                     else if (isNew)
-                        file = "新建配置";
+                        fileText = "新建配置";
                     else
-                        file = "无";
-                    EditorGUILayout.LabelField($"当前配置文件：{file}");
-
-
+                        fileText = "无";
+                    EditorGUILayout.LabelField($"当前配置文件：{fileText}");
 
                     if (GUILayout.Button("新建配置文件"))
                     {
@@ -83,13 +81,15 @@ namespace SceneNodeGraph
                     {
                         if (nodeGraphEditor != null)
                         {
+                            bool bTips = true;
                             if (string.IsNullOrEmpty(searchPath))
                             {
+                                bTips = false;
                                 searchPath = EditorUtility.SaveFilePanel("选择保存文件", luaFolder, "New Graph", "lua");
                             }
                             NodeGraphData nodeGraphData = nodeGraphEditor.GetNodeGraphData();
                             bool confirm = true;
-                            if (File.Exists(searchPath))
+                            if (bTips && File.Exists(searchPath))
                                 if (!EditorUtility.DisplayDialog("提示", "将覆盖原有文件", "保存", "取消"))
                                     confirm = false;
                             if (confirm)
