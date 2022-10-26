@@ -120,7 +120,6 @@ namespace SceneNodeGraph
             {
                 foreach (JProperty property in transitionToken.Children())
                 {
-                    //string fromNodeId = property.Name;
                     int.TryParse(property.Name, out int fromNodeId);
                     var transitions = nodeGraphData.transitions;
                     if (!transitions.ContainsKey(fromNodeId))
@@ -137,12 +136,6 @@ namespace SceneNodeGraph
                             int toNodeId = pathTransitionProp.Value.Value<int>();
                             nodeTransitions[path].Add(toNodeId);
                         }
-                        //JArray pathTransitionsToken = pathProp.Value as JArray;
-                        //foreach (JToken pathTransitionToken in pathTransitionsToken.Children())
-                        //{
-                        //    string toNodeId = pathTransitionToken.Value<string>();
-                        //    nodeTransitions[path].Add(toNodeId);
-                        //}
                     }
                 }
             }
