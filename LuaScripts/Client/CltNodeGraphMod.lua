@@ -9,8 +9,9 @@ function addNodeGraph(tCltGame, nNodeGraphId, nConfigId)
     tNodeGraph.nGameId = tCltGame.nGameId
     tNodeGraph.nNodeGraphId = nNodeGraphId
     tNodeGraph.tConfigData = NodeGraphCfgMod.getConfigByName(tConfig.sName)
-    tNodeGraph.tEventListeners = {}
+    tNodeGraph.tActiveNodes = {}
     tNodeGraph.tFinishedNodes = {}
+    tNodeGraph.tSyncNodePath = {}
     NodeGraphEventMod.init(tNodeGraph)
     return tNodeGraph
 end
@@ -34,6 +35,13 @@ function triggerNode(tNodeGraph, nNodeId)
         CltNodeGraphMod.finishNode(tNodeGraph, nNodeId)
         return
     end
+    local nSvrPath = tNodeGraph.tSyncNodePath[nNodeId]
+    if nSvrPath ~= nil then
+        CltNodeGraphMod.finishNode(tNodeGraph, nNodeId, nSvrPath)
+        return
+    end
+
+    tNodeGraph.tActiveNodes[nNodeId] = true
 
     local fNodeHandler = NodesHandlerMod.getCltNodeHandler(tNodeData.nNodeType)
     if fNodeHandler ~= nil then
@@ -49,6 +57,10 @@ function finishNode(tNodeGraph, nNodeId, nPath)
         return
     end
 
+    tNodeGraph.tActiveNodes[nNodeId] = nil
+    tNodeGraph.tFinishedNodes[nNodeId] = true
+    tNodeGraph.tSyncNodePath[nNodeId] = nil
+
     nPath = nPath or 1
     local tTransitionNodes = NodeGraphCfgMod.getTransitionNodes(tNodeGraph.tConfigData, nNodeId, nPath)
     if tTransitionNodes ~= nil then
@@ -56,8 +68,6 @@ function finishNode(tNodeGraph, nNodeId, nPath)
             CltNodeGraphMod.triggerNode(tNodeGraph, sToNodeId)
         end
     end
-
-    tNodeGraph.tFinishedNodes[nNodeId] = true
 end
 
 function recvFinishNode(nGameId, nNodeGraphId, nNodeId, nPath)
@@ -68,9 +78,16 @@ function recvFinishNode(nGameId, nNodeGraphId, nNodeId, nPath)
     if not CltGameMod.checkGameId(nGameId) then
         return
     end
-    local tMainNodeGraph = tCltGame.tMainNodeGraph
-    if tMainNodeGraph == nil or tMainNodeGraph.nNodeGraphId ~= nNodeGraphId then
+    local tNodeGraph = tCltGame.tMainNodeGraph
+    if tNodeGraph == nil or tNodeGraph.nNodeGraphId ~= nNodeGraphId then
         return
     end
-    CltNodeGraphMod.finishNode(tMainNodeGraph, nNodeId, nPath)
+    if tNodeGraph.tFinishedNodes[nNodeId] then
+        return
+    end
+    if tNodeGraph.tActiveNodes[nNodeId] then
+        CltNodeGraphMod.finishNode(tNodeGraph, nNodeId, nPath)
+    else
+        tNodeGraph.tSyncNodePath[nNodeId] = nPath
+    end
 end

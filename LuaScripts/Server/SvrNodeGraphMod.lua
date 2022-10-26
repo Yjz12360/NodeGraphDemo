@@ -9,7 +9,6 @@ function addNodeGraph(tSvrGame, nNodeGraphId, nConfigId)
     tNodeGraph.nGameId = tSvrGame.nGameId
     tNodeGraph.nNodeGraphId = nNodeGraphId
     tNodeGraph.tConfigData = NodeGraphCfgMod.getConfigByName(tConfig.sName)
-    tNodeGraph.tEventListeners = {}
     tNodeGraph.tFinishedNodes = {}
     tNodeGraph.bServer = true
     NodeGraphEventMod.init(tNodeGraph)
