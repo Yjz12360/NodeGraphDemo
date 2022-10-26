@@ -35,9 +35,9 @@ function triggerNode(tNodeGraph, nNodeId)
         CltNodeGraphMod.finishNode(tNodeGraph, nNodeId)
         return
     end
-    local nSvrPath = tNodeGraph.tSyncNodePath[nNodeId]
-    if nSvrPath ~= nil then
-        CltNodeGraphMod.finishNode(tNodeGraph, nNodeId, nSvrPath)
+    local nSyncPath = tNodeGraph.tSyncNodePath[nNodeId]
+    if nSyncPath ~= nil then
+        CltNodeGraphMod.finishNode(tNodeGraph, nNodeId, nSyncPath)
         return
     end
 
@@ -71,13 +71,10 @@ function finishNode(tNodeGraph, nNodeId, nPath)
 end
 
 function recvFinishNode(nGameId, nNodeGraphId, nNodeId, nPath)
-    local tCltGame = CltGameMod.getGame()
-    if tCltGame == nil then
-        return
-    end
     if not CltGameMod.checkGameId(nGameId) then
         return
     end
+    local tCltGame = CltGameMod.getGame()
     local tNodeGraph = tCltGame.tMainNodeGraph
     if tNodeGraph == nil or tNodeGraph.nNodeGraphId ~= nNodeGraphId then
         return
