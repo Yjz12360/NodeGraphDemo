@@ -11,8 +11,6 @@ namespace SceneNodeGraph
     {
 
         public static string dataPath = Application.dataPath + "/NodeGraphData/";
-        public static string luaPath = Application.dataPath + "/../LuaScripts/";
-        public static string luaConfigPath = Application.dataPath + "/../LuaScripts/Public/Config/NodeGraphData/";
 
         public static void SavePath(NodeGraphData nodeGraph, string path)
         {
@@ -54,16 +52,7 @@ namespace SceneNodeGraph
 
             string context = JsonConvert.SerializeObject(nodeGraph, Formatting.None, NodeGraphConverter.converter);
 
-            XLua.LuaEnv luaEnv = new XLua.LuaEnv();
-            luaEnv.AddLoader((ref string filename) =>
-            {
-                string luaFileName = $"{luaPath}{filename}.lua";
-                filename = luaFileName;
-                string luaContent = File.ReadAllText(luaFileName);
-                byte[] result = System.Text.Encoding.UTF8.GetBytes(luaContent);
-                return result;
-            });
-
+            XLua.LuaEnv luaEnv = LuaHelper.CreateEnv();
             luaEnv.DoString("require 'Tools/SerializeTool'");
             object[] resultArray = luaEnv.DoString($"return json2LuaTable('{context}')");
             string fixFileName = fileName.Replace(" ", "").Replace(".lua", "");
@@ -81,18 +70,8 @@ namespace SceneNodeGraph
 
             string luaContext = File.ReadAllText(path);
 
-            XLua.LuaEnv luaEnv = new XLua.LuaEnv();
-            luaEnv.AddLoader((ref string filename) =>
-            {
-                string luaFileName = $"{luaPath}{filename}.lua";
-                filename = luaFileName;
-                string luaContent = File.ReadAllText(luaFileName);
-                byte[] result = System.Text.Encoding.UTF8.GetBytes(luaContent);
-                return result;
-            });
-
+            XLua.LuaEnv luaEnv = LuaHelper.CreateEnv();
             luaEnv.DoString(luaContext);
-
             luaEnv.DoString("require 'Tools/SerializeTool'");
             string fixFileName = fileName.Replace(" ", "").Replace(".lua", "");
             luaEnv.DoString($"sJson = luaTable2Json(Config.NodeGraphData.{fixFileName})");

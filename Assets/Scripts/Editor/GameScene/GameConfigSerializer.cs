@@ -10,7 +10,6 @@ namespace Game
     public class GameConfigSerializer
     {
 
-        public static string luaPath = Application.dataPath + "/../LuaScripts/";
         public static string luaConfigPath = Application.dataPath + "/../LuaScripts/Public/Config/GameScene/";
 
         public static void SaveLua(GameObject configObject, string configName)
@@ -23,15 +22,7 @@ namespace Game
 
             string context = JsonConvert.SerializeObject(configObject, Formatting.None, GameConfigConverter.converter);
 
-            XLua.LuaEnv luaEnv = new XLua.LuaEnv();
-            luaEnv.AddLoader((ref string filename) =>
-            {
-                string fixFileName = $"{luaPath}{filename}.lua";
-                string luaContent = File.ReadAllText(fixFileName);
-                byte[] result = System.Text.Encoding.UTF8.GetBytes(luaContent);
-                return result;
-            });
-
+            XLua.LuaEnv luaEnv = LuaHelper.CreateEnv();
             luaEnv.DoString("require 'Tools/SerializeTool'");
             object[] resultArray = luaEnv.DoString($"return json2LuaTable('{context}')");
             string luaText = "Config = Config or {}\nConfig.GameScene = Config.GameScene or {}\n";
@@ -51,15 +42,7 @@ namespace Game
 
             string luaContext = File.ReadAllText(path);
 
-            XLua.LuaEnv luaEnv = new XLua.LuaEnv();
-            luaEnv.AddLoader((ref string filename) =>
-            {
-                string fixFileName = $"{luaPath}{filename}.lua";
-                string luaContent = File.ReadAllText(fixFileName);
-                byte[] result = System.Text.Encoding.UTF8.GetBytes(luaContent);
-                return result;
-            });
-
+            XLua.LuaEnv luaEnv = LuaHelper.CreateEnv();
             luaEnv.DoString(luaContext);
             luaEnv.DoString("require 'Tools/SerializeTool'");
             luaEnv.DoString($"sJson = luaTable2Json(Config.GameScene.{configName})");
