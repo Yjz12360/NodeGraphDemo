@@ -39,6 +39,18 @@ local function getDictCount(tablevalue)
     return nCount
 end
 
+local function getSortedKeys(tableValue)
+    if type(tableValue) ~= "table" then
+        return
+    end
+    local sortKeys = {}
+    for key, _ in pairs(tableValue) do
+        table.insert(sortKeys, key)
+    end
+    table.sort(sortKeys)
+    return sortKeys
+end
+
 local tStrTemp = {}
 local nIndent = 0
 local function doIndent()
@@ -84,10 +96,12 @@ local function toStr(element)
             table.insert(tStrTemp, "}")
         end
     else
+        local tSortKeys = getSortedKeys(element)
         if containsSubTable(element) then
             nIndent = nIndent + 1
             table.insert(tStrTemp, "{\n")
-            for k, v in pairs(element) do
+            for _, k in ipairs(tSortKeys) do
+                local v = element[k]
                 doIndent()
                 if type(k) == "string" then
                     if tonumber(k) == nil then
@@ -113,7 +127,8 @@ local function toStr(element)
             table.insert(tStrTemp, "{")
             local nDictCount = getDictCount(element)
             local nIdx = 0
-            for k, v in pairs(element) do
+            for _, k in ipairs(tSortKeys) do
+                local v = element[k]
                 if type(k) == "string" then
                     if tonumber(k) == nil then
                         table.insert(tStrTemp, k)
