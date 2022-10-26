@@ -31,6 +31,7 @@ function triggerNode(tNodeGraph, nNodeId)
     end
     local tNodeData = NodeGraphCfgMod.getNodeConfig(tNodeGraph.tConfigData, nNodeId)
     if tNodeData == nil then
+        CltNodeGraphMod.finishNode(tNodeGraph, nNodeId)
         return
     end
 

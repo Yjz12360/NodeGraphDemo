@@ -39,7 +39,7 @@ end
 
 function SvrHandler(tNodeGraph, tNodeData)
     if doCheck(tNodeGraph, tNodeData) then
-        SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
+        SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId, true)
         return
     end
     local nNodeId = tNodeData.nNodeId
@@ -52,7 +52,7 @@ function SvrOnMonsterNumChange(tNodeGraph, tNodeData)
         local nNodeId = tNodeData.nNodeId
         NodeGraphEventMod.unregisterNode(tNodeGraph, nNodeId, Const.EventType.AddMonster)
         NodeGraphEventMod.unregisterNode(tNodeGraph, nNodeId, Const.EventType.MonsterDead)
-        SvrNodeGraphMod.finishNode(tNodeGraph, nNodeId)
+        SvrNodeGraphMod.finishNode(tNodeGraph, nNodeId, true)
     end
 end
 

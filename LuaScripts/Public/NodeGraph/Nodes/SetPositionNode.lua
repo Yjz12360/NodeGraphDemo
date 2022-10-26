@@ -1,45 +1,4 @@
 
-function CltHandler(tNodeGraph, tNodeData)
-    local bSetPlayer = tNodeData.bSetPlayer
-    local nRefreshId = tNodeData.nRefreshId
-
-    local tCltGame = CltGameMod.getGame()
-    local nPosX, nPosY, nPosZ = 0, 0, 0
-    local sPosId = tNodeData.sPosId
-    if sPosId ~= nil and sPosId ~= "" then
-        local tPos = GameSceneCfgMod.getPosition(tCltGame.tGameSceneConfig, sPosId)
-        if tPos ~= nil then
-            nPosX, nPosY, nPosZ = tPos.x, tPos.y, tPos.z
-        end
-    else
-        nPosX, nPosY, nPosZ = tNodeData.nPosX, tNodeData.nPosY, tNodeData.nPosZ
-    end
-
-    local tGameObject
-    if bSetPlayer then
-        local tGameObjects = CltGameMod.getObjects()
-        for _, tGameObject in pairs(tGameObjects) do
-            if tGameObject.nObjectType == Const.GameObjectType.Player then
-                local goInstance = tGameObject.goInstance
-                if goInstance ~= nil then
-                    goInstance.transform.position = UE.Vector3(nPosX, nPosY, nPosZ)
-                end
-            end
-        end
-        CltCameraMod.update()
-    else
-        local tGameObject = CltGameRoleMod.getMonsterByRefreshId(nRefreshId)
-        if tGameObject ~= nil then
-            local goInstance = tGameObject.goInstance
-            if goInstance ~= nil then
-                goInstance.transform.position = UE.Vector3(nPosX, nPosY, nPosZ)
-            end
-        end
-    end
-
-    CltNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
-end
-
 function SvrHandler(tNodeGraph, tNodeData)
     local bSetPlayer = tNodeData.bSetPlayer
     local nRefreshId = tNodeData.nRefreshId
@@ -61,19 +20,15 @@ function SvrHandler(tNodeGraph, tNodeData)
         local tGameObjects = SvrGameMod.getObjects(tSvrGame)
         for _, tGameObject in pairs(tGameObjects) do
             if tGameObject.nObjectType == Const.GameObjectType.Player then
-                tGameObject.nPosX = nPosX
-                tGameObject.nPosY = nPosY
-                tGameObject.nPosZ = nPosZ
+                SvrGameRoleMod.forceSetPos(tSvrGame, tGameObject.nObjectId, nPosX, nPosY, nPosZ)
             end
         end
     else
         local tGameObject = SvrGameRoleMod.getMonsterByRefreshId(tSvrGame, nRefreshId)
         if tGameObject ~= nil then
-            tGameObject.nPosX = nPosX
-            tGameObject.nPosY = nPosY
-            tGameObject.nPosZ = nPosZ
+            SvrGameRoleMod.forceSetPos(tSvrGame, tGameObject.nObjectId, nPosX, nPosY, nPosZ)
         end
     end
 
-    SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
+    SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId, true)
 end

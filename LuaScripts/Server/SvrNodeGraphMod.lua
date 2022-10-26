@@ -45,7 +45,7 @@ function triggerNode(tNodeGraph, nNodeId)
     end
 end
 
-function finishNode(tNodeGraph, nNodeId, nPath)
+function finishNode(tNodeGraph, nNodeId, bSync, nPath)
     if tNodeGraph == nil then
         return
     end
@@ -54,11 +54,12 @@ function finishNode(tNodeGraph, nNodeId, nPath)
     end
 
     nPath = nPath or 1
-
-    local tSvrGame = SvrGameMod.getGameById(tNodeGraph.nGameId)
-    if tSvrGame ~= nil then
-        local nGameId = tSvrGame.nGameId
-        Messager.S2CFinishNode(nGameId, tNodeGraph.nNodeGraphId, nNodeId, nPath)
+    
+    if bSync then
+        local nGameId = tNodeGraph.nGameId
+        if SvrGameMod.getGameById(nGameId) ~= nil then
+            Messager.S2CFinishNode(nGameId, tNodeGraph.nNodeGraphId, nNodeId, nPath)
+        end
     end
     tNodeGraph.tFinishedNodes[nNodeId] = true
 
@@ -71,5 +72,3 @@ function finishNode(tNodeGraph, nNodeId, nPath)
         end
     end
 end
-
-

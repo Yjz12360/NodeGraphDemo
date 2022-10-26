@@ -182,9 +182,6 @@ tNodeHandlers[Const.NodeType.WaitAllNodeFinish] = {
 }
 
 tNodeHandlers[Const.NodeType.SetPosition] = {
-    tCltHandler = function(tNodeGraph, tNodeData)
-        return SetPositionNode.CltHandler(tNodeGraph, tNodeData)
-    end,
     tSvrHandler = function(tNodeGraph, tNodeData)
         return SetPositionNode.SvrHandler(tNodeGraph, tNodeData)
     end,

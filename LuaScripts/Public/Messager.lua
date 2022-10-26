@@ -54,6 +54,10 @@ S2CAddMonster = function(nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, nRe
     addMessage(CltGameRoleMod.addMonster, nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, nRefreshId)
 end
 
+S2CForceSetPos = function(nGameId, nObjectId, nPosX, nPosY, nPosZ)
+    addMessage(CltGameRoleMod.forceSetPos, nGameId, nObjectId, nPosX, nPosY, nPosZ)
+end
+
 S2CRoleDead = function(nGameId, nObjectId)
     addMessage(CltGameRoleMod.roleDead, nGameId, nObjectId)
 end

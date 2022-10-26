@@ -109,3 +109,17 @@ function getMonsterByRefreshId(nRefreshId)
         end
     end
 end
+
+function forceSetPos(nGameId, nObjectId, nPosX, nPosY, nPosZ)
+    if not CltGameMod.checkGameId(nGameId) then
+        return
+    end
+    local tGameObject = CltGameMod.getObject(nObjectId)
+    if tGameObject == nil then
+        return
+    end
+    local goInstance = tGameObject.goInstance
+    if goInstance ~= nil then
+        goInstance.transform.position = UE.Vector3(nPosX, nPosY, nPosZ)
+    end
+end

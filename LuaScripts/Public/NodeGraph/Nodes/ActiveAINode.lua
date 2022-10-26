@@ -24,5 +24,5 @@ function SvrHandler(tNodeGraph, tNodeData)
             end
         end
     end
-    SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
+    SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId, true)
 end

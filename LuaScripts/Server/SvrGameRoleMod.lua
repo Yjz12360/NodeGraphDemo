@@ -143,3 +143,17 @@ function getMonsterByRefreshId(tSvrGame, nRefreshId)
         end
     end
 end
+
+function forceSetPos(tSvrGame, nObjectId, nPosX, nPosY, nPosZ)
+    if tSvrGame == nil then
+        return
+    end
+    local tGameObject = tSvrGame.tGameObjects[nObjectId]
+    if nObjectId == nil then
+        return
+    end
+    tGameObject.nPosX = nPosX
+    tGameObject.nPosY = nPosY
+    tGameObject.nPosZ = nPosZ
+    Messager.S2CForceSetPos(tSvrGame.nGameId, nObjectId, nPosX, nPosY, nPosZ)
+end

@@ -19,5 +19,5 @@ function SvrHandler(tNodeGraph, tNodeData)
         SvrGameRoleMod.addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
     end
 
-    SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
+    SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId, true)
 end

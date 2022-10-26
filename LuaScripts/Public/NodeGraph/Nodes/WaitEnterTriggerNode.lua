@@ -9,6 +9,6 @@ function SvrOnTriggerEnter(tNodeGraph, tNodeData, nTriggerId)
     if nTriggerId == tNodeData.nTriggerId then
         local nNodeId = tNodeData.nNodeId
         NodeGraphEventMod.unregisterNode(tNodeGraph, nNodeId, Const.EventType.EnterTrigger, nTriggerId)
-        SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
+        SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId, true)
     end
 end

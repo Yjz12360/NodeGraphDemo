@@ -25,7 +25,7 @@ end
 function SvrHandler(tNodeGraph, tNodeData)
     local bCheckFlag = doCheck(tNodeGraph, tNodeData)
     if bCheckFlag then
-        SvrNodeGraphMod.finishNode(tNodeGraph, tNodeGraph.nNodeId)
+        SvrNodeGraphMod.finishNode(tNodeGraph, tNodeGraph.nNodeId, true)
         return
     end
     local nWaitNode1 = tNodeData.nWaitNode1
@@ -59,7 +59,7 @@ function SvrOnCheck(tNodeGraph, tNodeData)
             NodeGraphEventMod.unregisterNode(tNodeGraph, tNodeGraph.nNodeId, Const.EventType.FinishNode, nWaitNode3)
         end
 
-        SvrNodeGraphMod.finishNode(tNodeGraph, tNodeGraph.nNodeId)
+        SvrNodeGraphMod.finishNode(tNodeGraph, tNodeGraph.nNodeId, true)
     end
 end
 
