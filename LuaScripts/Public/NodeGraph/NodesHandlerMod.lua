@@ -172,7 +172,7 @@ tNodeHandlers[Const.NodeType.Random] = {
 
 tNodeHandlers[Const.NodeType.WaitAllNodeFinish] = {
     tSvrHandler = function(tNodeGraph, tNodeData)
-        return WaitAllNodeFinishNode.SvrOnCheck(tNodeGraph, tNodeData)
+        return WaitAllNodeFinishNode.SvrHandler(tNodeGraph, tNodeData)
     end,
     tSvrEventHandlers = {
         [Const.EventType.FinishNode] = function(tNodeGraph, tNodeData, nNodeId)
