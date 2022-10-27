@@ -42,6 +42,8 @@ namespace SceneNodeGraph
                 FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
                 foreach (FieldInfo fieldInfo in fieldInfos)
                 {
+                    if (!RequireAttrChecker.Check(fieldInfo, pair.Value))
+                        continue;
                     Type fieldType = fieldInfo.FieldType;
                     if(fieldType.IsPrimitive || fieldType.IsEnum || fieldType.Equals(typeof(string)))
                     {

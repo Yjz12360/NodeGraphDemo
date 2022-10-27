@@ -139,7 +139,7 @@ namespace SceneNodeGraph
             foreach (FieldInfo fieldInfo in fieldInfos)
             {
                 if (fieldInfo.Name == exclude) continue;
-                if (!CheckRequireAttr(fieldInfo, data))
+                if (!RequireAttrChecker.Check(fieldInfo, data))
                     continue;
 
                 Type fieldType = fieldInfo.FieldType;
@@ -162,50 +162,6 @@ namespace SceneNodeGraph
             }
         }
 
-        private static bool CheckRequireAttr(FieldInfo fieldInfo, object data)
-        {
-            Type type = data.GetType();
-            RequireBoolAttribute requireBool = fieldInfo.GetCustomAttribute<RequireBoolAttribute>();
-            if (requireBool != null)
-            {
-                string requireAttr = requireBool.attrName;
-                FieldInfo requireField = type.GetField(requireAttr);
-                if (requireField == null)
-                    return false;
-                object value = requireField.GetValue(data);
-                if (value == null || value.GetType() != typeof(bool))
-                    return false;
-                if ((bool)value != requireBool.value)
-                    return false;
-            }
-            RequireIntAttribute requireInt = fieldInfo.GetCustomAttribute<RequireIntAttribute>();
-            if (requireInt != null)
-            {
-                string requireAttr = requireInt.attrName;
-                FieldInfo requireField = type.GetField(requireAttr);
-                if (requireField == null)
-                    return false;
-                object value = requireField.GetValue(data);
-                if (value == null || value.GetType() != typeof(int))
-                    return false;
-                if ((int)value != 0)
-                    return false;
-            }
-            RequireEnumAttribute requireEnum = fieldInfo.GetCustomAttribute<RequireEnumAttribute>();
-            if(requireEnum != null)
-            {
-                string requireAttr = requireEnum.attrName;
-                FieldInfo requireField = type.GetField(requireAttr);
-                if (requireField == null)
-                    return false;
-                object value = requireField.GetValue(data);
-                if (value == null || !value.GetType().IsEnum)
-                    return false;
-                if ((int)value != (int)requireEnum.value)
-                    return false;
-            }
-            return true;
-        }
         public static void DrawNodeData(BaseNode node)
         {
             DrawAttribute(node, "nNodeId");
