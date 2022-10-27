@@ -39,7 +39,7 @@ namespace SceneNodeGraph
         {
             using (new EditorGUILayout.HorizontalScope(GUILayout.Width(1000)))
             {
-                using (new EditorGUILayout.VerticalScope(GUILayout.Width(200)))
+                using (new EditorGUILayout.VerticalScope(GUILayout.Width(300)))
                 {
                     string fileText;
                     if (!string.IsNullOrEmpty(searchPath))
@@ -137,55 +137,7 @@ namespace SceneNodeGraph
                         EditorGUILayout.LabelField("节点属性配置");
                         NodeGraphData nodeGraphData = nodeGraphEditor.GetNodeGraphData();
                         BaseNode nodeData = nodeGraphData.GetNodeData(selectNode);
-                        if (nodeData != null)
-                        {
-                            Type type = nodeData.GetType();
-                            if (type != null)
-                            {
-                                FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
-                                foreach (FieldInfo fieldInfo in fieldInfos)
-                                {
-                                    if (fieldInfo.Name == "nNodeId") continue;
-                                    Type fieldType = fieldInfo.FieldType;
-                                    if (fieldType == typeof(int))
-                                    {
-                                        int nOldValue = (int)fieldInfo.GetValue(nodeData);
-                                        int nNewValue = EditorGUILayout.IntField(fieldInfo.Name, nOldValue);
-                                        if (nNewValue != nOldValue)
-                                            fieldInfo.SetValue(nodeData, nNewValue);
-                                    }
-                                    else if (fieldType == typeof(float))
-                                    {
-                                        float nOldValue = (float)fieldInfo.GetValue(nodeData);
-                                        float nNewValue = EditorGUILayout.FloatField(fieldInfo.Name, nOldValue);
-                                        if (nNewValue != nOldValue)
-                                            fieldInfo.SetValue(nodeData, nNewValue);
-                                    }
-                                    else if (fieldType == typeof(string))
-                                    {
-                                        string sOldValue = (string)fieldInfo.GetValue(nodeData);
-                                        if (sOldValue == null) sOldValue = "";
-                                        string sNewValue = EditorGUILayout.TextField(fieldInfo.Name, sOldValue);
-                                        if (!sNewValue.Equals(sOldValue))
-                                            fieldInfo.SetValue(nodeData, sNewValue);
-                                    }
-                                    else if (fieldType == typeof(bool))
-                                    {
-                                        bool bOldValue = (bool)fieldInfo.GetValue(nodeData);
-                                        bool bNewValue = EditorGUILayout.Toggle(fieldInfo.Name, bOldValue);
-                                        if (bNewValue != bOldValue)
-                                            fieldInfo.SetValue(nodeData, bNewValue);
-                                    }
-                                    else if (fieldType.IsEnum)
-                                    {
-                                        Enum oldValue = (Enum)fieldInfo.GetValue(nodeData);
-                                        Enum newValue = EditorGUILayout.EnumPopup(fieldInfo.Name, oldValue);
-                                        if (newValue != oldValue)
-                                            fieldInfo.SetValue(nodeData, newValue);
-                                    }
-                                }
-                            }
-                        }
+                        NodeAttrDrawer.DrawNodeData(nodeData);
                     }
 
                 }

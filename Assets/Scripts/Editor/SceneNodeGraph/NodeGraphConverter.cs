@@ -48,6 +48,11 @@ namespace SceneNodeGraph
                         writer.WritePropertyName(fieldInfo.Name);
                         writer.WriteValue(fieldInfo.GetValue(pair.Value));
                     }
+                    else if (fieldType.IsGenericType && fieldType.GetGenericTypeDefinition() == typeof(List<>))
+                    {
+                        writer.WritePropertyName(fieldInfo.Name);
+                        writer.WriteRawValue(JsonConvert.SerializeObject(fieldInfo.GetValue(pair.Value)));
+                    }
                     else
                     {
                         Debug.LogError($"NodeGraphConverter: not support type: {fieldType}");
@@ -58,7 +63,6 @@ namespace SceneNodeGraph
             writer.WriteEndObject();
 
             writer.WritePropertyName("tTransitions");
-            JsonConvert.SerializeObject(nodeGraphData.transitions);
             writer.WriteStartObject();
             foreach (var pair in nodeGraphData.transitions)
             {
@@ -109,7 +113,16 @@ namespace SceneNodeGraph
                     {
                         if(property.Value[fieldInfo.Name] != null)
                         {
-                            fieldInfo.SetValue(nodeData, property.Value[fieldInfo.Name].ToObject(fieldInfo.FieldType));
+                            Type fieldType = fieldInfo.FieldType;
+                            if (fieldType.IsGenericType && fieldType.GetGenericTypeDefinition() == typeof(List<>))
+                            {
+                                string rawValue = property.Value[fieldInfo.Name].ToString();
+                                SetListValue(fieldInfo, nodeData, rawValue);
+                            }
+                            else
+                            {
+                                fieldInfo.SetValue(nodeData, property.Value[fieldInfo.Name].ToObject(fieldInfo.FieldType));
+                            }
                         }
                     }
                     nodeGraphData.nodeMap[nodeData.nNodeId] = nodeData;
@@ -144,6 +157,32 @@ namespace SceneNodeGraph
                 nodeGraphData.startNodeId = jsonObject["nStartNodeId"].Value<int>();
 
             return nodeGraphData;
+        }
+
+        private void SetListValue(FieldInfo fieldInfo, object nodeData, string rawValue)
+        {
+            Type fieldType = fieldInfo.FieldType;
+            Type argumentType = fieldType.GetGenericArguments()[0];
+            if (argumentType == typeof(int))
+                SetListValue<int>(fieldInfo, nodeData, rawValue);
+            else if (argumentType == typeof(float))
+                SetListValue<float>(fieldInfo, nodeData, rawValue);
+            else if (argumentType == typeof(string))
+                SetListValue<string>(fieldInfo, nodeData, rawValue);
+
+        }
+
+        private void SetListValue<T>(FieldInfo fieldInfo, object nodeData, string rawValue)
+        {
+            var dicValue = JsonConvert.DeserializeObject<Dictionary<string, T>>(rawValue);
+            List<string> keys = new List<string>();
+            foreach (string key in dicValue.Keys)
+                keys.Add(key);
+            keys.Sort();
+            List<T> value = new List<T>();
+            foreach (string key in keys)
+                value.Add(dicValue[key]);
+            fieldInfo.SetValue(nodeData, value);
         }
     }
 }

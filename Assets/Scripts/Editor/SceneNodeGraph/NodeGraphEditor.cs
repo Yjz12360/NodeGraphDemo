@@ -10,7 +10,7 @@ namespace SceneNodeGraph
 {
     class NodeGraphEditor
     {
-        private static readonly float drawOffsetX = 200;
+        private static readonly float drawOffsetX = 300;
         private static readonly float drawOffsetY = 40;
         private static readonly float padding = 20;
         private static readonly float nodeWidth = 160;
