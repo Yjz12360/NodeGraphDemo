@@ -45,7 +45,13 @@ namespace SceneNodeGraph
                     if (!RequireAttrChecker.Check(fieldInfo, pair.Value))
                         continue;
                     Type fieldType = fieldInfo.FieldType;
-                    if(fieldType.IsPrimitive || fieldType.IsEnum || fieldType.Equals(typeof(string)))
+                    CustomConverterAttribute customConverter = fieldInfo.GetCustomAttribute<CustomConverterAttribute>();
+                    if(customConverter != null)
+                    {
+                        writer.WritePropertyName(fieldInfo.Name);
+                        writer.WriteRawValue(JsonConvert.SerializeObject(fieldInfo.GetValue(pair.Value), Formatting.None, customConverter.converter));
+                    }
+                    else if (fieldType.IsPrimitive || fieldType.IsEnum || fieldType.Equals(typeof(string)))
                     {
                         writer.WritePropertyName(fieldInfo.Name);
                         writer.WriteValue(fieldInfo.GetValue(pair.Value));
@@ -113,17 +119,23 @@ namespace SceneNodeGraph
                     FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
                     foreach(FieldInfo fieldInfo in fieldInfos)
                     {
-                        if(property.Value[fieldInfo.Name] != null)
+                        JToken valueToken = property.Value[fieldInfo.Name];
+                        if (valueToken != null)
                         {
                             Type fieldType = fieldInfo.FieldType;
+                            CustomConverterAttribute customConverter = fieldInfo.GetCustomAttribute<CustomConverterAttribute>();
+                            if (customConverter != null)
+                            {
+                                fieldInfo.SetValue(nodeData, JsonConvert.DeserializeObject(valueToken.ToString(), fieldType, customConverter.converter));
+                            }
                             if (fieldType.IsGenericType && fieldType.GetGenericTypeDefinition() == typeof(List<>))
                             {
-                                string rawValue = property.Value[fieldInfo.Name].ToString();
+                                string rawValue = valueToken.ToString();
                                 SetListValue(fieldInfo, nodeData, rawValue);
                             }
                             else
                             {
-                                fieldInfo.SetValue(nodeData, property.Value[fieldInfo.Name].ToObject(fieldInfo.FieldType));
+                                fieldInfo.SetValue(nodeData, valueToken.ToObject(fieldType));
                             }
                         }
                     }
