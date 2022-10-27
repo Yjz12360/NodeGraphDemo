@@ -1,9 +1,9 @@
 
 function CltHandler(tNodeGraph, tNodeData)
     local nExplosionId = tNodeData.nExplosionId
-    local sPosId = tNodeData.sPosId
+    local nPosId = tNodeData.nPosId
     local tCltGame = CltGameMod.getGame()
-    local tPos = GameSceneCfgMod.getPosition(tCltGame.tGameSceneConfig, sPosId)
+    local tPos = GameSceneCfgMod.getPosition(tCltGame.tGameSceneConfig, nPosId)
     if tPos ~= nil then
         local tExplosionConfig = Config.Explosion[nExplosionId]
         if tExplosionConfig ~= nil then
@@ -16,9 +16,9 @@ end
 
 function SvrHandler(tNodeGraph, tNodeData)
     local nExplosionId = tNodeData.nExplosionId
-    local sPosId = tNodeData.sPosId
+    local nPosId = tNodeData.nPosId
     local tSvrGame = SvrGameMod.getGameById(tNodeGraph.nGameId)
-    local tPos = GameSceneCfgMod.getPosition(tSvrGame.tGameSceneConfig, sPosId)
+    local tPos = GameSceneCfgMod.getPosition(tSvrGame.tGameSceneConfig, nPosId)
     if tPos == nil then
         SvrNodeGraphMod.finishNode(tNodeGraph, tNodeData.nNodeId)
         return

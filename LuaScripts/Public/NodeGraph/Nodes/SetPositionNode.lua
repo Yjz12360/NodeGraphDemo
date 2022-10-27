@@ -5,9 +5,9 @@ function SvrHandler(tNodeGraph, tNodeData)
 
     local tSvrGame = SvrGameMod.getGameById(tNodeGraph.nGameId)
     local nPosX, nPosY, nPosZ = 0, 0, 0
-    local sPosId = tNodeData.sPosId
-    if sPosId ~= nil and sPosId ~= "" then
-        local tPos = GameSceneCfgMod.getPosition(tSvrGame.tGameSceneConfig, sPosId)
+    local nPosId = tNodeData.nPosId
+    if nPosId ~= nil and nPosId ~= "" then
+        local tPos = GameSceneCfgMod.getPosition(tSvrGame.tGameSceneConfig, nPosId)
         if tPos ~= nil then
             nPosX, nPosY, nPosZ = tPos.x, tPos.y, tPos.z
         end

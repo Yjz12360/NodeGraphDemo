@@ -7,7 +7,7 @@ namespace SceneNodeGraph
     public class ExplodeNode : BaseNode
     {
         public int nExplosionId;
-        public string sPosId;
+        public int nPosId;
     }
 
 }

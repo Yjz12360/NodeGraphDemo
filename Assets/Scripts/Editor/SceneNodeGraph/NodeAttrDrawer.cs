@@ -8,8 +8,7 @@ namespace SceneNodeGraph
 {
     public static class NodeAttrDrawer
     {
-
-        public static void DrawInt(FieldInfo fieldInfo, object data)
+        private static void DrawInt(FieldInfo fieldInfo, object data)
         {
             int nOldValue = (int)fieldInfo.GetValue(data);
             int nNewValue = EditorGUILayout.IntField(fieldInfo.Name, nOldValue);
@@ -17,7 +16,7 @@ namespace SceneNodeGraph
                 fieldInfo.SetValue(data, nNewValue);
         }
 
-        public static void DrawFloat(FieldInfo fieldInfo, object data)
+        private static void DrawFloat(FieldInfo fieldInfo, object data)
         {
             float nOldValue = (float)fieldInfo.GetValue(data);
             float nNewValue = EditorGUILayout.FloatField(fieldInfo.Name, nOldValue);
@@ -25,7 +24,7 @@ namespace SceneNodeGraph
                 fieldInfo.SetValue(data, nNewValue);
         }
 
-        public static void DrawString(FieldInfo fieldInfo, object data)
+        private static void DrawString(FieldInfo fieldInfo, object data)
         {
             string sOldValue = (string)fieldInfo.GetValue(data);
             if (sOldValue == null) sOldValue = "";
@@ -34,7 +33,7 @@ namespace SceneNodeGraph
                 fieldInfo.SetValue(data, sNewValue);
         }
 
-        public static void DrawBool(FieldInfo fieldInfo, object data)
+        private static void DrawBool(FieldInfo fieldInfo, object data)
         {
             bool bOldValue = (bool)fieldInfo.GetValue(data);
             bool bNewValue = EditorGUILayout.Toggle(fieldInfo.Name, bOldValue);
@@ -42,7 +41,7 @@ namespace SceneNodeGraph
                 fieldInfo.SetValue(data, bNewValue);
         }
 
-        public static void DrawEnum(FieldInfo fieldInfo, object data)
+        private static void DrawEnum(FieldInfo fieldInfo, object data)
         {
             Enum oldValue = (Enum)fieldInfo.GetValue(data);
             Enum newValue = EditorGUILayout.EnumPopup(fieldInfo.Name, oldValue);
@@ -50,7 +49,7 @@ namespace SceneNodeGraph
                 fieldInfo.SetValue(data, newValue);
         }
 
-        public static void DrawIntList(FieldInfo fieldInfo, object data)
+        private static void DrawIntList(FieldInfo fieldInfo, object data)
         {
             List<int> list = (List<int>)fieldInfo.GetValue(data);
             if (list == null)
@@ -77,7 +76,7 @@ namespace SceneNodeGraph
                 list.RemoveAt(removeIndex);
         }
 
-        public static void DrawFloatList(FieldInfo fieldInfo, object data)
+        private static void DrawFloatList(FieldInfo fieldInfo, object data)
         {
             List<float> list = (List<float>)fieldInfo.GetValue(data);
             if (list == null)
@@ -104,7 +103,7 @@ namespace SceneNodeGraph
                 list.RemoveAt(removeIndex);
         }
 
-        public static void DrawStringList(FieldInfo fieldInfo, object data)
+        private static void DrawStringList(FieldInfo fieldInfo, object data)
         {
             List<string> list = (List<string>)fieldInfo.GetValue(data);
             if (list == null)
@@ -131,38 +130,82 @@ namespace SceneNodeGraph
                 list.RemoveAt(removeIndex);
         }
 
-        public static void DrawAttribute(object data, string exclude)
+        private static void DrawAttribute(object data, string exclude)
         {
             if (data == null)
                 return;
             Type type = data.GetType();
-            if (type != null)
+            FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+            foreach (FieldInfo fieldInfo in fieldInfos)
             {
-                FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
-                foreach (FieldInfo fieldInfo in fieldInfos)
-                {
-                    if (fieldInfo.Name == exclude) continue;
-                    Type fieldType = fieldInfo.FieldType;
-                    if (fieldType == typeof(int))
-                        DrawInt(fieldInfo, data);
-                    else if (fieldType == typeof(float))
-                        DrawFloat(fieldInfo, data);
-                    else if (fieldType == typeof(string))
-                        DrawString(fieldInfo, data);
-                    else if (fieldType == typeof(bool))
-                        DrawBool(fieldInfo, data);
-                    else if (fieldType.IsEnum)
-                        DrawEnum(fieldInfo, data);
-                    else if (fieldType == typeof(List<int>))
-                        DrawIntList(fieldInfo, data);
-                    else if (fieldType == typeof(List<float>))
-                        DrawFloatList(fieldInfo, data);
-                    else if (fieldType == typeof(List<string>))
-                        DrawStringList(fieldInfo, data);
-                }
+                if (fieldInfo.Name == exclude) continue;
+                if (!CheckRequireAttr(fieldInfo, data))
+                    continue;
+
+                Type fieldType = fieldInfo.FieldType;
+                if (fieldType == typeof(int))
+                    DrawInt(fieldInfo, data);
+                else if (fieldType == typeof(float))
+                    DrawFloat(fieldInfo, data);
+                else if (fieldType == typeof(string))
+                    DrawString(fieldInfo, data);
+                else if (fieldType == typeof(bool))
+                    DrawBool(fieldInfo, data);
+                else if (fieldType.IsEnum)
+                    DrawEnum(fieldInfo, data);
+                else if (fieldType == typeof(List<int>))
+                    DrawIntList(fieldInfo, data);
+                else if (fieldType == typeof(List<float>))
+                    DrawFloatList(fieldInfo, data);
+                else if (fieldType == typeof(List<string>))
+                    DrawStringList(fieldInfo, data);
             }
         }
 
+        private static bool CheckRequireAttr(FieldInfo fieldInfo, object data)
+        {
+            Type type = data.GetType();
+            RequireBoolAttribute requireBool = fieldInfo.GetCustomAttribute<RequireBoolAttribute>();
+            if (requireBool != null)
+            {
+                string requireAttr = requireBool.attrName;
+                FieldInfo requireField = type.GetField(requireAttr);
+                if (requireField == null)
+                    return false;
+                object value = requireField.GetValue(data);
+                if (value == null || value.GetType() != typeof(bool))
+                    return false;
+                if ((bool)value != requireBool.value)
+                    return false;
+            }
+            RequireIntAttribute requireInt = fieldInfo.GetCustomAttribute<RequireIntAttribute>();
+            if (requireInt != null)
+            {
+                string requireAttr = requireInt.attrName;
+                FieldInfo requireField = type.GetField(requireAttr);
+                if (requireField == null)
+                    return false;
+                object value = requireField.GetValue(data);
+                if (value == null || value.GetType() != typeof(int))
+                    return false;
+                if ((int)value != 0)
+                    return false;
+            }
+            RequireEnumAttribute requireEnum = fieldInfo.GetCustomAttribute<RequireEnumAttribute>();
+            if(requireEnum != null)
+            {
+                string requireAttr = requireEnum.attrName;
+                FieldInfo requireField = type.GetField(requireAttr);
+                if (requireField == null)
+                    return false;
+                object value = requireField.GetValue(data);
+                if (value == null || !value.GetType().IsEnum)
+                    return false;
+                if ((int)value != (int)requireEnum.value)
+                    return false;
+            }
+            return true;
+        }
         public static void DrawNodeData(BaseNode node)
         {
             DrawAttribute(node, "nNodeId");
