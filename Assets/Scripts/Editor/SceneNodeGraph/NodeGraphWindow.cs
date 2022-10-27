@@ -137,7 +137,7 @@ namespace SceneNodeGraph
                         EditorGUILayout.LabelField("节点属性配置");
                         NodeGraphData nodeGraphData = nodeGraphEditor.GetNodeGraphData();
                         BaseNode nodeData = nodeGraphData.GetNodeData(selectNode);
-                        NodeAttrDrawer.DrawNodeData(nodeData);
+                        NodeAttrDrawer.DrawAttribute(nodeData, "nNodeId");
                     }
 
                 }

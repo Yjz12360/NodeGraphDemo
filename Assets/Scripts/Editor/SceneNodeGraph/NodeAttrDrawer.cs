@@ -8,7 +8,7 @@ namespace SceneNodeGraph
 {
     public static class NodeAttrDrawer
     {
-        private static void DrawInt(FieldInfo fieldInfo, object data)
+        public static void DrawInt(FieldInfo fieldInfo, object data)
         {
             int nOldValue = (int)fieldInfo.GetValue(data);
             int nNewValue = EditorGUILayout.IntField(fieldInfo.Name, nOldValue);
@@ -16,7 +16,7 @@ namespace SceneNodeGraph
                 fieldInfo.SetValue(data, nNewValue);
         }
 
-        private static void DrawFloat(FieldInfo fieldInfo, object data)
+        public static void DrawFloat(FieldInfo fieldInfo, object data)
         {
             float nOldValue = (float)fieldInfo.GetValue(data);
             float nNewValue = EditorGUILayout.FloatField(fieldInfo.Name, nOldValue);
@@ -24,7 +24,7 @@ namespace SceneNodeGraph
                 fieldInfo.SetValue(data, nNewValue);
         }
 
-        private static void DrawString(FieldInfo fieldInfo, object data)
+        public static void DrawString(FieldInfo fieldInfo, object data)
         {
             string sOldValue = (string)fieldInfo.GetValue(data);
             if (sOldValue == null) sOldValue = "";
@@ -33,7 +33,7 @@ namespace SceneNodeGraph
                 fieldInfo.SetValue(data, sNewValue);
         }
 
-        private static void DrawBool(FieldInfo fieldInfo, object data)
+        public static void DrawBool(FieldInfo fieldInfo, object data)
         {
             bool bOldValue = (bool)fieldInfo.GetValue(data);
             bool bNewValue = EditorGUILayout.Toggle(fieldInfo.Name, bOldValue);
@@ -41,7 +41,7 @@ namespace SceneNodeGraph
                 fieldInfo.SetValue(data, bNewValue);
         }
 
-        private static void DrawEnum(FieldInfo fieldInfo, object data)
+        public static void DrawEnum(FieldInfo fieldInfo, object data)
         {
             Enum oldValue = (Enum)fieldInfo.GetValue(data);
             Enum newValue = EditorGUILayout.EnumPopup(fieldInfo.Name, oldValue);
@@ -49,7 +49,7 @@ namespace SceneNodeGraph
                 fieldInfo.SetValue(data, newValue);
         }
 
-        private static void DrawIntList(FieldInfo fieldInfo, object data)
+        public static void DrawIntList(FieldInfo fieldInfo, object data)
         {
             List<int> list = (List<int>)fieldInfo.GetValue(data);
             if (list == null)
@@ -76,7 +76,7 @@ namespace SceneNodeGraph
                 list.RemoveAt(removeIndex);
         }
 
-        private static void DrawFloatList(FieldInfo fieldInfo, object data)
+        public static void DrawFloatList(FieldInfo fieldInfo, object data)
         {
             List<float> list = (List<float>)fieldInfo.GetValue(data);
             if (list == null)
@@ -103,7 +103,7 @@ namespace SceneNodeGraph
                 list.RemoveAt(removeIndex);
         }
 
-        private static void DrawStringList(FieldInfo fieldInfo, object data)
+        public static void DrawStringList(FieldInfo fieldInfo, object data)
         {
             List<string> list = (List<string>)fieldInfo.GetValue(data);
             if (list == null)
@@ -130,7 +130,7 @@ namespace SceneNodeGraph
                 list.RemoveAt(removeIndex);
         }
 
-        private static void DrawAttribute(object data, string exclude)
+        public static void DrawAttribute(object data, string exclude)
         {
             if (data == null)
                 return;
@@ -141,6 +141,17 @@ namespace SceneNodeGraph
                 if (fieldInfo.Name == exclude) continue;
                 if (!RequireAttrChecker.Check(fieldInfo, data))
                     continue;
+                CustomDrawerAttribute drawerAttr = fieldInfo.GetCustomAttribute<CustomDrawerAttribute>();
+                if (drawerAttr != null)
+                {
+                    Type drawerType = drawerAttr.drawerType;
+                    if(drawerType != null)
+                    {
+                        BaseCustomDrawer drawer = (BaseCustomDrawer)Activator.CreateInstance(drawerType);
+                        drawer.DrawAttr(fieldInfo, data);
+                        continue;
+                    }
+                }
 
                 Type fieldType = fieldInfo.FieldType;
                 if (fieldType == typeof(int))
@@ -160,11 +171,6 @@ namespace SceneNodeGraph
                 else if (fieldType == typeof(List<string>))
                     DrawStringList(fieldInfo, data);
             }
-        }
-
-        public static void DrawNodeData(BaseNode node)
-        {
-            DrawAttribute(node, "nNodeId");
         }
     }
 
