@@ -9,6 +9,7 @@ namespace SceneNodeGraph
     public class BaseNode
     {
         public int nNodeId;
+        public virtual Type GetPathType() { return typeof(SequencePath); }
 
         private static Dictionary<Type, NodeType> typesEnumMap = new Dictionary<Type, NodeType>();
         public virtual NodeType GetNodeType()

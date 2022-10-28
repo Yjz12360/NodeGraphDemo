@@ -33,7 +33,6 @@ namespace SceneNodeGraph
             {
                 writer.WritePropertyName(pair.Key.ToString());
                 Type type = pair.Value.GetType();
-                PropertyInfo[] props = type.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
                 writer.WriteStartObject();
 
                 writer.WritePropertyName("nNodeType");

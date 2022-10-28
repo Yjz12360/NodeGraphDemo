@@ -70,7 +70,7 @@ function addNodeGraph(nGameId, nNodeGraphId, nConfigId)
     CltNodeGraphMod.startNodeGraph(tNodeGraph)
 end
 
-function processEvent(nEventType, ...)
+function processEvent(nEventType, nEventLocalId, ...)
     if tCltGame == nil then
         return
     end

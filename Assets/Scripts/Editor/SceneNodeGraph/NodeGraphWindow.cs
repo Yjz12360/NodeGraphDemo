@@ -19,7 +19,7 @@ namespace SceneNodeGraph
 
         private int selectNode = -1;
         private NodeType addNodeType = NodeType.Print;
-        private int addNodePath = 1;
+        private object addNodePath = (SequencePath)1;
 
         private string luaFolder;
 
@@ -115,11 +115,11 @@ namespace SceneNodeGraph
                         EditorGUILayout.LabelField("");
                         EditorGUILayout.LabelField($"当前选中节点： {selectNode}");
                         addNodeType = (NodeType)EditorGUILayout.EnumPopup("选择添加节点类型", addNodeType);
-                        addNodePath = EditorGUILayout.IntField("路径编号", addNodePath);
+                        addNodePath = EditorGUILayout.EnumPopup("路径", (Enum)addNodePath);
                         if (GUILayout.Button("添加子节点"))
                         {
                             if (selectNode > 0)
-                                nodeGraphEditor.AddNode(selectNode, addNodeType, addNodePath);
+                                nodeGraphEditor.AddNode(selectNode, addNodeType, (int)addNodePath);
                             else
                                 EditorUtility.DisplayDialog("提示", "没有选中节点", "确定");
                         }
@@ -148,7 +148,21 @@ namespace SceneNodeGraph
 
         public void OnNodeSelect(int nodeId)
         {
+            if (nodeId == selectNode)
+                return;
             selectNode = nodeId;
+            BaseNode currNode = nodeGraphEditor.GetNodeGraphData().GetNodeData(selectNode);
+            if (currNode != null)
+            {
+                Type pathType = currNode.GetPathType();
+                foreach (var element in Enum.GetValues(pathType))
+                {
+                    if ((int)addNodePath == (int)element)
+                    {
+                        addNodePath = element;
+                    }
+                }
+            }
         }
     }
 }
