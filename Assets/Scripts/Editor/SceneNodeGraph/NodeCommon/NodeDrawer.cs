@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace SceneNodeGraph
 {
-    public static class NodeAttrDrawer
+    public static class NodeDrawer
     {
         public static void DrawInt(FieldInfo fieldInfo, object data)
         {
@@ -135,12 +135,18 @@ namespace SceneNodeGraph
             if (data == null)
                 return;
             Type type = data.GetType();
+            List<FieldInfo> nodeOutputs = new List<FieldInfo>();
             FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
             foreach (FieldInfo fieldInfo in fieldInfos)
             {
                 if (fieldInfo.Name == exclude) continue;
                 if (!RequireAttrChecker.Check(fieldInfo, data))
                     continue;
+                if (fieldInfo.GetCustomAttribute<NodeOutputAttribute>() != null)
+                {
+                    nodeOutputs.Add(fieldInfo);
+                    continue;
+                }
                 CustomDrawerAttribute drawerAttr = fieldInfo.GetCustomAttribute<CustomDrawerAttribute>();
                 if (drawerAttr != null)
                 {
@@ -171,6 +177,15 @@ namespace SceneNodeGraph
                 else if (fieldType == typeof(List<string>))
                     DrawStringList(fieldInfo, data);
             }
+            if(nodeOutputs.Count > 0)
+            {
+                EditorGUILayout.LabelField("节点输出属性：");
+                foreach (FieldInfo outputField in nodeOutputs)
+                {
+                    EditorGUILayout.LabelField(outputField.Name);
+                }
+            }
+
         }
     }
 

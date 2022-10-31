@@ -41,6 +41,8 @@ namespace SceneNodeGraph
                 FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
                 foreach (FieldInfo fieldInfo in fieldInfos)
                 {
+                    if (fieldInfo.GetCustomAttribute<NodeOutputAttribute>() != null)
+                        continue;
                     if (!RequireAttrChecker.Check(fieldInfo, pair.Value))
                         continue;
                     Type fieldType = fieldInfo.FieldType;
@@ -86,6 +88,60 @@ namespace SceneNodeGraph
                         writer.WriteValue(toNodeId);
                     }
                     writer.WriteEndArray();
+                }
+                writer.WriteEndObject();
+            }
+            writer.WriteEndObject();
+
+            writer.WritePropertyName("tNodeInputSource");
+            writer.WriteStartObject();
+            foreach (var pair in nodeGraphData.inputData)
+            {
+                int outputNodeId = pair.Key;
+                writer.WritePropertyName(outputNodeId.ToString());
+                writer.WriteStartObject();
+                foreach(var data in pair.Value)
+                {
+                    string outputNodeAttr = data.Key;
+                    if (string.IsNullOrEmpty(outputNodeAttr)) continue;
+                    NodeInputData nodeInputData = data.Value;
+                    int inputNodeId = nodeInputData.nodeId;
+                    if (inputNodeId <= 0) continue;
+                    string inputNodeAttr = nodeInputData.attrName;
+                    if (string.IsNullOrEmpty(inputNodeAttr)) continue;
+                    writer.WritePropertyName(outputNodeAttr);
+                    writer.WriteStartObject();
+                    writer.WritePropertyName("nInputNodeId");
+                    writer.WriteValue(inputNodeId);
+                    writer.WritePropertyName("sInputNodeAttr");
+                    writer.WriteValue(inputNodeAttr);
+                    writer.WriteEndObject();
+                }
+                writer.WriteEndObject();
+            }
+            writer.WriteEndObject();
+
+            Dictionary<int, List<string>> requireDic = new Dictionary<int, List<string>>();
+            foreach (var pair in nodeGraphData.inputData)
+            {
+                foreach (NodeInputData nodeInputData in pair.Value.Values)
+                {
+                    int nodeId = nodeInputData.nodeId;
+                    if (!requireDic.ContainsKey(nodeId))
+                        requireDic[nodeId] = new List<string>();
+                    requireDic[nodeId].Add(nodeInputData.attrName);
+                }
+            }
+            writer.WritePropertyName("tRequiredOutput");
+            writer.WriteStartObject();
+            foreach(var pair in requireDic)
+            {
+                writer.WritePropertyName(pair.Key.ToString());
+                writer.WriteStartObject();
+                foreach(string attr in pair.Value)
+                {
+                    writer.WritePropertyName(attr);
+                    writer.WriteValue(true);
                 }
                 writer.WriteEndObject();
             }
@@ -161,6 +217,31 @@ namespace SceneNodeGraph
                         {
                             int toNodeId = pathTransitionProp.Value.Value<int>();
                             nodeTransitions[path].Add(toNodeId);
+                        }
+                    }
+                }
+            }
+
+            if (jsonObject.TryGetValue("tNodeInputSource", out JToken inputDataToken))
+            {
+                foreach (JProperty inputDataProp in inputDataToken.Children())
+                {
+                    if (!int.TryParse(inputDataProp.Name, out int outputNodeId))
+                        continue;
+                    var inputData = nodeGraphData.inputData;
+                    if (!inputData.ContainsKey(outputNodeId))
+                        inputData[outputNodeId] = new Dictionary<string, NodeInputData>();
+                    foreach (JProperty outputAttrProp in inputDataProp.Value.Children())
+                    {
+                        string outputAttr = outputAttrProp.Name;
+                        if (!inputData[outputNodeId].ContainsKey(outputAttr))
+                            inputData[outputNodeId][outputAttr] = new NodeInputData();
+                        foreach(JProperty inputProp in outputAttrProp.Value.Children())
+                        {
+                            if (inputProp.Name == "nInputNodeId")
+                                inputData[outputNodeId][outputAttr].nodeId = inputProp.Value.Value<int>();
+                            if (inputProp.Name == "sInputNodeAttr")
+                                inputData[outputNodeId][outputAttr].attrName = inputProp.Value.Value<string>();
                         }
                     }
                 }

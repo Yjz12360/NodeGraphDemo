@@ -5,10 +5,17 @@ using UnityEngine;
 namespace SceneNodeGraph
 {
 
+    public class NodeInputData
+    {
+        public int nodeId = 0;
+        public string attrName;
+    }
+
     public class NodeGraphData
     {
         public Dictionary<int, BaseNode> nodeMap = new Dictionary<int, BaseNode>();
         public Dictionary<int, Dictionary<int, List<int>>> transitions = new Dictionary<int, Dictionary<int, List<int>>>();
+        public Dictionary<int, Dictionary<string, NodeInputData>> inputData = new Dictionary<int, Dictionary<string, NodeInputData>>();
         public int startNodeId;
 
         public void AddNode(BaseNode node)
@@ -58,6 +65,10 @@ namespace SceneNodeGraph
                 {
                     transitions.Remove(removeNode);
                 }
+                if(inputData.ContainsKey(removeNode))
+                {
+                    inputData.Remove(removeNode);
+                }
             }
             foreach (int validNode in validNodes)
             {
@@ -69,9 +80,22 @@ namespace SceneNodeGraph
                         if (toNodeList.Contains(nodeId))
                         {
                             toNodeList.Remove(nodeId);
-                            break;
                         }
                     }
+                }
+                if(inputData.ContainsKey(validNode))
+                {
+                    var attrInputData = inputData[validNode];
+                    List<string> toDel = new List<string>();
+                    foreach(var pair in attrInputData)
+                    {
+                        string toNodeAttr = pair.Key;
+                        int fromNodeId = pair.Value.nodeId;
+                        if (!nodeMap.ContainsKey(fromNodeId))
+                            toDel.Add(toNodeAttr);
+                    }
+                    foreach (string attr in toDel)
+                        inputData[validNode].Remove(attr);
                 }
             }
         }

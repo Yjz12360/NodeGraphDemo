@@ -137,16 +137,46 @@ namespace SceneNodeGraph
                                 EditorUtility.DisplayDialog("提示", "没有选中节点", "确定");
                         }
                         EditorGUILayout.LabelField("");
-                        EditorGUILayout.LabelField("节点属性配置");
                         NodeGraphData nodeGraphData = nodeGraphEditor.GetNodeGraphData();
                         BaseNode nodeData = nodeGraphData.GetNodeData(selectNode);
-                        NodeAttrDrawer.DrawAttribute(nodeData, "nNodeId");
+                        EditorGUILayout.LabelField("节点输入信息：");
+                        DrawNodeInputData(selectNode);
+                        EditorGUILayout.LabelField("节点属性配置：");
+                        NodeDrawer.DrawAttribute(nodeData, "nNodeId");
                     }
 
                 }
                 if (nodeGraphEditor != null)
                     nodeGraphEditor.Draw();
             }
+        }
+
+        private void DrawNodeInputData(int selectNode)
+        {
+            NodeGraphData nodeGraphData = nodeGraphEditor.GetNodeGraphData();
+            BaseNode nodeData = nodeGraphData.GetNodeData(selectNode);
+            if (nodeData == null) return;
+            Type type = nodeData.GetType();
+            FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+            bool hasInput = false;
+            foreach (FieldInfo fieldInfo in fieldInfos)
+            {
+                NodeInputAttribute nodeInputAttribute = fieldInfo.GetCustomAttribute<NodeInputAttribute>();
+                if (nodeInputAttribute != null)
+                {
+                    hasInput = true;
+                    EditorGUILayout.LabelField($"{fieldInfo.Name}：");
+                    if (!nodeGraphData.inputData.ContainsKey(selectNode))
+                        nodeGraphData.inputData[selectNode] = new Dictionary<string, NodeInputData>();
+                    if (!nodeGraphData.inputData[selectNode].ContainsKey(fieldInfo.Name))
+                        nodeGraphData.inputData[selectNode][fieldInfo.Name] = new NodeInputData();
+                    NodeInputData nodeInputData = nodeGraphData.inputData[selectNode][fieldInfo.Name];
+                    nodeInputData.nodeId = EditorGUILayout.IntField(" 来源节点编号", nodeInputData.nodeId);
+                    nodeInputData.attrName = EditorGUILayout.TextField(" 来源节点输出属性", nodeInputData.attrName);
+                }
+            }
+            if (!hasInput)
+                EditorGUILayout.LabelField("无");
         }
 
         public void OnNodeSelect(int nodeId)

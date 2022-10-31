@@ -9,6 +9,10 @@ namespace SceneNodeGraph
         public int nEffectId;
         public int nPosId;
 
+        [NodeInput(NodeAttrType.VecPos)]
+        [CustomDrawer(typeof(Vector3Drawer))]
+        [CustomConverter(typeof(Vector3Converter))]
+        public Vector3 tPos;
     }
 
 }

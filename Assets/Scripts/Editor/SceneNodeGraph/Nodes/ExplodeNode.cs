@@ -8,6 +8,7 @@ namespace SceneNodeGraph
     {
         public int nExplosionId;
         public int nPosId;
+
     }
 
 }
