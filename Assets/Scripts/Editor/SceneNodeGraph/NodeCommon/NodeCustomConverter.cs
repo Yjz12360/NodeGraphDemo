@@ -15,7 +15,7 @@ namespace SceneNodeGraph
         {
             if (!converterType.IsSubclassOf(typeof(BaseNodeAttrConverter)))
             {
-                Debug.LogError("CustomDrawerAttribute Error: not a subtype of JsonConverter");
+                Debug.LogError("CustomDrawerAttribute Error: not a subtype of BaseNodeAttrConverter");
                 return;
             }
             this.converter = (BaseNodeAttrConverter)Activator.CreateInstance(converterType);
