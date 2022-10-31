@@ -115,7 +115,10 @@ namespace SceneNodeGraph
                         EditorGUILayout.LabelField("");
                         EditorGUILayout.LabelField($"当前选中节点： {selectNode}");
                         addNodeType = (NodeType)EditorGUILayout.EnumPopup("选择添加节点类型", addNodeType);
-                        addNodePath = EditorGUILayout.EnumPopup("路径", (Enum)addNodePath);
+                        if (addNodePath.GetType() == typeof(int)) // CustomPath
+                            addNodePath = EditorGUILayout.IntField("路径", (int)addNodePath);
+                        else
+                            addNodePath = EditorGUILayout.EnumPopup("路径", (Enum)addNodePath);
                         if (GUILayout.Button("添加子节点"))
                         {
                             if (selectNode > 0)
@@ -154,12 +157,16 @@ namespace SceneNodeGraph
             BaseNode currNode = nodeGraphEditor.GetNodeGraphData().GetNodeData(selectNode);
             if (currNode != null)
             {
+                addNodePath = 1;
                 Type pathType = currNode.GetPathType();
-                foreach (var element in Enum.GetValues(pathType))
+                if(pathType != typeof(CustomPath))
                 {
-                    if ((int)addNodePath == (int)element)
+                    foreach (var element in Enum.GetValues(pathType))
                     {
-                        addNodePath = element;
+                        if ((int)addNodePath == (int)element)
+                        {
+                            addNodePath = element;
+                        }
                     }
                 }
             }

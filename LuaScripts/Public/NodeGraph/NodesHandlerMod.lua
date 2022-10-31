@@ -202,4 +202,10 @@ tNodeHandlers[Const.NodeType.ActiveTransparentWall] = {
     end,
 }
 
+tNodeHandlers[Const.NodeType.MonsterHpRate] = {
+    tSvrHandler = function(tNodeGraph, tNodeData)
+        return MonsterHpRateNode.SvrHandler(tNodeGraph, tNodeData)
+    end,
+}
+
 init()
