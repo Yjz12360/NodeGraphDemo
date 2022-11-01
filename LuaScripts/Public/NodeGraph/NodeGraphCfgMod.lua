@@ -46,3 +46,37 @@ function getTransitionNodes(tNodeGraphConfig, nNodeId, nPath)
     end
     return tNodeTransitions[nPath]
 end
+
+function checkRequireOutput(tNodeGraphConfig, nNodeId, sOutputAttr)
+    if tNodeGraphConfig == nil then
+        return false
+    end
+    local tRequiredOutput = tNodeGraphConfig.tRequiredOutput
+    if tRequiredOutput == nil then
+        return false
+    end
+    local tNodeRequireOutput = tRequiredOutput[nNodeId]
+    if tNodeRequireOutput == nil then
+        return false
+    end
+    return tNodeRequireOutput[sOutputAttr] ~= nil
+end
+
+function getInputSource(tNodeGraphConfig, nNodeId, sInputAttr)
+    if tNodeGraphConfig == nil then
+        return
+    end
+    local tNodeInputSource = tNodeGraphConfig.tNodeInputSource
+    if tNodeInputSource == nil then
+        return
+    end
+    local tSource = tNodeInputSource[nNodeId]
+    if tSource == nil then
+        return
+    end
+    local tAttrSource = tSource[sInputAttr]
+    if tAttrSource == nil then
+        return
+    end
+    return tAttrSource.nInputNodeId, tAttrSource.sInputNodeAttr
+end

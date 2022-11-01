@@ -12,6 +12,7 @@ function addNodeGraph(tCltGame, nNodeGraphId, nConfigId)
     tNodeGraph.tActiveNodes = {}
     tNodeGraph.tFinishedNodes = {}
     tNodeGraph.tSyncNodePath = {}
+    tNodeGraph.tNodeOutput = {}
     NodeGraphEventMod.init(tNodeGraph)
     return tNodeGraph
 end
@@ -87,4 +88,36 @@ function recvFinishNode(nGameId, nNodeGraphId, nNodeId, nPath)
     else
         tNodeGraph.tSyncNodePath[nNodeId] = nPath
     end
+end
+
+function setNodeOutput(tNodeGraph, nNodeId, sOutputAttr, vValue)
+    if tNodeGraph == nil then
+        return
+    end
+    local tNodeGraphConfig = tNodeGraph.tConfigData
+    if not NodeGraphCfgMod.checkRequireOutput(tNodeGraphConfig, nNodeId, sOutputAttr) then
+        return
+    end
+    local tOutput = tNodeGraph.tNodeOutput[nNodeId]
+    if tOutput == nil then
+        tOutput = {}
+        tNodeGraph.tNodeOutput[nNodeId] = tOutput
+    end
+    tOutput[sOutputAttr] = vValue
+end
+
+function getNodeInput(tNodeGraph, nNodeId, sInputAttr)
+    if tNodeGraph == nil then
+        return
+    end
+    local tNodeGraphConfig = tNodeGraph.tConfigData
+    local nInputNodeId, sInputNodeAttr = NodeGraphCfgMod.getInputSource(tNodeGraphConfig, nNodeId, sInputAttr)
+    if nInputNodeId == nil then
+        return
+    end
+    local tInput = tNodeGraph.tNodeOutput[nInputNodeId]
+    if tInput == nil then
+        return
+    end
+    return tInput[sInputNodeAttr]
 end

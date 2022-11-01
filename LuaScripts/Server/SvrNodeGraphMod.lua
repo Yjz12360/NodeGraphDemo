@@ -10,6 +10,7 @@ function addNodeGraph(tSvrGame, nNodeGraphId, nConfigId)
     tNodeGraph.nNodeGraphId = nNodeGraphId
     tNodeGraph.tConfigData = NodeGraphCfgMod.getConfigByName(tConfig.sName)
     tNodeGraph.tFinishedNodes = {}
+    tNodeGraph.tNodeOutput = {}
     tNodeGraph.bServer = true
     NodeGraphEventMod.init(tNodeGraph)
     return tNodeGraph
@@ -70,4 +71,28 @@ function finishNode(tNodeGraph, nNodeId, bSync, nPath)
             SvrNodeGraphMod.triggerNode(tNodeGraph, sToNodeId)
         end
     end
+end
+
+function setNodeOutput(tNodeGraph, nNodeId, sOutputAttr, vValue)
+    if not NodeGraphCfgMod.checkRequireOutput(tNodeGraph.tConfigData, nNodeId, sOutputAttr) then
+        return
+    end
+    local tOutput = tNodeGraph.tNodeOutput[nNodeId]
+    if tOutput == nil then
+        tOutput = {}
+        tNodeGraph.tNodeOutput[nNodeId] = tOutput
+    end
+    tOutput[sOutputAttr] = vValue
+end
+
+function getNodeInput(tNodeGraph, nNodeId, sInputAttr)
+    local nInputNodeId, sInputNodeAttr = NodeGraphCfgMod.getInputSource(tNodeGraph.tConfigData, nNodeId, sInputAttr)
+    if nInputNodeId == nil then
+        return
+    end
+    local tInput = tNodeGraphConfig.tNodeOutput[nInputNodeId]
+    if tInput == nil then
+        return
+    end
+    return tInput[sInputNodeAttr]
 end

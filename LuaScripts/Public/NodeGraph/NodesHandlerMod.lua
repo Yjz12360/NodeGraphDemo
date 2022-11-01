@@ -208,4 +208,13 @@ tNodeHandlers[Const.NodeType.MonsterHpRate] = {
     end,
 }
 
+tNodeHandlers[Const.NodeType.GetMonsterPos] = {
+    tCltHandler = function(tNodeGraph, tNodeData)
+        return GetMonsterPosNode.CltHandler(tNodeGraph, tNodeData)
+    end,
+    tSvrHandler = function(tNodeGraph, tNodeData)
+        return GetMonsterPosNode.SvrHandler(tNodeGraph, tNodeData)
+    end,
+}
+
 init()

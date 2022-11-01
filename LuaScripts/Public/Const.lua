@@ -22,6 +22,7 @@ NodeType = {
     CameraTrace = 20,
     ActiveTransparentWall = 21,
     MonsterHpRate = 22,
+    GetMonsterPos = 23,
 }
 
 GameObjectType = {

@@ -37,5 +37,6 @@ require "Public/NodeGraph/Nodes/SetPositionNode"
 require "Public/NodeGraph/Nodes/CameraTraceNode"
 require "Public/NodeGraph/Nodes/ActiveTransparentWallNode"
 require "Public/NodeGraph/Nodes/MonsterHpRateNode"
+require "Public/NodeGraph/Nodes/GetMonsterPosNode"
 
 
