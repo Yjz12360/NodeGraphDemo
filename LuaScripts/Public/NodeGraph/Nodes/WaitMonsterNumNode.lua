@@ -8,15 +8,15 @@ local CompareType = {
 local function doCheck(tNodeGraph, tNodeData)
     local tSvrGame = SvrGameMod.getGameById(tNodeGraph.nGameId)
     local nMonsterNum
-    local sMonsterGroupId = tNodeData.sMonsterGroupId
-    if sMonsterGroupId == "" then
+    local nGroupId = tNodeData.nGroupId
+    if nGroupId == 0 then
         local nMonsterNum = SvrGameRoleMod.getMonsterNum(tSvrGame)        
     else
         nMonsterNum = 0
         local tGameObjects = SvrGameMod.getObjects(tSvrGame)
         for _, tGameObject in pairs(tGameObjects) do
             if tGameObject.nObjectType == Const.GameObjectType.Monster then
-                if tGameObject.nGroupId == sMonsterGroupId then
+                if tGameObject.nGroupId == nGroupId then
                     nMonsterNum = nMonsterNum + 1
                 end
             end
@@ -34,7 +34,7 @@ local function doCheck(tNodeGraph, tNodeData)
     else
         bCheck = false
     end
-    return bTrigger
+    return bCheck
 end
 
 function SvrHandler(tNodeGraph, tNodeData)

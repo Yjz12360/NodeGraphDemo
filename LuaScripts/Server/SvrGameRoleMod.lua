@@ -21,7 +21,7 @@ function addPlayer(tSvrGame, nConfigId, nPosX, nPosY, nPosZ)
     Messager.S2CAddPlayer(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ)
 end
 
-function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ, nRefreshId)
+function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ, nRefreshId, nGroupId)
     if tSvrGame == nil then
         return
     end
@@ -40,6 +40,7 @@ function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ, nRefreshId)
     tMonster.nPosZ = nPosZ
     tMonster.nCurrHP = tConfig.nHP
     tMonster.nRefreshId = nRefreshId
+    tMonster.nGroupId = nGroupId
     tSvrGame.tGameObjects[nObjectId] = tMonster
     AIManagerMod.addAI(tSvrGame.tAIManager, nObjectId)
     Messager.S2CAddMonster(tSvrGame.nGameId, nObjectId, nConfigId, nPosX, nPosY, nPosZ, nRefreshId)
@@ -47,7 +48,7 @@ function addMonster(tSvrGame, nConfigId, nPosX, nPosY, nPosZ, nRefreshId)
     return tMonster
 end
 
-function refreshMonster(tSvrGame, nRefreshId)
+function refreshMonster(tSvrGame, nRefreshId, nGroupId)
     if tSvrGame == nil then
         return
     end
@@ -59,7 +60,7 @@ function refreshMonster(tSvrGame, nRefreshId)
     end
     local nMonsterCfgId = tRefreshConfig.nMonsterCfgId
     local tPos = tRefreshConfig.tPos
-    local tMonster = SvrGameRoleMod.addMonster(tSvrGame, nMonsterCfgId, tPos.x, tPos.y, tPos.z, nRefreshId)
+    local tMonster = SvrGameRoleMod.addMonster(tSvrGame, nMonsterCfgId, tPos.x, tPos.y, tPos.z, nRefreshId, nGroupId)
     local tPath = tRefreshConfig.tPath
     if tPath ~= nil then
         AIManagerMod.setPath(tSvrGame.tAIManager, tMonster.nObjectId, tPath)
@@ -78,7 +79,7 @@ function refreshMonsterGroup(tSvrGame, nGroupId)
         return
     end
     for _, nRefreshId in ipairs(tRefreshMonsterGroups) do
-        SvrGameRoleMod.refreshMonster(tSvrGame, nRefreshId)
+        SvrGameRoleMod.refreshMonster(tSvrGame, nRefreshId, nGroupId)
     end
 end
 

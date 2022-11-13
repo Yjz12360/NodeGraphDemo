@@ -29,7 +29,7 @@ function registerNode(tNodeGraph, nNodeId, nEventType, nEventLocalId)
         local tEventNodes = tEventNodeMap[nEventType]
         if tEventNodes == nil then
             tEventNodes = {}
-            tNodeEventMap[nEventType] = tEventNodes
+            tEventNodeMap[nEventType] = tEventNodes
         end
         tEventNodes[nNodeId] = true
     end
